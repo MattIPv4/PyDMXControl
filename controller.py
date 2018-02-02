@@ -1,7 +1,3 @@
-from typing import TypeVar
-T = TypeVar('T')
-
-
 class Controller:
 
     def __init__(self, *, ltp=False):
@@ -10,7 +6,7 @@ class Controller:
         # LTP (default HTP) (Lowest not latest, tracking latest is far too much work)
         self.__ltp = ltp
 
-    def add_fixture(self, fixture: T) -> T:
+    def add_fixture(self, fixture):
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
         fixture._set_id(fixture_id)
         self.__fixtures[fixture_id] = fixture
@@ -21,6 +17,18 @@ class Controller:
             del self.__fixtures[fixture_id]
             return True
         return False
+
+    def get_fixture(self, fixture_id: int):
+        if fixture_id in self.__fixtures.keys():
+            return self.__fixtures[fixture_id]
+        return None
+
+    def get_fixture_by_profile(self, profile) -> list:
+        matches = []
+        for fixture_id in self.__fixtures.keys():
+            if isinstance(self.__fixtures[fixture_id], profile):
+                matches.append(self.__fixtures[fixture_id])
+        return matches
 
     @property
     def channels(self):

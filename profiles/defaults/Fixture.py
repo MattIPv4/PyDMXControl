@@ -11,6 +11,14 @@ class Fixture:
         self.__channels = []
         self.__id = 0
 
+    def __str__(self):
+        return "Fixture of type {} using channels {}->{} ({}).".format(
+            self.__class__.__name__,
+            self.__start_channel,
+            (self.__start_channel+len(self.__channels)-1),
+            len(self.__channels)
+        )
+
     def _register_channel(self, name: str) -> int:
         if self.__start_channel + len(self.__channels) > 512:
             warnings.warn('Not enough space in universe for channel `{}`.'.format(name))

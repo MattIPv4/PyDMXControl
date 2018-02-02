@@ -26,3 +26,9 @@ custom.set_channel(1, 10)
 
 # View the DMX out
 print(dmx.channels)
+
+# Test getting by profile
+print(dmx.get_fixture_by_profile(Generic))
+
+# Testing str info
+print(led)
