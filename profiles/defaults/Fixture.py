@@ -1,5 +1,6 @@
 import warnings
 
+
 class Fixture:
 
     def __init__(self, start_channel):

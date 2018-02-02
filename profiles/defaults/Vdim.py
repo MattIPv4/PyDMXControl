@@ -1,5 +1,6 @@
 from profiles.defaults.Fixture import Fixture
 
+
 class Vdim(Fixture):
 
     def __init__(self, *args, **kwargs):
@@ -8,7 +9,7 @@ class Vdim(Fixture):
         self.__vdims = []
         self.__vdim = 255
 
-    def _register_channel(self, name, *, vdim=False):
+    def _register_channel(self, name: str, *, vdim: bool = False) -> int:
         super_call = super()._register_channel(name)
         if super_call == -1: return -1
 
