@@ -23,7 +23,7 @@ class Controller:
             return self.__fixtures[fixture_id]
         return None
 
-    def get_fixture_by_profile(self, profile) -> list:
+    def get_fixtures_by_profile(self, profile) -> list:
         matches = []
         for fixture_id in self.__fixtures.keys():
             if isinstance(self.__fixtures[fixture_id], profile):
