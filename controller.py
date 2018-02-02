@@ -7,7 +7,7 @@ class Controller:
     def __init__(self, *, ltp=False):
         self.__fixtures = {}
 
-        # LTP (default HTP)
+        # LTP (default HTP) (Lowest not latest, tracking latest is far too much work)
         self.__ltp = ltp
 
     def add_fixture(self, fixture: T) -> T:
