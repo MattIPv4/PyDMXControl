@@ -15,8 +15,7 @@ custom = dmx.add_fixture(Custom(5, dmx.next_channel))
 dimmer.set_channel('dimmer', 10)
 
 # Set our RGB fixture
-led.set_channels(255, 128, 0)
-led.set_channel('dimmer', 0)
+led.set_channels(255, 128, 0, 0)
 
 # Test custom
 custom.set_channel(1, 10)

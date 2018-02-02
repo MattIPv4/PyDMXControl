@@ -30,7 +30,7 @@ class Vdim(Fixture):
 
         # Allow setting of vdim
         channel = str(channel).lower().strip()
-        if channel == "dimmer" or channel == "vdim" or channel == str(len(self.channels)):
+        if channel == "dimmer" or channel == "vdim" or channel == str(len(self.channels)+1):
             return self.set_vdim(value)
 
         return False
