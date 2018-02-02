@@ -10,16 +10,27 @@ class Fixture:
         self.__channels = []
         self.__id = 0
 
-    def _register_channel(self, name: str) -> bool:
+    def _register_channel(self, name: str) -> int:
         if self.__start_channel + len(self.__channels) > 512:
-            warnings.warn('Not enough space in universe for channel `{}`'.format(name))
-            return False
+            warnings.warn('Not enough space in universe for channel `{}`.'.format(name))
+            return -1
+
+        used_names = [f['name'] for f in self.__channels]
+        if name.lower().strip() in used_names:
+            warnings.warn('Name `{}` already in use for channel.'.format(name))
+            return -1
 
         self.__channels.append({'name': name, 'value': 0})
-        return True
+        return len(self.__channels)-1
 
     def _set_id(self, id: int) -> None:
         self.__id = id
+
+    def _valid_channel_value(self, value: int) -> bool:
+        if value < 0 or value > 255:
+            warnings.warn('DMX value must be between 0 and 255.')
+            return False
+        return True
 
     @property
     def id(self):
@@ -29,25 +40,31 @@ class Fixture:
     def channels(self):
         channels = {}
         for i, chan in enumerate(self.__channels):
-            channels[self.__start_channel + i] = chan
+            channels[self.__start_channel + i] = {'name': chan['name'], 'value': self.get_channel_value(i)}
         return channels
 
-    def __get_channel(self, channel: [str, int]) -> int:
-        if str(channel).isdigit():
+    def __get_channel_id(self, channel: [str, int]) -> int:
+        channel = str(channel)
+
+        if channel.isdigit():
             channel = int(channel)-1
             if channel < len(self.__channels):
                 return channel
+
         for i, chan in enumerate(self.__channels):
             if chan['name'] == str(channel).lower().strip():
                 return i
-        return False
+
+        return -1
+
+    def get_channel_value(self, channel: int) -> int:
+        if channel >= len(self.__channels): return -1
+        return self.__channels[channel]['value']
 
     def set_channel(self, channel: [str, int], value: int) -> bool:
-        if value < 0 or value > 255:
-            warnings.warn('DMX value for channel `{}` must be between 0 and 255.'.format(channel))
-            return False
+        if not self._valid_channel_value(value): return False
 
-        channel = self.__get_channel(channel)
+        channel = self.__get_channel_id(channel)
         if channel == -1:
             return False
 

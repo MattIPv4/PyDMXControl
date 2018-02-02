@@ -1,11 +1,13 @@
-from profiles.Fixture import Fixture
+from typing import TypeVar
+T = TypeVar('T')
+
 
 class Controller:
 
     def __init__(self):
         self.fixtures = {}
 
-    def add_fixture(self, fixture: Fixture) -> Fixture:
+    def add_fixture(self, fixture: T) -> T:
         fixture_id = (max(list(self.fixtures.keys()) or [0])) + 1
         fixture._set_id(fixture_id)
         self.fixtures[fixture_id] = fixture

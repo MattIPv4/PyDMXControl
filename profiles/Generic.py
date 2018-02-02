@@ -1,4 +1,4 @@
-from profiles.Fixture import Fixture
+from profiles.defaults.Fixture import Fixture
 
 
 class Generic(Fixture):
