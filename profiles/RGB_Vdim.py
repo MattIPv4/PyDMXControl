@@ -1,7 +1,7 @@
 from profiles.defaults.Vdim import Vdim
 
 
-class LED_RGB(Vdim):
+class RGB_Vdim(Vdim):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -84,6 +84,7 @@ class Fixture:
         channel = 1
         if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0: channel = int(kwargs['start'])
         for value in args:
-            if str(value).isdigit():
-                self.set_channel(channel, int(value))
+            if value is not None:
+                if str(value).isdigit():
+                    self.set_channel(channel, int(value))
             channel += 1
