@@ -1,10 +1,14 @@
 class Controller:
 
-    def __init__(self, *, ltp=False):
+    def __init__(self, *, ltp=False, dynamic_frame=False):
+        # Store all registered fixtures
         self.__fixtures = {}
 
         # LTP (default HTP) (Lowest not latest, tracking latest is far too much work)
         self.__ltp = ltp
+
+        self.__frame = [0] * 512
+        self.__dynamic_frame = dynamic_frame
 
     def add_fixture(self, fixture):
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
@@ -48,6 +52,16 @@ class Controller:
                 else:
                     channels[chanid] = chanval
         return channels
+
+    @property
+    def frame(self):
+        if self.__dynamic_frame:
+            self.__frame = [0] * (self.next_channel-1)
+
+        for key,val in self.channels.items():
+            if key-1 < len(self.__frame):
+                self.__frame[key-1] = val
+        return self.__frame
 
     @property
     def next_channel(self):

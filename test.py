@@ -18,3 +18,4 @@ for f in dmx.get_fixtures_by_profile(Stairville_LED_Par_36):
 
 # View the DMX out
 print(dmx.channels)
+print(dmx.frame)
