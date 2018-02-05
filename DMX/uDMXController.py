@@ -22,23 +22,30 @@ class Controller(Controller):
             self.run()
 
     def __send_data(self):
+        # Start loop
         self.__sending = True
         while self.__sending:
 
+            # Transmit frame
             self.udmx.send_multi_value(1, self.frame)
-            sleep(0.000001*92) # Minimum transmission break for DMX512
+
+            # Sleep (Minimum transmission break for DMX512)
+            sleep(0.000001*92)
 
         return
 
     def close(self, all_zero = False):
+        # Stop the threaded loop
         self.__sending = False
 
+        # Send blank frame if wanted
         if all_zero:
             self.udmx.send_multi_value(1, [0 for v in range(0, 512)])
+
+        # Close device
         self.udmx.close()
 
-        return
-
     def run(self):
+        # Create the thread and transmit data
         Thread(target=self.__send_data).start()
         return

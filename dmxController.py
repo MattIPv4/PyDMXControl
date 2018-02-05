@@ -25,4 +25,5 @@ for f in dmx.get_fixtures_by_profile(Stairville_LED_Par_36):
 # Test if send is threaded
 sleep(2)
 
+# Close the controller once we're done
 dmx.close()
