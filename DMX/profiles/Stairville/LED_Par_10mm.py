@@ -1,4 +1,4 @@
-from profiles.defaults.Fixture import Fixture
+from DMX.profiles.defaults.Fixture import Fixture
 
 
 class Stairville_LED_Par_10mm(Fixture):

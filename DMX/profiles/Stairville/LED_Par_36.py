@@ -1,4 +1,4 @@
-from profiles.defaults.Vdim import Vdim
+from DMX.profiles.defaults.Vdim import Vdim
 
 
 class Stairville_LED_Par_36(Vdim):
