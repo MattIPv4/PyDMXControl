@@ -21,3 +21,8 @@ sleep(2)
 dmx.get_fixture(1).set_channels(0, 50, 255, None, None, None, 255)
 for f in dmx.get_fixtures_by_profile(Stairville_LED_Par_36):
     f.set_channels(None, 0, 50, 255, None, 255)
+
+# Test if send is threaded
+sleep(2)
+
+dmx.close()
