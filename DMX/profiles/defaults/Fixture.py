@@ -84,8 +84,15 @@ class Fixture:
         channel = 1
         if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0: channel = int(
             kwargs['start'])
-        for value in args:
-            if value is not None:
-                if str(value).isdigit():
-                    self.set_channel(channel, int(value))
-            channel += 1
+
+        def apply_values(values, channel = 1):
+            for value in values:
+                if value is not None:
+                    if isinstance(value, list):
+                        channel = apply_values(value, channel)
+                    if str(value).isdigit():
+                        self.set_channel(channel, int(value))
+                channel += 1
+            return channel
+
+        apply_values(args)

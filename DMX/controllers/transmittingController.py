@@ -1,16 +1,13 @@
 from threading import Thread
+from typing import List
 
-from DMX.Controller import Controller
-from pyudmx import pyudmx
+from DMX.controllers.Controller import Controller
 
 
-class Controller(Controller):
+class transmittingController(Controller):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.udmx = pyudmx.uDMXDevice()
-        self.udmx.open()
 
         self.__sending = True
         self.__auto = True
@@ -21,12 +18,15 @@ class Controller(Controller):
         if self.__auto:
             self.run()
 
-    def __send_data(self):
+    def _send__data(self, data: List[int]):
+        pass
+
+    def __send_data_loop(self):
         # Start loop
         self.__sending = True
         while self.__sending:
             # Transmit frame
-            self.udmx.send_multi_value(1, self.frame)
+            self._send__data(self.frame)
 
             # Sleep (Minimum transmission break for DMX512)
             self.sleep(0.000001 * 92)
@@ -39,12 +39,9 @@ class Controller(Controller):
 
         # Send blank frame if wanted
         if all_zero:
-            self.udmx.send_multi_value(1, [0 for v in range(0, 512)])
-
-        # Close device
-        self.udmx.close()
+            self._send__data([0 for v in range(0, 512)])
 
     def run(self):
         # Create the thread and transmit data
-        Thread(target=self.__send_data).start()
+        Thread(target=self.__send_data_loop).start()
         return
