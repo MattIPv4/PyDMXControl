@@ -1,7 +1,7 @@
-from DMX.profiles.defaults.Fixture import Fixture
+from DMX.profiles.defaults import Fixture
 
 
-class Stairville_LED_Par_10mm(Fixture):
+class LED_Par_10mm(Fixture):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

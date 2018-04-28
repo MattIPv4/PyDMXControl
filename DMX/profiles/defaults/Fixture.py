@@ -1,4 +1,4 @@
-import warnings
+from warnings import warn
 
 
 class Fixture:
@@ -15,29 +15,29 @@ class Fixture:
         return "Fixture of type {} using channels {}->{} ({}).".format(
             self.__class__.__name__,
             self.__start_channel,
-            (self.__start_channel+len(self.__channels)-1),
+            (self.__start_channel + len(self.__channels) - 1),
             len(self.__channels)
         )
 
     def _register_channel(self, name: str) -> int:
         if self.__start_channel + len(self.__channels) > 512:
-            warnings.warn('Not enough space in universe for channel `{}`.'.format(name))
+            warn('Not enough space in universe for channel `{}`.'.format(name))
             return -1
 
         used_names = [f['name'] for f in self.__channels]
         if name.lower().strip() in used_names:
-            warnings.warn('Name `{}` already in use for channel.'.format(name))
+            warn('Name `{}` already in use for channel.'.format(name))
             return -1
 
         self.__channels.append({'name': name, 'value': 0})
-        return len(self.__channels)-1
+        return len(self.__channels) - 1
 
     def _set_id(self, id: int) -> None:
         self.__id = id
 
     def _valid_channel_value(self, value: int) -> bool:
         if value < 0 or value > 255:
-            warnings.warn('DMX value must be between 0 and 255.')
+            warn('DMX value must be between 0 and 255.')
             return False
         return True
 
@@ -56,7 +56,7 @@ class Fixture:
         channel = str(channel)
 
         if channel.isdigit():
-            channel = int(channel)-1
+            channel = int(channel) - 1
             if channel < len(self.__channels):
                 return channel
 
@@ -82,7 +82,8 @@ class Fixture:
 
     def set_channels(self, *args, **kwargs) -> None:
         channel = 1
-        if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0: channel = int(kwargs['start'])
+        if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0: channel = int(
+            kwargs['start'])
         for value in args:
             if value is not None:
                 if str(value).isdigit():

@@ -1,6 +1,6 @@
-from DMX.uDMXController import Controller
-from DMX.profiles.Stairville.LED_Par_10mm import Stairville_LED_Par_10mm
-from DMX.profiles.Stairville.LED_Par_36 import Stairville_LED_Par_36
+# from DMX.uDMXController import Controller
+from DMX.Controller import Controller
+from DMX.profiles.Stairville import Stairville_LED_Par_10mm, Stairville_LED_Par_36
 
 from time import sleep
 

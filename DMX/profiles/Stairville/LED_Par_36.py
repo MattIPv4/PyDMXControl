@@ -1,7 +1,7 @@
-from DMX.profiles.defaults.Vdim import Vdim
+from DMX.profiles.defaults import Vdim
 
 
-class Stairville_LED_Par_36(Vdim):
+class LED_Par_36(Vdim):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
