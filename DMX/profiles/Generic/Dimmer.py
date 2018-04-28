@@ -1,4 +1,4 @@
-from DMX.profiles.defaults.Fixture import Fixture
+from DMX.profiles.defaults import Fixture
 
 
 class Dimmer(Fixture):

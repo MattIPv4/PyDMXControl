@@ -1,3 +1,8 @@
+from time import sleep
+from typing import Type
+from DMX.profiles.defaults import Fixture
+
+
 class Controller:
 
     def __init__(self, *, ltp=False, dynamic_frame=False):
@@ -11,7 +16,11 @@ class Controller:
         self.__frame = []
         self.__dynamic_frame = dynamic_frame
 
-    def add_fixture(self, fixture):
+    def add_fixture(self, fixture: Type[Fixture]) -> Type[Fixture]:
+        # Handle auto inserting
+        if isinstance(fixture, type):
+            fixture = fixture(self.next_channel)
+
         # Get the next id
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
 
@@ -57,6 +66,29 @@ class Controller:
         # Return any matches
         return matches
 
+    def sleep(self, seconds: float = 1) -> None:
+        # Hold
+        sleep(seconds)
+
+        # We're done
+        return None
+
+    def sleep_till_enter(self) -> None:
+        # Hold
+        input("Press Enter to end sleep...")
+
+        # We're done
+        return None
+
+    def sleep_till_interrupt(self) -> None:
+        # Hold
+        try:
+            while True:
+                sleep(0.000001)
+        except KeyboardInterrupt:
+            # We're done
+            return None
+
     @property
     def channels(self):
         channels = {}
@@ -64,7 +96,7 @@ class Controller:
         # Channels for each registered fixture
         for chans in [v.channels for v in self.__fixtures.values()]:
             # Channels in this fixture
-            for chanid,chanval in chans.items():
+            for chanid, chanval in chans.items():
                 chanval = chanval['value']
                 # If channel id already set
                 if chanid in channels.keys():
@@ -87,13 +119,13 @@ class Controller:
         # Generate frame
         self.__frame = [0] * 512
         if self.__dynamic_frame:
-            self.__frame = [0] * (self.next_channel-1)
+            self.__frame = [0] * (self.next_channel - 1)
 
         # Get all channels values
-        for key,val in self.channels.items():
+        for key, val in self.channels.items():
             # If channel in frame
-            if key-1 < len(self.__frame):
-                self.__frame[key-1] = val
+            if key - 1 < len(self.__frame):
+                self.__frame[key - 1] = val
 
         # Return populated frame
         return self.__frame
@@ -104,7 +136,7 @@ class Controller:
         channels = list(self.channels.keys())
 
         # Return next channel
-        return max(channels or [0])+1
+        return max(channels or [0]) + 1
 
     def run(self, *args, **kwargs):
         # Method used in transmitting controllers
