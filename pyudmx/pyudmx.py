@@ -24,7 +24,8 @@
 # dev.close()
 #
 
-import usb # the pyusb module is required to be in the current environment
+import usb  # the pyusb module is required to be in the current environment
+
 
 class uDMXDevice:
     def __init__(self):
@@ -111,7 +112,7 @@ class uDMXDevice:
         """
 
         n = self._dev.ctrl_transfer(bmRequestType, cmd, wValue=value_or_length, wIndex=channel - 1,
-            data_or_wLength=data_or_length)
+                                    data_or_wLength=data_or_length)
 
         # For a single value transfer the return value is the data_or_length value.
         # For a multi-value transfer the return value is the number of values transfer
@@ -143,5 +144,5 @@ class uDMXDevice:
         else:
             ba = bytearray(values)
         n = self._send_control_message(SetMultiChannel, value_or_length=len(ba),
-            channel=channel, data_or_length=ba)
+                                       channel=channel, data_or_length=ba)
         return n

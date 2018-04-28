@@ -9,4 +9,4 @@ class Custom(Fixture):
         super().__init__(*args, **kwargs)
 
         for _ in range(chans):
-            self._register_channel(str(_+1))
+            self._register_channel(str(_ + 1))

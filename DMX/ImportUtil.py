@@ -1,3 +1,8 @@
+"""
+Not used anymore. This does work as intended, but PyCharm doesn't like it when you import stuff this util has imported.
+"""
+
+
 class ImportUtil:
 
     @staticmethod

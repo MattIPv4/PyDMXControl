@@ -1,5 +1,6 @@
 from time import sleep
 from typing import Type
+
 from DMX.profiles.defaults import Fixture
 
 
