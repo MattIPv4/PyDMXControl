@@ -34,6 +34,9 @@ class transmittingController(Controller):
         return
 
     def close(self, all_zero=False):
+        # Parent
+        super().close()
+
         # Stop the threaded loop
         self.__sending = False
 

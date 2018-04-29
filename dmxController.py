@@ -31,7 +31,7 @@ for f in dmx.get_fixtures_by_profile(LED_Par_36):
     f.set_channels(None, bluegreen, None, 255)
 
 # Test if send is threaded
-dmx.sleep_till_interrupt()
+dmx.sleep_till_enter()
 
 # Close the controller once we're done
 dmx.close()

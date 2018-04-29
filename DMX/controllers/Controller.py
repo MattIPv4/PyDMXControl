@@ -209,5 +209,8 @@ class Controller:
         pass
 
     def close(self, *args, **kwargs):
+        # Stop the ticker
+        self.ticker.stop()
+
         # Method used in transmitting controllers
         pass
