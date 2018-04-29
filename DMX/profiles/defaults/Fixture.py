@@ -1,3 +1,4 @@
+from typing import Union, List
 from warnings import warn
 
 
@@ -80,10 +81,10 @@ class Fixture:
         self.__channels[channel]['value'] = value
         return True
 
-    def set_channels(self, *args, **kwargs) -> None:
+    def set_channels(self, *args: Union[int, List[int], None], **kwargs) -> None:
         channel = 1
-        if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0: channel = int(
-            kwargs['start'])
+        if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0:
+            channel = int(kwargs['start'])
 
         def apply_values(values, channel=1):
             for value in values:
@@ -95,4 +96,4 @@ class Fixture:
                 channel += 1
             return channel
 
-        apply_values(args)
+        apply_values(args, channel)
