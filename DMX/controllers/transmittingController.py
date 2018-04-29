@@ -29,7 +29,7 @@ class transmittingController(Controller):
             self._send__data(self.frame)
 
             # Sleep (Minimum transmission break for DMX512)
-            self.sleep(0.000001 * 92)
+            self.sleep(Controller.DMX_min_wait)
 
         return
 
