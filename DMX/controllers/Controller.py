@@ -1,7 +1,7 @@
 from threading import Thread
 from time import sleep
 from time import time
-from typing import Type, Callable
+from typing import Type, Callable, List, Union, Dict
 
 from DMX.profiles.defaults import Fixture
 
@@ -110,7 +110,7 @@ class Controller:
         # Return it wasn't found
         return False
 
-    def get_fixture(self, fixture_id: int):
+    def get_fixture(self, fixture_id: int) -> Union[Type[Fixture], None]:
         # Check if the id exists
         if fixture_id in self.__fixtures.keys():
             # Return the found fixture
@@ -119,7 +119,7 @@ class Controller:
         # Give up
         return None
 
-    def get_fixtures_by_profile(self, profile) -> list:
+    def get_fixtures_by_profile(self, profile) -> List[Type[Fixture]]:
         matches = []
 
         # Iterate over each fixture id
@@ -156,7 +156,7 @@ class Controller:
             return None
 
     @property
-    def channels(self):
+    def channels(self) -> Dict[int, int]:
         channels = {}
 
         # Channels for each registered fixture
@@ -181,7 +181,7 @@ class Controller:
         return channels
 
     @property
-    def frame(self):
+    def frame(self) -> List[int]:
         # Generate frame
         self.__frame = [0] * 512
         if self.__dynamic_frame:
@@ -197,7 +197,7 @@ class Controller:
         return self.__frame
 
     @property
-    def next_channel(self):
+    def next_channel(self) -> int:
         # Get all channels
         channels = list(self.channels.keys())
 

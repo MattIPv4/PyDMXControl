@@ -12,12 +12,17 @@ dmx.add_fixture(LED_Par_36)
 dmx.add_fixture(LED_Par_36)
 dmx.add_fixture(LED_Par_36)
 
+
 # Test callbacks
 def callback1():
     print(1)
+
+
 def callback2():
     print(2)
-dmx.ticker.set_interval(500) # twice per second
+
+
+dmx.ticker.set_interval(500)  # twice per second
 dmx.ticker.set_callback(callback1)
 dmx.sleep(1)
 dmx.ticker.add_callback(callback2)

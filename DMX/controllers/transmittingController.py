@@ -18,7 +18,7 @@ class transmittingController(Controller):
         if self.__auto:
             self.run()
 
-    def _send__data(self, data: List[int]):
+    def _send_data(self, data: List[int]):
         pass
 
     def __send_data_loop(self):
@@ -26,7 +26,7 @@ class transmittingController(Controller):
         self.__sending = True
         while self.__sending:
             # Transmit frame
-            self._send__data(self.frame)
+            self._send_data(self.frame)
 
             # Sleep (Minimum transmission break for DMX512)
             self.sleep(Controller.DMX_min_wait)
@@ -42,7 +42,7 @@ class transmittingController(Controller):
 
         # Send blank frame if wanted
         if all_zero:
-            self._send__data([0 for v in range(0, 512)])
+            self._send_data([0 for v in range(0, 512)])
 
     def run(self):
         # Create the thread and transmit data

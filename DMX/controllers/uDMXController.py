@@ -10,5 +10,5 @@ class uDMXController(transmittingController):
 
         super().__init__(*args, **kwargs)
 
-    def _send__data(self, data):
+    def _send_data(self, data):
         self.udmx.send_multi_value(1, data)
