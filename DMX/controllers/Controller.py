@@ -86,10 +86,10 @@ class Controller:
         self.ticker = Ticker()
         self.ticker.start()
 
-    def add_fixture(self, fixture: Type[Fixture]) -> Type[Fixture]:
+    def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
         if isinstance(fixture, type):
-            fixture = fixture(self.next_channel)
+            fixture = fixture(self.next_channel, *args, **kwargs)
 
         # Get the next id
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
@@ -114,7 +114,7 @@ class Controller:
         # Return it wasn't found
         return False
 
-    def get_fixture(self, fixture_id: int) -> Union[Type[Fixture], None]:
+    def get_fixture(self, fixture_id: int) -> Union[Fixture, None]:
         # Check if the id exists
         if fixture_id in self.__fixtures.keys():
             # Return the found fixture
@@ -123,13 +123,26 @@ class Controller:
         # Give up
         return None
 
-    def get_fixtures_by_profile(self, profile) -> List[Type[Fixture]]:
+    def get_fixtures_by_profile(self, profile: Type[Fixture]) -> List[Fixture]:
         matches = []
 
         # Iterate over each fixture id
         for fixture_id in self.__fixtures.keys():
             # If it matches the given profile
             if isinstance(self.__fixtures[fixture_id], profile):
+                # Store
+                matches.append(self.__fixtures[fixture_id])
+
+        # Return any matches
+        return matches
+
+    def get_fixtures_by_name(self, name: str) -> List[Fixture]:
+        matches = []
+
+        # Iterate over each fixture id
+        for fixture_id in self.__fixtures.keys():
+            # If it matches the given name
+            if self.__fixtures[fixture_id].name.lower() == name.lower():
                 # Store
                 matches.append(self.__fixtures[fixture_id])
 

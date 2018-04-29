@@ -45,6 +45,7 @@ class Colors(list, Enum):
 
     Black = [000, 000, 000]
     White = [255, 255, 255]
+    Warm = [255, 127, 78]
     Red = [255, 000, 000]
     Amber = [255, 127, 000]
     Yellow = [255, 255, 000]

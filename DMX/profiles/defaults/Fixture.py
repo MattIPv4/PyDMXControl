@@ -4,13 +4,14 @@ from warnings import warn
 
 class Fixture:
 
-    def __init__(self, start_channel):
+    def __init__(self, start_channel, *, name: str = ""):
         if start_channel < 1 or start_channel > 512:
             raise ValueError('Start Channel must be between 1 and 512.')
 
         self.__start_channel = start_channel
         self.__channels = []
         self.__id = 0
+        self.__name = name
 
     def __str__(self):
         return "Fixture of type {} using channels {}->{} ({}).".format(
@@ -36,6 +37,9 @@ class Fixture:
     def _set_id(self, id: int) -> None:
         self.__id = id
 
+    def _set_name(self, name: str) -> None:
+        self.__name = name
+
     def _valid_channel_value(self, value: int) -> bool:
         if value < 0 or value > 255:
             warn('DMX value must be between 0 and 255.')
@@ -45,6 +49,10 @@ class Fixture:
     @property
     def id(self) -> int:
         return self.__id
+
+    @property
+    def name(self) -> str:
+        return self.__name
 
     @property
     def channels(self) -> dict:
