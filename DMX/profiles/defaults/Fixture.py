@@ -43,11 +43,11 @@ class Fixture:
         return True
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self.__id
 
     @property
-    def channels(self):
+    def channels(self) -> dict:
         channels = {}
         for i, chan in enumerate(self.__channels):
             channels[self.__start_channel + i] = {'name': chan['name'], 'value': self.get_channel_value(i)}
@@ -86,14 +86,14 @@ class Fixture:
         if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0:
             channel = int(kwargs['start'])
 
-        def apply_values(values, channel=1):
+        def apply_values(self, values, channel=1):
             for value in values:
                 if value is not None:
                     if isinstance(value, list):
-                        channel = apply_values(value, channel)
-                    if str(value).isdigit():
+                        channel = apply_values(self, value, channel)
+                    elif str(value).isdigit():
                         self.set_channel(channel, int(value))
                 channel += 1
-            return channel
+            return channel-1
 
-        apply_values(args, channel)
+        apply_values(self, args, channel)

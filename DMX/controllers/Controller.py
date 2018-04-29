@@ -16,6 +16,7 @@ class Ticker:
         self.__last = self.__millis_now()
         self.__callbacks = []
         self.__ticking = False
+        self.thread = None
 
     def __ticker(self):
         # If diff in milliseconds is interval
@@ -37,6 +38,8 @@ class Ticker:
             # Call ticker and sleep DMX delay time
             self.__ticker()
             sleep(Controller.DMX_min_wait)
+
+        return
 
     def set_interval(self, milliseconds: float):
         self.__interval = milliseconds
@@ -60,12 +63,13 @@ class Ticker:
 
     def start(self):
         # Create the thread and run loop
-        Thread(target=self.__ticker__loop).start()
-        return
+        self.thread = Thread(target=self.__ticker__loop)
+        self.thread.daemon = True
+        self.thread.start()
 
 
 class Controller:
-    DMX_min_wait = 0.000001 * 92
+    DMX_min_wait = (0.000001 * 92) + 0.000002
 
     def __init__(self, *, ltp=False, dynamic_frame=False):
         # Store all registered fixtures
@@ -155,6 +159,21 @@ class Controller:
             # We're done
             return None
 
+    def get_frame(self) -> List[int]:
+        # Generate frame
+        self.__frame = [0] * 512
+        if self.__dynamic_frame:
+            self.__frame = [0] * (self.next_channel - 1)
+
+        # Get all channels values
+        for key, val in self.channels.items():
+            # If channel in frame
+            if key - 1 < len(self.__frame):
+                self.__frame[key - 1] = val
+
+        # Return populated frame
+        return self.__frame
+
     @property
     def channels(self) -> Dict[int, int]:
         channels = {}
@@ -181,22 +200,6 @@ class Controller:
         return channels
 
     @property
-    def frame(self) -> List[int]:
-        # Generate frame
-        self.__frame = [0] * 512
-        if self.__dynamic_frame:
-            self.__frame = [0] * (self.next_channel - 1)
-
-        # Get all channels values
-        for key, val in self.channels.items():
-            # If channel in frame
-            if key - 1 < len(self.__frame):
-                self.__frame[key - 1] = val
-
-        # Return populated frame
-        return self.__frame
-
-    @property
     def next_channel(self) -> int:
         # Get all channels
         channels = list(self.channels.keys())
@@ -211,6 +214,6 @@ class Controller:
     def close(self, *args, **kwargs):
         # Stop the ticker
         self.ticker.stop()
+        print("CLOSE: ticker stopped")
 
-        # Method used in transmitting controllers
-        pass
+        return

@@ -18,7 +18,7 @@ class Colors(list, Enum):
             res = val1 + val2
             res = min(res, 255)
             res = max(res, 0)
-            result.append(res)
+            result.append(int(res))
 
         return result
 
@@ -39,7 +39,7 @@ class Colors(list, Enum):
             res = val1 + val2
             res = min(res, 255)
             res = max(res, 0)
-            result.append(res)
+            result.append(int(res))
 
         return result
 

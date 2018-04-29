@@ -10,5 +10,15 @@ class uDMXController(transmittingController):
 
         super().__init__(*args, **kwargs)
 
+    def close(self):
+        # uDMX
+        self.udmx.close()
+        print("CLOSE: uDMX closed")
+
+        # Parent
+        super().close()
+
+        return
+
     def _send_data(self, data):
         self.udmx.send_multi_value(1, data)
