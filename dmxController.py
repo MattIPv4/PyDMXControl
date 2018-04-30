@@ -39,13 +39,13 @@ standard_lights()
 # Timed lights
 last_state = None
 times = [
-    [1530, 2135],  # Monday
-    [1530, 2135],  # Tuesday
-    [1530, 2135],  # Wednesday
-    [1530, 2135],  # Thursday
-    [1530, 2205],  # Friday
-    [900, 2205],  # Saturday
-    [900, 2135],  # Sunday
+    [1510, 2130],  # Monday
+    [1550, 2130],  # Tuesday
+    [1550, 2130],  # Wednesday
+    [1550, 2130],  # Thursday
+    [1510, 2200],  # Friday
+    [900, 2200],  # Saturday
+    [900, 2130],  # Sunday
 ]
 
 
