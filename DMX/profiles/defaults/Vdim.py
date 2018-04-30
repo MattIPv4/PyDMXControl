@@ -17,9 +17,13 @@ class Vdim(Fixture):
         if vdim: self.__vdims.append(super_call)
         return super_call
 
-    def get_channel_value(self, channel: int) -> int:
+    def get_channel_value(self, channel: [str, int]) -> int:
         super_call = super().get_channel_value(channel)
-        if super_call == -1: return -1
+        if super_call == -1:
+            channel = str(channel).lower().strip()
+            if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel-1):
+                return self.__vdim
+            return -1
 
         # Apply vdim to value if applicable
         if channel in self.__vdims: super_call = super_call * (self.__vdim / 255)
@@ -31,7 +35,7 @@ class Vdim(Fixture):
 
         # Allow setting of vdim
         channel = str(channel).lower().strip()
-        if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(len(self.channels) + 1):
+        if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel):
             return self.set_vdim(value)
 
         return False

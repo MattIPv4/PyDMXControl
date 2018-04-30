@@ -149,6 +149,10 @@ class Controller:
         # Return any matches
         return matches
 
+    def get_all_fixtures(self) -> List[Fixture]:
+        # Return all the fixtures
+        return list(self.__fixtures.values())
+
     def sleep(self, seconds: float = 1) -> None:
         # Hold
         sleep(seconds)
@@ -196,6 +200,7 @@ class Controller:
             # Channels in this fixture
             for chanid, chanval in chans.items():
                 chanval = chanval['value']
+                if chanval == -1: chanval = 0
                 # If channel id already set
                 if chanid in channels.keys():
                     if self.__ltp:
@@ -219,6 +224,37 @@ class Controller:
 
         # Return next channel
         return max(channels or [0]) + 1
+
+    def debug_control(self):
+        # DMX debug control
+        print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.next_channel-1))
+        while True:
+
+            # Fixture selection / exit dmx debug
+            fixture = input("[DMX Debug] Fixture ID/Name (or 'exit'): ").strip()
+            if fixture == 'exit':
+                break
+            if not fixture.isdigit():
+                fixture = self.get_fixtures_by_name(fixture)
+                if fixture: fixture = fixture[0]
+            else:
+                fixture = self.get_fixture(int(fixture))
+            if not fixture:
+                continue
+
+            # Fixture debug control
+            print("[Fixture Debug] Fixture selected:", fixture)
+            while True:
+
+                # Channel selection / exit fixture debug
+                channel = input("[Fixture Debug] Channel Number/Name (or 'exit'): ").strip()
+                if channel == 'exit':
+                    break
+                value = input("[Fixture Debug] Channel Value: ").strip()
+                if not value.isdigit():
+                    continue
+                value = int(value)
+                fixture.set_channel(channel, value)
 
     def run(self, *args, **kwargs):
         # Method used in transmitting controllers
