@@ -69,7 +69,7 @@ class Ticker:
 
 
 class Controller:
-    DMX_min_wait = (0.000001 * 92) + 0.000002
+    DMX_min_wait = 0.000001 * 92
 
     def __init__(self, *, ltp=False, dynamic_frame=False):
         # Store all registered fixtures
