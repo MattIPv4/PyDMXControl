@@ -12,6 +12,7 @@ class Fixture:
         self.__channels = []
         self.__id = 0
         self.__name = name
+        self.__channel_aliases = {}
 
     def __str__(self):
         return "Fixture of type {} using channels {}->{} ({}).".format(
@@ -31,8 +32,26 @@ class Fixture:
             warn('Name `{}` already in use for channel.'.format(name))
             return -1
 
-        self.__channels.append({'name': name, 'value': 0})
+        self.__channels.append({'name': name.lower().strip(), 'value': 0})
         return len(self.__channels) - 1
+
+    def _register_channel_aliases(self, channel: str, *aliases: str) -> bool:
+        if not aliases:
+            return False
+
+        channel = channel.lower().strip()
+
+        used_names = [f['name'] for f in self.__channels]
+        if channel not in used_names:
+            warn('Channel name `{}` is not registered.'.format(channel))
+            return False
+
+        for alias in aliases:
+            if alias in self.__channel_aliases.keys():
+                warn('Channel alias `{}` already in use for channel `{}`.'.format(alias, self.__channel_aliases[alias]))
+                continue
+            self.__channel_aliases[alias] = channel
+        return True
 
     def _set_id(self, id: int) -> None:
         self.__id = id
@@ -69,8 +88,12 @@ class Fixture:
             if channel < len(self.__channels):
                 return channel
 
+        channel = str(channel).lower().strip()
+        if channel in self.__channel_aliases.keys():
+            channel = self.__channel_aliases[channel]
+
         for i, chan in enumerate(self.__channels):
-            if chan['name'] == str(channel).lower().strip():
+            if chan['name'] == channel:
                 return i
 
         return -1

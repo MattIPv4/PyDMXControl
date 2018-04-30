@@ -7,3 +7,4 @@ class Dimmer(Fixture):
         super().__init__(*args, **kwargs)
 
         self._register_channel('dimmer')
+        self._register_channel_aliases('dimmer', 'dim', 'd')
