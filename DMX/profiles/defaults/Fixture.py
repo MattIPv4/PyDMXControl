@@ -18,7 +18,8 @@ class Fixture:
         self.__channel_aliases = {}
 
     def __str__(self):
-        return "Fixture ('{}') of type {} using channels {}->{} ({}).".format(
+        return "Fixture #{} ('{}') of type {} using channels {}->{} ({}).".format(
+            self.id,
             self.name,
             self.__class__.__name__,
             self.__start_channel,
