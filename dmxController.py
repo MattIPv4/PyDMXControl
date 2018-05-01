@@ -66,7 +66,7 @@ def callback():
             last_state = 1
     else:
         if last_state != 0:
-            on()
+            off()
             last_state = 0
 
 
