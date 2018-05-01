@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Dict, Tuple
 
 
 class Colors(list, Enum):
@@ -42,6 +42,22 @@ class Colors(list, Enum):
             result.append(int(res))
 
         return result
+
+    @staticmethod
+    def to_dict(colors: List[int]) -> Dict[str, int]:
+        """ Assumes RGBWA """
+        keys = list('RGBWA')
+        result = {}
+        for i in range(len(colors)):
+            if i < len(keys):
+                result[keys[i]] = colors[i]
+        return result
+
+    @staticmethod
+    def to_tuples(colors: List[int]) -> List[Tuple[str, int]]:
+        """ Assumes RGBWA """
+        dict = Colors.to_dict(colors)
+        return [(k, v) for k, v in dict.items()]
 
     Black = [000, 000, 000]
     White = [255, 255, 255]

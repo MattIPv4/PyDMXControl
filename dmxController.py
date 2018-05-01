@@ -15,12 +15,29 @@ dmx.add_fixture(LED_Par_36, name="FR")
 dmx.add_fixture(LED_Par_36, name="CR")
 
 
+# Define all the methods the callback will use
 def standard_lights():
-    dmx.get_fixtures_by_name("Flood")[0].set_channels(Colors.White, 0, 0, 0, 0)
-    dmx.get_fixtures_by_name("CL")[0].set_channels(0, Colors.Warm, 0, 0)
-    dmx.get_fixtures_by_name("FR")[0].set_channels(0, Colors.Warm, 0, 0)
-    dmx.get_fixtures_by_name("CR")[0].set_channels(0, Colors.Blue, 0, 0)
-    dmx.get_fixtures_by_name("FL")[0].set_channels(0, Colors.Blue, 0, 0)
+    dmx.get_fixtures_by_name("Flood")[0].set_channels(Colors.Black, 0, 0, 0, 0)
+    dmx.get_fixtures_by_name("CL")[0].set_channels(0, Colors.Black, 0, 0)
+    dmx.get_fixtures_by_name("FR")[0].set_channels(0, Colors.Black, 0, 0)
+    dmx.get_fixtures_by_name("CR")[0].set_channels(0, Colors.Black, 0, 0)
+    dmx.get_fixtures_by_name("FL")[0].set_channels(0, Colors.Black, 0, 0)
+
+
+def normal():
+    dmx.get_fixtures_by_name("Flood")[0].anim(2000, *Colors.to_tuples(Colors.White))
+    dmx.get_fixtures_by_name("CL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("FR")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("CR")[0].anim(2000, *Colors.to_tuples(Colors.Blue))
+    dmx.get_fixtures_by_name("FL")[0].anim(2000, *Colors.to_tuples(Colors.Blue))
+
+
+def dimmer():
+    dmx.get_fixtures_by_name("Flood")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("CL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("FR")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("CR")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("FL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
 
 
 def on():
@@ -38,6 +55,7 @@ standard_lights()
 
 # Timed lights
 last_state = None
+last_state_type = None
 times = [
     [(700, 800), (1510, 2130)],  # Monday
     [(700, 800), (1550, 2130)],  # Tuesday
@@ -50,7 +68,7 @@ times = [
 
 
 def callback():
-    global last_state, times
+    global last_state, last_state_type, times
 
     time_limit = times[datetime.today().weekday()]
     time = int(datetime.today().strftime('%H%M'))
@@ -69,7 +87,17 @@ def callback():
             off()
             last_state = 0
 
+    if time >= 2100 or time <= 700:
+        if last_state_type != 1:
+            dimmer()
+            last_state_type = 1
+    else:
+        if last_state_type != 0:
+            normal()
+            last_state_type = 0
 
+
+# Enable the callback
 dmx.ticker.set_interval(500)
 dmx.ticker.set_callback(callback)
 
