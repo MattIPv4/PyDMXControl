@@ -1,3 +1,5 @@
+from typing import Union
+
 from DMX.profiles.defaults.Fixture import Fixture
 
 
@@ -17,11 +19,11 @@ class Vdim(Fixture):
         if vdim: self.__vdims.append(super_call)
         return super_call
 
-    def get_channel_value(self, channel: [str, int]) -> int:
+    def get_channel_value(self, channel: Union[str, int]) -> int:
         super_call = super().get_channel_value(channel)
         if super_call == -1:
             channel = str(channel).lower().strip()
-            if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel-1):
+            if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel - 1):
                 return self.__vdim
             return -1
 
@@ -29,7 +31,7 @@ class Vdim(Fixture):
         if channel in self.__vdims: super_call = super_call * (self.__vdim / 255)
         return int(super_call)
 
-    def set_channel(self, channel: [str, int], value: int) -> bool:
+    def set_channel(self, channel: Union[str, int], value: int) -> bool:
         super_call = super().set_channel(channel, value)
         if super_call is True: return True
 

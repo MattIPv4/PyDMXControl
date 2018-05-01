@@ -1,7 +1,7 @@
 from threading import Thread
 from time import sleep
 from time import time
-from typing import Union, List
+from typing import Union, List, Tuple
 from warnings import warn
 
 
@@ -89,7 +89,7 @@ class Fixture:
             channels[self.__start_channel + i] = {'name': chan['name'], 'value': self.get_channel_value(i)}
         return channels
 
-    def _get_channel_id(self, channel: [str, int]) -> int:
+    def _get_channel_id(self, channel: Union[str, int]) -> int:
         channel = str(channel)
 
         if channel.isdigit():
@@ -153,7 +153,7 @@ class Fixture:
 
         return
 
-    def dim(self, target_value: int, milliseconds: int, channel: [str, int] = 'dimmer') -> 'Fixture':
+    def dim(self, target_value: int, milliseconds: int, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
         current = self.get_channel_value(self._get_channel_id(channel))
@@ -164,3 +164,7 @@ class Fixture:
         thread.start()
 
         return self
+
+    def anim(self, milliseconds: int, *channels_values: Tuple[Union[str, int], int]):
+        for channel_value in channels_values:
+            self.dim(channel_value[1], milliseconds, channel_value[0])

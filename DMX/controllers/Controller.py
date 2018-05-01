@@ -227,7 +227,7 @@ class Controller:
 
     def debug_control(self):
         # DMX debug control
-        print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.next_channel-1))
+        print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.next_channel - 1))
         while True:
 
             # Fixture selection / exit dmx debug
@@ -254,7 +254,7 @@ class Controller:
                 if not value.isdigit():
                     continue
                 value = int(value)
-                fixture.set_channel(channel, value)
+                fixture.anim(1000, (channel, value))
 
     def run(self, *args, **kwargs):
         # Method used in transmitting controllers
