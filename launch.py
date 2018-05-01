@@ -46,6 +46,7 @@ if __name__ == "__main__":
         builder = ExtendedEnvBuilder(with_pip=True)
         builder.create("./venv")
 
-    run()
+    while True:
+        run()
 
     print("Bye!")
