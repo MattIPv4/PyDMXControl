@@ -254,7 +254,7 @@ class Controller:
                 if not value.isdigit():
                     continue
                 value = int(value)
-                fixture.anim(1000, (channel, value))
+                fixture.set_channel(channel, value)
 
     def run(self, *args, **kwargs):
         # Method used in transmitting controllers
