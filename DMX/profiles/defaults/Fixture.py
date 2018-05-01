@@ -141,24 +141,25 @@ class Fixture:
 
         return self
 
-    def __dim(self, current, target, millis):
+    def __dim(self, current, target, millis, channel):
         start = time() * 1000.0
         gap = target - current
 
         while (time() * 1000.0) - start <= millis:
             diff = gap * (((time() * 1000.0) - start) / millis)
-            self.set_channel('dimmer', int(current + diff))
+            self.set_channel(channel, int(current + diff))
             sleep(0.000001)
+        self.set_channel(channel, int(target))
 
         return
 
-    def dim(self, target_value: int, milliseconds: int) -> 'Fixture':
+    def dim(self, target_value: int, milliseconds: int, channel: [str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
-        current = self.get_channel_value(self._get_channel_id('dimmer'))
+        current = self.get_channel_value(self._get_channel_id(channel))
 
         # Create the thread and run loop
-        thread = Thread(target=self.__dim, args=(current, target_value, milliseconds))
+        thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))
         thread.daemon = True
         thread.start()
 
