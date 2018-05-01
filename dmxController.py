@@ -39,13 +39,13 @@ standard_lights()
 # Timed lights
 last_state = None
 times = [
-    [1510, 2130],  # Monday
-    [1550, 2130],  # Tuesday
-    [1550, 2130],  # Wednesday
-    [1550, 2130],  # Thursday
-    [1510, 2200],  # Friday
-    [900, 2200],  # Saturday
-    [900, 2130],  # Sunday
+    [(700, 800), (1510, 2130)],  # Monday
+    [(700, 800), (1550, 2130)],  # Tuesday
+    [(700, 800), (1550, 2130)],  # Wednesday
+    [(700, 800), (1550, 2130)],  # Thursday
+    [(700, 800), (1510, 2200)],  # Friday
+    [(900, 2200)],  # Saturday
+    [(900, 2130)],  # Sunday
 ]
 
 
@@ -54,14 +54,20 @@ def callback():
 
     time_limit = times[datetime.today().weekday()]
     time = int(datetime.today().strftime('%H%M'))
-    if time < time_limit[0] or time > time_limit[1]:
-        if last_state != 0:
-            off()
-            last_state = 0
-    else:
+
+    in_range = False
+    for range in time_limit:
+        if time >= range[0] and time <= range[1]:
+            in_range = True
+
+    if in_range:
         if last_state != 1:
             on()
             last_state = 1
+    else:
+        if last_state != 0:
+            on()
+            last_state = 0
 
 
 dmx.ticker.set_interval(500)
