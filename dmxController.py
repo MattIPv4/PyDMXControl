@@ -57,11 +57,11 @@ standard_lights()
 last_state = None
 last_state_type = None
 times = [
-    [(700, 800), (1510, 2130)],  # Monday
-    [(700, 800), (1550, 2130)],  # Tuesday
-    [(700, 800), (1550, 2130)],  # Wednesday
-    [(700, 800), (1550, 2130)],  # Thursday
-    [(700, 800), (1510, 2200)],  # Friday
+    [(700, 750), (1500, 2130)],  # Monday
+    [(700, 750), (1600, 2130)],  # Tuesday
+    [(700, 750), (1600, 2130)],  # Wednesday
+    [(700, 750), (1600, 2130)],  # Thursday
+    [(700, 750), (1330, 2200)],  # Friday
     [(900, 2200)],  # Saturday
     [(900, 2130)],  # Sunday
 ]
@@ -87,7 +87,7 @@ def callback():
             off()
             last_state = 0
 
-    if time >= 2100 or time <= 700:
+    if time >= 2100 or time <= 715:
         if last_state_type != 1:
             dimmer()
             last_state_type = 1
