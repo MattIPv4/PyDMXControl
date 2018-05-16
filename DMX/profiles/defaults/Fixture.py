@@ -1,8 +1,21 @@
+from datetime import datetime
 from threading import Thread
 from time import sleep
 from time import time
 from typing import Union, List, Tuple
 from warnings import warn
+
+
+class Channel:
+
+    def __init__(self, name: str):
+        self.name = name
+        self.value = 0
+        self.updated = datetime.utcnow()
+
+    def set_value(self, value: int):
+        self.value = value
+        self.updated = datetime.utcnow()
 
 
 class Fixture:
@@ -32,12 +45,13 @@ class Fixture:
             warn('Not enough space in universe for channel `{}`.'.format(name))
             return -1
 
-        used_names = [f['name'] for f in self.__channels]
+        used_names = [f.name for f in self.__channels]
+        used_names.extend([f for f in self.__channel_aliases.keys()])
         if name.lower().strip() in used_names:
-            warn('Name `{}` already in use for channel.'.format(name))
+            warn('Name `{}` already in use for channel (or alias).'.format(name))
             return -1
 
-        self.__channels.append({'name': name.lower().strip(), 'value': 0})
+        self.__channels.append(Channel(name.lower().strip()))
         return len(self.__channels) - 1
 
     def _register_channel_aliases(self, channel: str, *aliases: str) -> bool:
@@ -46,7 +60,7 @@ class Fixture:
 
         channel = channel.lower().strip()
 
-        used_names = [f['name'] for f in self.__channels]
+        used_names = [f.name for f in self.__channels]
         if channel not in used_names:
             warn('Channel name `{}` is not registered.'.format(channel))
             return False
@@ -119,7 +133,7 @@ class Fixture:
         if channel == -1:
             return self
 
-        self.__channels[channel]['value'] = value
+        self.__channels[channel].set_value(value)
         return self
 
     def set_channels(self, *args: Union[int, List[int], None], **kwargs) -> 'Fixture':
