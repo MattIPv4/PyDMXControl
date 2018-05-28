@@ -206,8 +206,13 @@ class Controller:
                 if chanid in channels.keys():
                     if self.__ltp:
                         # LTP
-                        if chanval[1] > channels[chanid][1]: ## TODO: if datetime equal, htp?
-                            channels[chanid] = chanval
+                        if chanval[1] >= channels[chanid][1]:
+                            # HTP if set at identical times
+                            if chanval[1] == channels[chanid][1]:
+                                if chanval[0] > channels[chanid][0]:
+                                    channels[chanid] = chanval
+                            else:
+                                channels[chanid] = chanval
                     else:
                         # HTP
                         if chanval[0] > channels[chanid][0]:

@@ -34,7 +34,7 @@ class Vdim(Fixture):
         newTime = super_call[1]
         if channel in self.__vdims:
             newVal = int(newVal * (self.__vdim / 255))
-            if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated ## TODO: if datetime equal, htp?
+            if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated
 
         return (newVal, newTime)
 
