@@ -100,7 +100,7 @@ class Fixture:
     def channels(self) -> dict:
         channels = {}
         for i, chan in enumerate(self.__channels):
-            channels[self.__start_channel + i] = {'name': chan['name'], 'value': self.get_channel_value(i)}
+            channels[self.__start_channel + i] = {'name': chan.name, 'value': chan.value}
         return channels
 
     def _get_channel_id(self, channel: Union[str, int]) -> int:
@@ -116,14 +116,14 @@ class Fixture:
             channel = self.__channel_aliases[channel]
 
         for i, chan in enumerate(self.__channels):
-            if chan['name'] == channel:
+            if chan.name == channel:
                 return i
 
         return -1
 
     def get_channel_value(self, channel: int) -> int:
         if channel >= len(self.__channels): return -1
-        return self.__channels[channel]['value']
+        return self.__channels[channel].value
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
         if not self._valid_channel_value(value):
@@ -159,10 +159,11 @@ class Fixture:
         start = time() * 1000.0
         gap = target - current
 
-        while (time() * 1000.0) - start <= millis:
-            diff = gap * (((time() * 1000.0) - start) / millis)
-            self.set_channel(channel, int(current + diff))
-            sleep(0.000001)
+        if millis > 0:
+            while (time() * 1000.0) - start <= millis:
+                diff = gap * (((time() * 1000.0) - start) / millis)
+                self.set_channel(channel, int(current + diff))
+                sleep(0.000001)
         self.set_channel(channel, int(target))
 
         return
