@@ -17,6 +17,9 @@ class Channel:
         self.value = value
         self.updated = datetime.utcnow()
 
+    def get_value(self) -> Tuple[int, datetime]:
+        return (self.value, self.updated)
+
 
 class Fixture:
 
@@ -100,7 +103,7 @@ class Fixture:
     def channels(self) -> dict:
         channels = {}
         for i, chan in enumerate(self.__channels):
-            channels[self.__start_channel + i] = {'name': chan.name, 'value': chan.value}
+            channels[self.__start_channel + i] = {'name': chan.name, 'value': chan.get_value()}
         return channels
 
     def _get_channel_id(self, channel: Union[str, int]) -> int:
@@ -121,9 +124,9 @@ class Fixture:
 
         return -1
 
-    def get_channel_value(self, channel: int) -> int:
-        if channel >= len(self.__channels): return -1
-        return self.__channels[channel].value
+    def get_channel_value(self, channel: int) -> Tuple[int, datetime]:
+        if channel >= len(self.__channels): return (-1, datetime.utcnow())
+        return self.__channels[channel].get_value()
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
         if not self._valid_channel_value(value):
@@ -171,7 +174,7 @@ class Fixture:
     def dim(self, target_value: int, milliseconds: int, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
-        current = self.get_channel_value(self._get_channel_id(channel))
+        current = self.get_channel_value(self._get_channel_id(channel))[0]
 
         # Create the thread and run loop
         thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))

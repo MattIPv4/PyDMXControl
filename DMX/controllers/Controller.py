@@ -71,11 +71,11 @@ class Ticker:
 class Controller:
     DMX_min_wait = 0.000001 * 92
 
-    def __init__(self, *, ltp=False, dynamic_frame=False):
+    def __init__(self, *, ltp=True, dynamic_frame=False):
         # Store all registered fixtures
         self.__fixtures = {}
 
-        # LTP (default HTP) (Lowest not latest, tracking latest is far too much work)
+        # LTP (default) (Latest takes priority, disable for Highest takes priority)
         self.__ltp = ltp
 
         # Frame data
@@ -186,7 +186,7 @@ class Controller:
         for key, val in self.channels.items():
             # If channel in frame
             if key - 1 < len(self.__frame):
-                self.__frame[key - 1] = val
+                self.__frame[key - 1] = val[0]
 
         # Return populated frame
         return self.__frame
@@ -200,16 +200,17 @@ class Controller:
             # Channels in this fixture
             for chanid, chanval in chans.items():
                 chanval = chanval['value']
-                if chanval == -1: chanval = 0
+                if chanval[0] == -1: chanval[0] = 0
+
                 # If channel id already set
                 if chanid in channels.keys():
                     if self.__ltp:
                         # LTP
-                        if chanval < channels[chanid]:
+                        if chanval[1] > channels[chanid][1]: ## TODO: if datetime equal, htp?
                             channels[chanid] = chanval
                     else:
                         # HTP
-                        if chanval > channels[chanid]:
+                        if chanval[0] > channels[chanid][0]:
                             channels[chanid] = chanval
                 else:
                     channels[chanid] = chanval
