@@ -250,11 +250,10 @@ class Controller:
             if fixture == 'exit':
                 break
             if fixture == 'callbacks':
+                # Give callbacks
+                print("[Callbacks Debug] Available callbacks:",
+                      ", ".join(["'" + f + "'" for f in callbacks.keys()]))
                 while True:
-                    # Give callbacks
-                    print("[Callbacks Debug] Available callbacks:",
-                          ", ".join(["'" + f + "'" for f in callbacks.keys()]))
-
                     # Callback selection / exit callback debug
                     callback = input("[Callbacks Debug] Callback Name (or 'exit'): ").strip()
                     if callback == 'exit':

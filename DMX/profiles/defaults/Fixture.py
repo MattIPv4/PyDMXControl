@@ -103,7 +103,7 @@ class Fixture:
     def channels(self) -> dict:
         channels = {}
         for i, chan in enumerate(self.__channels):
-            channels[self.__start_channel + i] = {'name': chan.name, 'value': chan.get_value()}
+            channels[self.__start_channel + i] = {'name': chan.name, 'value': self.get_channel_value(i)}
         return channels
 
     def _get_channel_id(self, channel: Union[str, int]) -> int:
