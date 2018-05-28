@@ -71,11 +71,11 @@ class Ticker:
 class Controller:
     DMX_min_wait = 0.000001 * 92
 
-    def __init__(self, *, ltp=False, dynamic_frame=False):
+    def __init__(self, *, ltp=True, dynamic_frame=False):
         # Store all registered fixtures
         self.__fixtures = {}
 
-        # LTP (default HTP) (Lowest not latest, tracking latest is far too much work)
+        # LTP (default) (Latest takes priority, disable for Highest takes priority)
         self.__ltp = ltp
 
         # Frame data
@@ -186,7 +186,7 @@ class Controller:
         for key, val in self.channels.items():
             # If channel in frame
             if key - 1 < len(self.__frame):
-                self.__frame[key - 1] = val
+                self.__frame[key - 1] = val[0]
 
         # Return populated frame
         return self.__frame
@@ -200,16 +200,17 @@ class Controller:
             # Channels in this fixture
             for chanid, chanval in chans.items():
                 chanval = chanval['value']
-                if chanval == -1: chanval = 0
+                if chanval[0] == -1: chanval[0] = 0
+
                 # If channel id already set
                 if chanid in channels.keys():
                     if self.__ltp:
                         # LTP
-                        if chanval < channels[chanid]:
+                        if chanval[1] > channels[chanid][1]: ## TODO: if datetime equal, htp?
                             channels[chanid] = chanval
                     else:
                         # HTP
-                        if chanval > channels[chanid]:
+                        if chanval[0] > channels[chanid][0]:
                             channels[chanid] = chanval
                 else:
                     channels[chanid] = chanval
@@ -225,15 +226,49 @@ class Controller:
         # Return next channel
         return max(channels or [0]) + 1
 
-    def debug_control(self):
+    def all_on(self, milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.dim(255, milliseconds)
+
+    def all_off(self, milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.dim(0, milliseconds)
+
+    def debug_control(self, callbacks: dict = {}):
+        # Some default callbacks
+        if not 'all_on' in callbacks: callbacks['all_on'] = self.all_on
+        if not 'on' in callbacks: callbacks['on'] = self.all_on
+        if not 'all_off' in callbacks: callbacks['all_of'] = self.all_off
+        if not 'off' in callbacks: callbacks['off'] = self.all_off
+
         # DMX debug control
         print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.next_channel - 1))
         while True:
 
-            # Fixture selection / exit dmx debug
-            fixture = input("[DMX Debug] Fixture ID/Name (or 'exit'): ").strip()
+            # Fixture selection / callbacks / exit dmx debug
+            fixture = input("[DMX Debug] Fixture ID/Name or 'callbacks' (or 'exit'): ").strip()
             if fixture == 'exit':
                 break
+            if fixture == 'callbacks':
+                # Give callbacks
+                print("[Callbacks Debug] Available callbacks:",
+                      ", ".join(["'" + f + "'" for f in callbacks.keys()]))
+                while True:
+                    # Callback selection / exit callback debug
+                    callback = input("[Callbacks Debug] Callback Name (or 'exit'): ").strip()
+                    if callback == 'exit':
+                        break
+                    if callback not in callbacks:
+                        continue
+                    try:
+                        res = callbacks[callback]()
+                    except:
+                        print("[Callbacks Debug] '" + callback + "' failed.")
+                    else:
+                        print("[Callbacks Debug] Callback '" + callback + "' succeed and returned:", res)
+
+                continue
+
             if not fixture.isdigit():
                 fixture = self.get_fixtures_by_name(fixture)
                 if fixture: fixture = fixture[0]

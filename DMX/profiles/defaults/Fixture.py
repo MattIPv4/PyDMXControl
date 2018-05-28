@@ -1,8 +1,24 @@
+from datetime import datetime
 from threading import Thread
 from time import sleep
 from time import time
 from typing import Union, List, Tuple
 from warnings import warn
+
+
+class Channel:
+
+    def __init__(self, name: str):
+        self.name = name
+        self.value = 0
+        self.updated = datetime.utcnow()
+
+    def set_value(self, value: int):
+        self.value = value
+        self.updated = datetime.utcnow()
+
+    def get_value(self) -> Tuple[int, datetime]:
+        return (self.value, self.updated)
 
 
 class Fixture:
@@ -32,12 +48,13 @@ class Fixture:
             warn('Not enough space in universe for channel `{}`.'.format(name))
             return -1
 
-        used_names = [f['name'] for f in self.__channels]
+        used_names = [f.name for f in self.__channels]
+        used_names.extend([f for f in self.__channel_aliases.keys()])
         if name.lower().strip() in used_names:
-            warn('Name `{}` already in use for channel.'.format(name))
+            warn('Name `{}` already in use for channel (or alias).'.format(name))
             return -1
 
-        self.__channels.append({'name': name.lower().strip(), 'value': 0})
+        self.__channels.append(Channel(name.lower().strip()))
         return len(self.__channels) - 1
 
     def _register_channel_aliases(self, channel: str, *aliases: str) -> bool:
@@ -46,7 +63,7 @@ class Fixture:
 
         channel = channel.lower().strip()
 
-        used_names = [f['name'] for f in self.__channels]
+        used_names = [f.name for f in self.__channels]
         if channel not in used_names:
             warn('Channel name `{}` is not registered.'.format(channel))
             return False
@@ -86,7 +103,7 @@ class Fixture:
     def channels(self) -> dict:
         channels = {}
         for i, chan in enumerate(self.__channels):
-            channels[self.__start_channel + i] = {'name': chan['name'], 'value': self.get_channel_value(i)}
+            channels[self.__start_channel + i] = {'name': chan.name, 'value': self.get_channel_value(i)}
         return channels
 
     def _get_channel_id(self, channel: Union[str, int]) -> int:
@@ -102,14 +119,14 @@ class Fixture:
             channel = self.__channel_aliases[channel]
 
         for i, chan in enumerate(self.__channels):
-            if chan['name'] == channel:
+            if chan.name == channel:
                 return i
 
         return -1
 
-    def get_channel_value(self, channel: int) -> int:
-        if channel >= len(self.__channels): return -1
-        return self.__channels[channel]['value']
+    def get_channel_value(self, channel: int) -> Tuple[int, datetime]:
+        if channel >= len(self.__channels): return (-1, datetime.utcnow())
+        return self.__channels[channel].get_value()
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
         if not self._valid_channel_value(value):
@@ -119,7 +136,7 @@ class Fixture:
         if channel == -1:
             return self
 
-        self.__channels[channel]['value'] = value
+        self.__channels[channel].set_value(value)
         return self
 
     def set_channels(self, *args: Union[int, List[int], None], **kwargs) -> 'Fixture':
@@ -145,10 +162,11 @@ class Fixture:
         start = time() * 1000.0
         gap = target - current
 
-        while (time() * 1000.0) - start <= millis:
-            diff = gap * (((time() * 1000.0) - start) / millis)
-            self.set_channel(channel, int(current + diff))
-            sleep(0.000001)
+        if millis > 0:
+            while (time() * 1000.0) - start <= millis:
+                diff = gap * (((time() * 1000.0) - start) / millis)
+                self.set_channel(channel, int(current + diff))
+                sleep(0.000001)
         self.set_channel(channel, int(target))
 
         return
@@ -156,7 +174,7 @@ class Fixture:
     def dim(self, target_value: int, milliseconds: int, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
-        current = self.get_channel_value(self._get_channel_id(channel))
+        current = self.get_channel_value(self._get_channel_id(channel))[0]
 
         # Create the thread and run loop
         thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))

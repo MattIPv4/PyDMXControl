@@ -40,16 +40,6 @@ def dimmer():
     dmx.get_fixtures_by_name("FL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
 
 
-def on():
-    for f in dmx.get_all_fixtures():
-        f.dim(255, 2000)
-
-
-def off():
-    for f in dmx.get_all_fixtures():
-        f.dim(0, 2000)
-
-
 # Set some values
 standard_lights()
 
@@ -80,11 +70,11 @@ def callback():
 
     if in_range:
         if last_state != 1:
-            on()
+            dmx.all_on()
             last_state = 1
     else:
         if last_state != 0:
-            off()
+            dmx.all_off()
             last_state = 0
 
     if time >= 2100 or time <= 715:
@@ -102,7 +92,10 @@ dmx.ticker.set_interval(500)
 dmx.ticker.set_callback(callback)
 
 # Debug
-dmx.debug_control()
+dmx.debug_control({
+    "normal": normal,
+    "dimmer": dimmer
+})
 
 # Close the controller once we're done
 dmx.sleep_till_enter()
