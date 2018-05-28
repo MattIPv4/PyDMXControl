@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from DMX import Colors
-from DMX.controllers import transmittingController as Controller  # This controller has the thread but does nothing
+from DMX.controllers import uDMXController as Controller  # This controller has the thread but does nothing
 from DMX.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
 # Create our controller
