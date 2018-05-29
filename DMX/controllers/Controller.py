@@ -6,6 +6,12 @@ from typing import Type, Callable, List, Union, Dict
 from DMX.profiles.defaults import Fixture
 
 
+class LTPCollisionException(Exception):
+
+    def __init__(self, channel_id):
+        super().__init__("Channel {} has two different values assigned at the same timestamp.".format(channel_id))
+
+
 class Ticker:
 
     def __millis_now(self) -> float:
@@ -205,14 +211,13 @@ class Controller:
                 # If channel id already set
                 if chanid in channels.keys():
                     if self.__ltp:
+                        # Handle collision
+                        if chanval[1] == channels[chanid][1] and chanval[0] != channels[chanid][0]:
+                            raise LTPCollisionException(chanid)
+
                         # LTP
-                        if chanval[1] >= channels[chanid][1]:
-                            # HTP if set at identical times
-                            if chanval[1] == channels[chanid][1]:
-                                if chanval[0] > channels[chanid][0]:
-                                    channels[chanid] = chanval
-                            else:
-                                channels[chanid] = chanval
+                        if chanval[1] > channels[chanid][1]:
+                            channels[chanid] = chanval
                     else:
                         # HTP
                         if chanval[0] > channels[chanid][0]:
