@@ -1,4 +1,5 @@
 # PyDMXControl
+![PyDMXControl](brand/PyDMXControl-500x60.png)\
 **A Python 3.6 module to control DMX via Python. Featuring fixture profiles and working with uDMX.**
 
 Just messing around with using Python to control/send DMX.\
@@ -11,6 +12,8 @@ There is also a print controller included that prints the DMX frames to console 
 If someone wants to buy me an Enttec USB DMX Pro then I'll try make it work with that too.
 
 ## Discussion, Support and Issues
-For general support and discussion of this project, please join the Discord server: https://discord.gg/qyXqA7y \
+For general support and discussion of this project, please join the Discord lounge server: https://discord.gg/qyXqA7y \
+[![Discord Server](https://discordapp.com/api/guilds/204663881799303168/widget.png?style=banner2)](https://discord.gg/qyXqA7y)
+
 To check known bugs and see planned changes and features for this project, please see the GitHub issues.\
 Found a bug we don't already have an issue for? Please report it in a new GItHub issue with as much detail as you can!
