@@ -1,7 +1,9 @@
 from threading import Thread
 from typing import List
+from time import sleep
 
 from DMX.controllers.Controller import Controller
+from .utils.timing import DMXMINWAIT
 
 
 class transmittingController(Controller):
@@ -34,7 +36,7 @@ class transmittingController(Controller):
                 continue
 
             # Sleep (Minimum transmission break for DMX512)
-            self.sleep(Controller.DMX_min_wait)
+            sleep(DMXMINWAIT)
 
         return
 

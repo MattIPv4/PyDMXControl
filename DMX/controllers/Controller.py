@@ -1,81 +1,14 @@
-from threading import Thread
 from time import sleep
-from time import time
-from typing import Type, Callable, List, Union, Dict
+from typing import Type, List, Union, Dict
 
 from DMX.profiles.defaults import Fixture
-
-
-class LTPCollisionException(Exception):
-
-    def __init__(self, channel_id):
-        super().__init__("Channel {} has two different values assigned at the same timestamp.".format(channel_id))
-
-
-class Ticker:
-
-    def __millis_now(self) -> float:
-        return time() * 1000.0
-
-    def __init__(self):
-        self.__interval = 1000.0
-        self.__last = self.__millis_now()
-        self.__callbacks = []
-        self.__ticking = False
-        self.thread = None
-
-    def __ticker(self):
-        # If diff in milliseconds is interval
-        if self.__millis_now() - self.__last >= self.__interval:
-            # If have any callbacks
-            if self.__callbacks:
-                # Loop over each callback
-                for callback in self.__callbacks:
-                    # Check is valid callback
-                    if callback and callable(callback):
-                        callback()
-            # Finished, update last tick time
-            self.__last = self.__millis_now()
-
-    def __ticker__loop(self):
-        # Use a variable so loop can be stopped
-        self.__ticking = True
-        while self.__ticking:
-            # Call ticker and sleep DMX delay time
-            self.__ticker()
-            sleep(Controller.DMX_min_wait)
-
-        return
-
-    def set_interval(self, milliseconds: float):
-        self.__interval = milliseconds
-
-    def get_interval(self) -> float:
-        return self.__interval
-
-    def set_callback(self, callback: Callable):
-        self.__callbacks = [callback]
-
-    def add_callback(self, callback: Callable):
-        self.__callbacks.append(callback)
-
-    def remove_callback(self, callback: Callable):
-        if callback in self.__callbacks:
-            self.__callbacks.remove(callback)
-
-    def stop(self):
-        # Stop the threaded loop
-        self.__ticking = False
-
-    def start(self):
-        # Create the thread and run loop
-        self.thread = Thread(target=self.__ticker__loop)
-        self.thread.daemon = True
-        self.thread.start()
+from .utils.exceptions import LTPCollisionException
+from .utils.debug import Debugger
+from .utils.timing import DMXMINWAIT, Ticker
+from ..profiles.defaults.Fixture import Channel
 
 
 class Controller:
-    DMX_min_wait = 0.000001 * 92
 
     def __init__(self, *, ltp=True, dynamic_frame=False):
         # Store all registered fixtures
@@ -159,25 +92,20 @@ class Controller:
         # Return all the fixtures
         return list(self.__fixtures.values())
 
-    def sleep(self, seconds: float = 1) -> None:
-        # Hold
-        sleep(seconds)
-
-        # We're done
-        return None
-
-    def sleep_till_enter(self) -> None:
+    @staticmethod
+    def sleep_till_enter() -> None:
         # Hold
         input("Press Enter to end sleep...")
 
         # We're done
         return None
 
-    def sleep_till_interrupt(self) -> None:
+    @staticmethod
+    def sleep_till_interrupt() -> None:
         # Hold
         try:
             while True:
-                sleep(Controller.DMX_min_wait)
+                sleep(DMXMINWAIT)
         except KeyboardInterrupt:
             # We're done
             return None
@@ -198,7 +126,7 @@ class Controller:
         return self.__frame
 
     @property
-    def channels(self) -> Dict[int, int]:
+    def channels(self) -> Dict[int, Channel]:
         channels = {}
 
         # Channels for each registered fixture
@@ -245,61 +173,7 @@ class Controller:
             fixture.dim(0, milliseconds)
 
     def debug_control(self, callbacks: dict = {}):
-        # Some default callbacks
-        if not 'all_on' in callbacks: callbacks['all_on'] = self.all_on
-        if not 'on' in callbacks: callbacks['on'] = self.all_on
-        if not 'all_off' in callbacks: callbacks['all_of'] = self.all_off
-        if not 'off' in callbacks: callbacks['off'] = self.all_off
-
-        # DMX debug control
-        print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.next_channel - 1))
-        while True:
-
-            # Fixture selection / callbacks / exit dmx debug
-            fixture = input("[DMX Debug] Fixture ID/Name or 'callbacks' (or 'exit'): ").strip()
-            if fixture == 'exit':
-                break
-            if fixture == 'callbacks':
-                # Give callbacks
-                print("[Callbacks Debug] Available callbacks:",
-                      ", ".join(["'" + f + "'" for f in callbacks.keys()]))
-                while True:
-                    # Callback selection / exit callback debug
-                    callback = input("[Callbacks Debug] Callback Name (or 'exit'): ").strip()
-                    if callback == 'exit':
-                        break
-                    if callback not in callbacks:
-                        continue
-                    try:
-                        res = callbacks[callback]()
-                    except:
-                        print("[Callbacks Debug] '" + callback + "' failed.")
-                    else:
-                        print("[Callbacks Debug] Callback '" + callback + "' succeed and returned:", res)
-
-                continue
-
-            if not fixture.isdigit():
-                fixture = self.get_fixtures_by_name(fixture)
-                if fixture: fixture = fixture[0]
-            else:
-                fixture = self.get_fixture(int(fixture))
-            if not fixture:
-                continue
-
-            # Fixture debug control
-            print("[Fixture Debug] Fixture selected:", fixture)
-            while True:
-
-                # Channel selection / exit fixture debug
-                channel = input("[Fixture Debug] Channel Number/Name (or 'exit'): ").strip()
-                if channel == 'exit':
-                    break
-                value = input("[Fixture Debug] Channel Value: ").strip()
-                if not value.isdigit():
-                    continue
-                value = int(value)
-                fixture.set_channel(channel, value)
+        Debugger(self, callbacks).run()
 
     def run(self, *args, **kwargs):
         # Method used in transmitting controllers
