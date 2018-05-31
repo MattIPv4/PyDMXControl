@@ -171,6 +171,10 @@ class Controller:
         for fixture in self.get_all_fixtures():
             fixture.dim(0, milliseconds)
 
+    def all_locate(self):
+        for fixture in self.get_all_fixtures():
+            fixture.locate()
+
     def debug_control(self, callbacks: dict = None):
         if callbacks is None: callbacks = {}
         Debugger(self, callbacks).run()

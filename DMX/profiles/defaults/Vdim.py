@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Union, Tuple
 
-from .defaults.Fixture import Fixture
+from .Fixture import Fixture
 
 
 class Vdim(Fixture):
@@ -41,7 +41,7 @@ class Vdim(Fixture):
         # Apply vdim to value if applicable
         newVal = super_call[0]
         newTime = super_call[1]
-        if self.get_channel_id(channel) in self.__vdims:
+        if self.get_channel_id(channel) + 1 in self.__vdims:
             newVal = int(newVal * (self.__vdim / 255))
             if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated
 

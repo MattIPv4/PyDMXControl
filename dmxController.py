@@ -25,19 +25,19 @@ def standard_lights():
 
 
 def normal():
-    dmx.get_fixtures_by_name("Flood")[0].anim(2000, *Colors.to_tuples(Colors.White))
-    dmx.get_fixtures_by_name("CL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
-    dmx.get_fixtures_by_name("FR")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
-    dmx.get_fixtures_by_name("CR")[0].anim(2000, *Colors.to_tuples(Colors.Blue))
-    dmx.get_fixtures_by_name("FL")[0].anim(2000, *Colors.to_tuples(Colors.Blue))
+    dmx.get_fixtures_by_name("Flood")[0].color(Colors.White, 2000)
+    dmx.get_fixtures_by_name("CL")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("FR")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("CR")[0].color(Colors.Blue, 2000)
+    dmx.get_fixtures_by_name("FL")[0].color(Colors.Blue, 2000)
 
 
 def dimmer():
-    dmx.get_fixtures_by_name("Flood")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
-    dmx.get_fixtures_by_name("CL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
-    dmx.get_fixtures_by_name("FR")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
-    dmx.get_fixtures_by_name("CR")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
-    dmx.get_fixtures_by_name("FL")[0].anim(2000, *Colors.to_tuples(Colors.Warm))
+    dmx.get_fixtures_by_name("Flood")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("CL")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("FR")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("CR")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("FL")[0].color(Colors.Warm, 2000)
 
 
 # Set some values

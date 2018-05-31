@@ -16,6 +16,9 @@ class Debugger:
         if not 'all_off' in self.cbs: self.cbs['all_of'] = self.cont.all_off
         if not 'off' in self.cbs: self.cbs['off'] = self.cont.all_off
 
+        if not 'all_locate' in self.cbs: self.cbs['all_locate'] = self.cont.all_locate
+        if not 'locate' in self.cbs: self.cbs['locate'] = self.cont.all_locate
+
     def __check_callbacks(self):
         for key in self.cbs.keys():
             if not self.cbs[key] or not callable(self.cbs[key]):

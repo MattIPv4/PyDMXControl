@@ -4,6 +4,7 @@ from time import sleep
 from time import time
 from typing import Union, List, Tuple
 from warnings import warn
+from DMX import Colors
 
 
 class Channel:
@@ -159,6 +160,8 @@ class Fixture:
 
         return self
 
+    ## HELPERS
+
     def __dim(self, current, target, millis, channel):
         start = time() * 1000.0
         gap = target - current
@@ -172,7 +175,7 @@ class Fixture:
 
         return
 
-    def dim(self, target_value: int, milliseconds: int, channel: Union[str, int] = 'dimmer') -> 'Fixture':
+    def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
         current = self.get_channel_value(self.get_channel_id(channel))[0]
@@ -187,3 +190,22 @@ class Fixture:
     def anim(self, milliseconds: int, *channels_values: Tuple[Union[str, int], int]):
         for channel_value in channels_values:
             self.dim(channel_value[1], milliseconds, channel_value[0])
+
+    def color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
+        # Handle string color names
+        if type(color) is str:
+            if color in Colors:
+                color = Colors[color]
+            else:
+                raise ValueError("Color '" + color + "' not defined in Colors enum."
+                                                     " Supply valid Colors enum or List/Tuple of integers.")
+
+        # Get a tuple
+        color = Colors.to_tuples(color)
+
+        # Apply
+        self.anim(milliseconds, *color)
+
+    def locate(self):
+        self.color([255, 255, 255, 255, 255])
+        self.dim(255)
