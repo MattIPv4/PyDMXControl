@@ -4,9 +4,9 @@ from typing import List, Tuple
 
 class Debugger:
 
-    def __init__(self, controller: 'Controller', callbacks: dict = {}):
+    def __init__(self, controller: 'Controller', callbacks: dict = None):
         self.cont = controller
-        self.cbs = callbacks
+        self.cbs = {} if callbacks is None else callbacks
 
     def __default_callbacks(self):
         # Some default callbacks
@@ -65,7 +65,7 @@ class Debugger:
             else:
                 keyword_params[param.name] = given_param
 
-        return (ordered_params, keyword_params)
+        return ordered_params, keyword_params
 
     def run_callbacks(self):
         # Defaults

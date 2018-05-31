@@ -143,6 +143,7 @@ class uDMXDevice:
             ba = values
         else:
             ba = bytearray(values)
+        # noinspection PyTypeChecker
         n = self._send_control_message(SetMultiChannel, value_or_length=len(ba),
                                        channel=channel, data_or_length=ba)
         return n

@@ -18,7 +18,7 @@ class Channel:
         self.updated = datetime.utcnow()
 
     def get_value(self) -> Tuple[int, datetime]:
-        return (self.value, self.updated)
+        return self.value, self.updated
 
 
 class Fixture:
@@ -75,8 +75,8 @@ class Fixture:
             self.__channel_aliases[alias] = channel
         return True
 
-    def _set_id(self, id: int) -> None:
-        self.__id = id
+    def _set_id(self, fixture_id: int) -> None:
+        self.__id = fixture_id
 
     def _set_name(self, name: str) -> None:
         self.__name = name
@@ -126,7 +126,7 @@ class Fixture:
         return -1
 
     def get_channel_value(self, channel: int) -> Tuple[int, datetime]:
-        if channel >= len(self.__channels): return (-1, datetime.utcnow())
+        if channel >= len(self.__channels): return -1, datetime.utcnow()
         return self.__channels[channel].get_value()
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
@@ -145,15 +145,15 @@ class Fixture:
         if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0:
             channel = int(kwargs['start'])
 
-        def apply_values(self, values, channel=1):
+        def apply_values(fixture, values, chan=1):
             for value in values:
                 if value is not None:
                     if isinstance(value, list):
-                        channel = apply_values(self, value, channel)
+                        chan = apply_values(fixture, value, chan)
                     elif str(value).isdigit():
-                        self.set_channel(channel, int(value))
-                channel += 1
-            return channel - 1
+                        fixture.set_channel(chan, int(value))
+                        chan += 1
+            return chan - 1
 
         apply_values(self, args, channel)
 

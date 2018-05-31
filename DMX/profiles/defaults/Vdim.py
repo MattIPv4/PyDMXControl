@@ -35,8 +35,8 @@ class Vdim(Fixture):
         if super_call[0] == -1:
             channel = str(channel).lower().strip()
             if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel - 1):
-                return (self.__vdim, self.__vdimUpdated)
-            return (-1, datetime.utcnow())
+                return self.__vdim, self.__vdimUpdated
+            return -1, datetime.utcnow()
 
         # Apply vdim to value if applicable
         newVal = super_call[0]
@@ -45,7 +45,7 @@ class Vdim(Fixture):
             newVal = int(newVal * (self.__vdim / 255))
             if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated
 
-        return (newVal, newTime)
+        return newVal, newTime
 
     def set_channel(self, channel: Union[str, int], value: int) -> Fixture:
         # Allow setting of vdim

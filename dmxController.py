@@ -64,8 +64,8 @@ def callback():
     time = int(datetime.today().strftime('%H%M'))
 
     in_range = False
-    for range in time_limit:
-        if range[0] <= time <= range[1]:
+    for time_range in time_limit:
+        if time_range[0] <= time <= time_range[1]:
             in_range = True
 
     if in_range:

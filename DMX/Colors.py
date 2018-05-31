@@ -56,8 +56,7 @@ class Colors(list, Enum):
     @staticmethod
     def to_tuples(colors: List[int]) -> List[Tuple[str, int]]:
         """ Assumes RGBWA """
-        dict = Colors.to_dict(colors)
-        return [(k, v) for k, v in dict.items()]
+        return [(k, v) for k, v in Colors.to_dict(colors).items()]
 
     Black = [000, 000, 000]
     White = [255, 255, 255]
