@@ -1,5 +1,5 @@
-from typing import Union, Tuple
 from datetime import datetime
+from typing import Union, Tuple
 
 from DMX.profiles.defaults.Fixture import Fixture
 
@@ -21,6 +21,14 @@ class Vdim(Fixture):
         if vdim: self.__vdims.append(super_call)
         return super_call
 
+    def _get_channel_id(self, channel: Union[str, int]) -> int:
+        super_call = super()._get_channel_id(channel)
+        if super_call == -1:
+            if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel - 1) or channel == (
+                    self.next_channel - 1):
+                return self.next_channel - 1
+        return super_call
+
     def get_channel_value(self, channel: Union[str, int]) -> Tuple[int, datetime]:
         super_call = super().get_channel_value(channel)
         if super_call[0] == -1:
@@ -32,26 +40,25 @@ class Vdim(Fixture):
         # Apply vdim to value if applicable
         newVal = super_call[0]
         newTime = super_call[1]
-        if channel in self.__vdims:
+        if self._get_channel_id(channel) in self.__vdims:
             newVal = int(newVal * (self.__vdim / 255))
             if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated
 
         return (newVal, newTime)
 
-    def set_channel(self, channel: Union[str, int], value: int) -> bool:
-        super_call = super().set_channel(channel, value)
-        if super_call is True: return True
-
+    def set_channel(self, channel: Union[str, int], value: int) -> 'Fixture':
         # Allow setting of vdim
-        channel = str(channel).lower().strip()
-        if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel):
+        if str(channel).lower().strip() in ["dimmer", "vdim", "dim", "d"] or str(channel).lower().strip() == str(
+                self.next_channel):
             return self.set_vdim(value)
 
-        return False
+        # Normal
+        super_call = super().set_channel(channel, value)
+        return super_call
 
-    def set_vdim(self, value: int) -> bool:
+    def set_vdim(self, value: int) -> 'Fixture':
         # Update the vdim value
-        if not self._valid_channel_value(value): return False
+        if not self._valid_channel_value(value): return self
         self.__vdim = value
         self.__vdimUpdated = datetime.utcnow()
-        return True
+        return self
