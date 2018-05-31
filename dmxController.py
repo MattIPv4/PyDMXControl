@@ -65,7 +65,7 @@ def callback():
 
     in_range = False
     for range in time_limit:
-        if time >= range[0] and time <= range[1]:
+        if range[0] <= time <= range[1]:
             in_range = True
 
     if in_range:

@@ -81,7 +81,8 @@ class Fixture:
     def _set_name(self, name: str) -> None:
         self.__name = name
 
-    def _valid_channel_value(self, value: int) -> bool:
+    @staticmethod
+    def _valid_channel_value(value: int) -> bool:
         if value < 0 or value > 255:
             warn('DMX value must be between 0 and 255.')
             return False
@@ -106,7 +107,7 @@ class Fixture:
             channels[self.__start_channel + i] = {'name': chan.name, 'value': self.get_channel_value(i)}
         return channels
 
-    def _get_channel_id(self, channel: Union[str, int]) -> int:
+    def get_channel_id(self, channel: Union[str, int]) -> int:
         channel = str(channel)
 
         if channel.isdigit():
@@ -132,7 +133,7 @@ class Fixture:
         if not self._valid_channel_value(value):
             return self
 
-        channel = self._get_channel_id(channel)
+        channel = self.get_channel_id(channel)
         if channel == -1:
             return self
 
@@ -174,7 +175,7 @@ class Fixture:
     def dim(self, target_value: int, milliseconds: int, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
-        current = self.get_channel_value(self._get_channel_id(channel))[0]
+        current = self.get_channel_value(self.get_channel_id(channel))[0]
 
         # Create the thread and run loop
         thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))

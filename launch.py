@@ -35,7 +35,7 @@ def run():
     proc = Popen([os.path.abspath(path), "dmxController.py"],
                  cwd=os.getcwd(), env=env)
 
-    result = proc.communicate()
+    proc.communicate()
 
 
 if __name__ == "__main__":
@@ -48,5 +48,3 @@ if __name__ == "__main__":
 
     while True:
         run()
-
-    print("Bye!")

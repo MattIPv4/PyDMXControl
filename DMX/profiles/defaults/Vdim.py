@@ -13,6 +13,7 @@ class Vdim(Fixture):
         self.__vdim = 255
         self.__vdimUpdated = datetime.utcnow()
 
+    # noinspection PyMethodOverriding
     def _register_channel(self, name: str, *, vdim: bool = False) -> int:
         super_call = super()._register_channel(name)
         if super_call == -1: return -1
@@ -21,8 +22,8 @@ class Vdim(Fixture):
         if vdim: self.__vdims.append(super_call)
         return super_call
 
-    def _get_channel_id(self, channel: Union[str, int]) -> int:
-        super_call = super()._get_channel_id(channel)
+    def get_channel_id(self, channel: Union[str, int]) -> int:
+        super_call = super().get_channel_id(channel)
         if super_call == -1:
             if channel in ["dimmer", "vdim", "dim", "d"] or channel == str(self.next_channel - 1) or channel == (
                     self.next_channel - 1):
@@ -40,13 +41,13 @@ class Vdim(Fixture):
         # Apply vdim to value if applicable
         newVal = super_call[0]
         newTime = super_call[1]
-        if self._get_channel_id(channel) in self.__vdims:
+        if self.get_channel_id(channel) in self.__vdims:
             newVal = int(newVal * (self.__vdim / 255))
             if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated
 
         return (newVal, newTime)
 
-    def set_channel(self, channel: Union[str, int], value: int) -> 'Fixture':
+    def set_channel(self, channel: Union[str, int], value: int) -> Fixture:
         # Allow setting of vdim
         if str(channel).lower().strip() in ["dimmer", "vdim", "dim", "d"] or str(channel).lower().strip() == str(
                 self.next_channel):
@@ -56,7 +57,7 @@ class Vdim(Fixture):
         super_call = super().set_channel(channel, value)
         return super_call
 
-    def set_vdim(self, value: int) -> 'Fixture':
+    def set_vdim(self, value: int) -> Fixture:
         # Update the vdim value
         if not self._valid_channel_value(value): return self
         self.__vdim = value
