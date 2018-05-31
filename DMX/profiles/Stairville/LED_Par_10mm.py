@@ -1,4 +1,4 @@
-from DMX.profiles.defaults import Fixture
+from ..defaults import Fixture
 
 
 class LED_Par_10mm(Fixture):

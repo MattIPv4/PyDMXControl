@@ -1,5 +1,5 @@
-from DMX.controllers.transmittingController import transmittingController
 from pyudmx import pyudmx
+from .transmittingController import transmittingController
 
 
 class uDMXController(transmittingController):

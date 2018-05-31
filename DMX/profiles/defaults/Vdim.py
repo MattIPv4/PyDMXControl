@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Union, Tuple
 
-from DMX.profiles.defaults.Fixture import Fixture
+from .defaults.Fixture import Fixture
 
 
 class Vdim(Fixture):

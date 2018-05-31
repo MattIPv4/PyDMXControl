@@ -1,4 +1,4 @@
-from DMX.profiles.defaults import Vdim
+from ..defaults import Vdim
 
 
 class LED_Par_36(Vdim):

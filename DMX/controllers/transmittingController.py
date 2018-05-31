@@ -1,8 +1,8 @@
 from threading import Thread
-from typing import List
 from time import sleep
+from typing import List
 
-from DMX.controllers.Controller import Controller
+from .Controller import Controller
 from .utils.timing import DMXMINWAIT
 
 

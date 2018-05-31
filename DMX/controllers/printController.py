@@ -1,4 +1,4 @@
-from DMX.controllers.transmittingController import transmittingController
+from .transmittingController import transmittingController
 
 
 class printController(transmittingController):
