@@ -30,7 +30,7 @@ class Vdim(Fixture):
                 return self.next_channel - 1
         return super_call
 
-    def get_channel_value(self, channel: Union[str, int]) -> Tuple[int, datetime]:
+    def get_channel_value(self, channel: Union[str, int], apply_vdim: bool = True) -> Tuple[int, datetime]:
         super_call = super().get_channel_value(channel)
         if super_call[0] == -1:
             channel = str(channel).lower().strip()
@@ -41,7 +41,7 @@ class Vdim(Fixture):
         # Apply vdim to value if applicable
         newVal = super_call[0]
         newTime = super_call[1]
-        if self.get_channel_id(channel) + 1 in self.__vdims:
+        if apply_vdim and self.get_channel_id(channel) in self.__vdims:
             newVal = int(newVal * (self.__vdim / 255))
             if self.__vdimUpdated > newTime: newTime = self.__vdimUpdated
 
@@ -50,7 +50,7 @@ class Vdim(Fixture):
     def set_channel(self, channel: Union[str, int], value: int) -> Fixture:
         # Allow setting of vdim
         if str(channel).lower().strip() in ["dimmer", "vdim", "dim", "d"] or str(channel).lower().strip() == str(
-                self.next_channel):
+                self.next_channel - 1):
             return self.set_vdim(value)
 
         # Normal

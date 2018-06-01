@@ -112,7 +112,7 @@ class Fixture:
         channel = str(channel)
 
         if channel.isdigit():
-            channel = int(channel) - 1
+            channel = int(channel)
             if channel < len(self.__channels):
                 return channel
 
@@ -142,7 +142,7 @@ class Fixture:
         return self
 
     def set_channels(self, *args: Union[int, List[int], None], **kwargs) -> 'Fixture':
-        channel = 1
+        channel = 0
         if 'start' in kwargs and str(kwargs['start']).isdigit() and int(kwargs['start']) > 0:
             channel = int(kwargs['start'])
 

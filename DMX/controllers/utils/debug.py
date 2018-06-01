@@ -1,5 +1,7 @@
 from inspect import signature, Parameter
-from typing import List, Tuple
+from typing import List, Tuple, Union
+
+from DMX.profiles.defaults import Fixture, Vdim
 
 
 class Debugger:
@@ -107,6 +109,18 @@ class Debugger:
 
         return
 
+    def __fixture_channels(self, fixture: Fixture) -> List[str]:
+        names = ["'" + f['name'] + "'" for f in fixture.channels.values()]
+        print(issubclass(type(fixture), Vdim))
+        if issubclass(type(fixture), Vdim):
+            names.append("'dimmer'")
+        return names
+
+    def __fixture_channel_value(self, fixture: Fixture, channel: Union[str, int]) -> int:
+        if issubclass(type(fixture), Vdim):
+            return fixture.get_channel_value(channel, False)[0]
+        return fixture.get_channel_value(channel)[0]
+
     def run_fixture(self, fixture: str):
         # Find the fixture
         if not fixture.isdigit():
@@ -121,7 +135,7 @@ class Debugger:
         print("[Fixture Debug] Fixture selected:", fixture)
         # Give Channels
         print("[Fixture Debug] Available channels:",
-              ", ".join(["'" + f['name'] + "'" for f in fixture.channels.values()]))
+              ", ".join(self.__fixture_channels(fixture)))
         while True:
 
             # Channel selection / exit fixture debug
@@ -131,7 +145,7 @@ class Debugger:
             channel = fixture.get_channel_id(channel)
             if channel == -1:
                 continue
-            value = str(fixture.get_channel_value(channel)[0])
+            value = str(self.__fixture_channel_value(fixture, channel))
             value = input("[Fixture Debug] Channel Value (Currently " + value + ", leave blank to abort): ").strip()
             if value == "":
                 continue
