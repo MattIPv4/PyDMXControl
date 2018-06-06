@@ -25,19 +25,19 @@ def standard_lights():
 
 
 def normal():
-    dmx.get_fixtures_by_name("Flood")[0].color(Colors.White, 2000)
-    dmx.get_fixtures_by_name("CL")[0].color(Colors.Warm, 2000)
-    dmx.get_fixtures_by_name("FR")[0].color(Colors.Warm, 2000)
-    dmx.get_fixtures_by_name("CR")[0].color(Colors.Blue, 2000)
-    dmx.get_fixtures_by_name("FL")[0].color(Colors.Blue, 2000)
+    dmx.get_fixtures_by_name("Flood")[0].color(Colors.White, 10000)
+    dmx.get_fixtures_by_name("CL")[0].color(Colors.Warm, 10000)
+    dmx.get_fixtures_by_name("FR")[0].color(Colors.Warm, 10000)
+    dmx.get_fixtures_by_name("CR")[0].color(Colors.Blue, 10000)
+    dmx.get_fixtures_by_name("FL")[0].color(Colors.Blue, 10000)
 
 
 def dimmer():
-    dmx.get_fixtures_by_name("Flood")[0].color(Colors.Warm, 2000)
-    dmx.get_fixtures_by_name("CL")[0].color(Colors.Warm, 2000)
-    dmx.get_fixtures_by_name("FR")[0].color(Colors.Warm, 2000)
-    dmx.get_fixtures_by_name("CR")[0].color(Colors.Warm, 2000)
-    dmx.get_fixtures_by_name("FL")[0].color(Colors.Warm, 2000)
+    dmx.get_fixtures_by_name("Flood")[0].color(Colors.Warm, 10000)
+    dmx.get_fixtures_by_name("CL")[0].color(Colors.Warm, 10000)
+    dmx.get_fixtures_by_name("FR")[0].color(Colors.Warm, 10000)
+    dmx.get_fixtures_by_name("CR")[0].color(Colors.Warm, 10000)
+    dmx.get_fixtures_by_name("FL")[0].color(Colors.Warm, 10000)
 
 
 # Set some values
@@ -70,11 +70,11 @@ def callback():
 
     if in_range:
         if last_state != 1:
-            dmx.all_on()
+            dmx.all_on(10000)
             last_state = 1
     else:
         if last_state != 0:
-            dmx.all_off()
+            dmx.all_off(10000)
             last_state = 0
 
     if time >= 2100 or time <= 715:
