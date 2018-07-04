@@ -2,8 +2,8 @@ from time import sleep
 from typing import Type, List, Union, Dict
 
 from .utils.debug import Debugger
-from .utils.exceptions import LTPCollisionException
-from .utils.timing import DMXMINWAIT, Ticker
+from DMX.utils.exceptions import LTPCollisionException
+from DMX.utils.timing import DMXMINWAIT, Ticker
 from ..profiles.defaults.Fixture import Channel, Fixture
 
 

@@ -3,7 +3,7 @@ from time import sleep
 from typing import List
 
 from .Controller import Controller
-from .utils.timing import DMXMINWAIT
+from DMX.utils.timing import DMXMINWAIT
 
 
 class transmittingController(Controller):
