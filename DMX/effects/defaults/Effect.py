@@ -4,14 +4,15 @@ from DMX.utils.timing import Ticker
 
 class Effect:
 
-    def __init__(self, fixture: Fixture, speed_milliseconds: int, offset_percent: float = 0):
+    def __init__(self, fixture: Fixture, speed_milliseconds: int, delay_percent: float = 0, offset_percent: float = 0):
         # The fixture effect is applied to
         self.fixture = fixture
 
         # Speed for effect to complete
         self.speed = speed_milliseconds
 
-        # Offset to allow effect stacking across fixtures
+        # Delay & offset to allow effect stacking across fixtures
+        self.delay = delay_percent / 100
         self.offset = offset_percent / 100
 
         # Ticker for callback

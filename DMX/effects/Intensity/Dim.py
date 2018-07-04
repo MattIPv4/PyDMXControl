@@ -6,24 +6,34 @@ class Dim(Effect):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Start of latest loop
-        self.__last = None
+        # Start of loop
+        self.__start = None
 
     def callback(self):
         # New
-        if self.__last is None:
-            self.__last = self.ticker.millis_now()
+        if self.__start is None:
+            self.__start = self.ticker.millis_now()
 
-        # Get progress through this loop
-        progress = (self.ticker.millis_now() - self.__last) / self.speed
+        # Initial offset
+        if (self.ticker.millis_now() - self.__start) <= (self.speed * self.offset):
+            self.fixture.set_channel('dimmer', 0)
+            return
 
-        # Reset if past 100% progress
-        if progress >= 1:
-            progress = 0
-            self.__last = self.ticker.millis_now()
+        offset = self.speed * self.offset  # Calculate offset duration
+        delay = self.speed * self.delay  # Calculate delay period after effect
+        total = self.speed + delay  # Calculate total loop time (speed + delay)
 
-        # Apply offset
-        progress += self.offset
+        start = self.__start + offset  # Account for initial offset
+        since_start = self.ticker.millis_now() - start  # Calculate time since effect started
+        since_last = since_start % total  # Calculate time since this loop started
+
+        # If in delay period
+        if since_last > self.speed:
+            self.fixture.set_channel('dimmer', 0)
+            return
+
+        # Get progress through this loop (excl delay)
+        progress = since_last / self.speed
 
         # Ensure in range 0 <= p <= 1
         while progress > 1:
@@ -32,14 +42,17 @@ class Dim(Effect):
             progress = 1 + progress
 
         # Flip half way through
-        if progress > 0.5:
-            progress = 1 - progress
+        progress *= 2
+        if progress > 1:
+            progress = 1 - (progress - 1)
 
-        print(progress)
+        # Ensure we reach 100%
+        if progress >= 0.95:
+            progress = 1
 
         # Apply dimmer
         self.fixture.set_channel('dimmer', int(255 * progress))
 
     def start(self):
-        self.__last = None
+        self.__start = None
         super().start()

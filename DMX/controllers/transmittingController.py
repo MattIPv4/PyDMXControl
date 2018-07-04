@@ -1,5 +1,3 @@
-from typing import List
-
 from DMX.utils.timing import Ticker
 from .Controller import Controller
 
@@ -26,7 +24,7 @@ class transmittingController(Controller):
     def close(self):
         # Stop the threaded loop
         self.internalTicker.stop()
-        print("CLOSE: sending = False")
+        print("CLOSE: internalTicker stopped")
 
         # Parent
         super().close()

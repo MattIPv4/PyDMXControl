@@ -3,6 +3,7 @@ from time import sleep, time
 from typing import Callable
 
 DMXMINWAIT = 0.000001 * 92
+DMXMINWAIT = 0.01  # Provides far smoother animation
 
 
 class Ticker:
