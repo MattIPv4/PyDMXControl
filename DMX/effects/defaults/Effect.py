@@ -1,19 +1,21 @@
+from typing import List
+
 from DMX.profiles.defaults import Fixture
 from DMX.utils.timing import Ticker
 
 
 class Effect:
 
-    def __init__(self, fixture: Fixture, speed_milliseconds: int, delay_percent: float = 0, offset_percent: float = 0):
+    def __init__(self, fixture: Fixture, speed: int, *, delay: float = 0, offset: float = 0):
         # The fixture effect is applied to
         self.fixture = fixture
 
         # Speed for effect to complete
-        self.speed = speed_milliseconds
+        self.speed = speed
 
         # Delay & offset to allow effect stacking across fixtures
-        self.delay = delay_percent / 100
-        self.offset = offset_percent / 100
+        self.delay = delay / 100
+        self.offset = offset / 100
 
         # Ticker for callback
         self.ticker = Ticker()
@@ -32,3 +34,14 @@ class Effect:
         self.ticker.clear_callbacks()
         self.ticker.add_callback(self.callback)
         self.ticker.start()
+
+    @classmethod
+    def group_apply(cls, fixtures: List['Fixture'], speed: float):
+        # Position
+        index = 0
+        total = len(fixtures) - 1
+
+        # Iterate over each
+        for fixture in fixtures:
+            fixture.add_effect(cls, speed, delay=total * 100, offset=index * 100)
+            index += 1

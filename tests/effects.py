@@ -1,29 +1,29 @@
 from DMX import Colors
 from DMX.controllers import uDMXController as Controller
 from DMX.effects.Intensity import Intensity_Dim
-from DMX.profiles.Stairville import LED_Par_36, LED_Par_10mm
+from DMX.profiles.Stairville import LED_Par_36, LED_Par_10mm, Quad_Par_Profile
 
 dmx = Controller()
 
+# Fixtures
 dmx.add_fixture(LED_Par_10mm, name="Flood")
 dmx.add_fixture(LED_Par_36, name="CL")
 dmx.add_fixture(LED_Par_36, name="FL")
 dmx.add_fixture(LED_Par_36, name="FR")
 dmx.add_fixture(LED_Par_36, name="CR")
+dmx.add_fixture(Quad_Par_Profile, name="test")
 
-color = Colors.Blue
-dmx.get_fixtures_by_name("Flood")[0].color(color, 0)
-dmx.get_fixtures_by_name("CL")[0].color(color, 0)
-dmx.get_fixtures_by_name("FR")[0].color(color, 0)
-dmx.get_fixtures_by_name("CR")[0].color(color, 0)
-dmx.get_fixtures_by_name("FL")[0].color(color, 0)
+# Color
+dmx.all_color(Colors.Blue)
 
-speed = 1000
-Intensity_Dim(dmx.get_fixtures_by_name("Flood")[0], speed, 400, 0).start()
-Intensity_Dim(dmx.get_fixtures_by_name("FR")[0], speed, 400, 100).start()
-Intensity_Dim(dmx.get_fixtures_by_name("CR")[0], speed, 400, 200).start()
-Intensity_Dim(dmx.get_fixtures_by_name("CL")[0], speed, 400, 300).start()
-Intensity_Dim(dmx.get_fixtures_by_name("FL")[0], speed, 400, 400).start()
+# Effect
+"""speed = 1000
+all = dmx.get_all_fixtures()
+i = 0
+for fix in all:
+    fix.add_effect(Intensity_Dim, speed, delay=(len(all)-1)*100, offset=i*100)
+    i += 1"""
+Intensity_Dim.group_apply(dmx.get_all_fixtures(), 1000)
 
 # dmx.debug_control()
 

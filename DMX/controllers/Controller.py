@@ -1,9 +1,10 @@
 from time import sleep
-from typing import Type, List, Union, Dict
+from typing import Type, List, Union, Dict, Tuple
 
-from .utils.debug import Debugger
+from DMX import Colors
 from DMX.utils.exceptions import LTPCollisionException
 from DMX.utils.timing import DMXMINWAIT, Ticker
+from .utils.debug import Debugger
 from ..profiles.defaults.Fixture import Channel, Fixture
 
 
@@ -175,6 +176,10 @@ class Controller:
         for fixture in self.get_all_fixtures():
             fixture.locate()
 
+    def all_color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.color(color, milliseconds)
+
     def debug_control(self, callbacks: dict = None):
         if callbacks is None: callbacks = {}
         Debugger(self, callbacks).run()
@@ -187,5 +192,10 @@ class Controller:
         # Stop the ticker
         self.ticker.stop()
         print("CLOSE: ticker stopped")
+
+        # Stop any effect tickers
+        for fixture in self.__fixtures.values():
+            fixture.clear_effects()
+        print("CLOSE: all effects cleared")
 
         return
