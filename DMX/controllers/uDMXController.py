@@ -20,5 +20,6 @@ class uDMXController(transmittingController):
 
         return
 
-    def _send_data(self, data):
+    def _send_data(self):
+        data = self.get_frame()
         self.udmx.send_multi_value(1, data)

@@ -14,18 +14,18 @@ class transmittingController(Controller):
             if type(kwargs['autostart']) is bool:
                 self.__auto = kwargs['autostart']
 
+        self.internalTicker = Ticker()
+        self.internalTicker.set_interval(0)
+
         if self.__auto:
             self.run()
 
-        self.__transTicker = Ticker()
-        self.__transTicker.set_interval(0)
-
-    def _send_data(self, data: List[int]):
+    def _send_data(self):
         pass
 
     def close(self):
         # Stop the threaded loop
-        self.__transTicker.stop()
+        self.internalTicker.stop()
         print("CLOSE: sending = False")
 
         # Parent
@@ -35,6 +35,6 @@ class transmittingController(Controller):
 
     def run(self):
         # Create the thread and transmit data
-        self.__transTicker.clear_callbacks()
-        self.__transTicker.add_callback(self._send_data)
-        self.__transTicker.start()
+        self.internalTicker.clear_callbacks()
+        self.internalTicker.add_callback(self._send_data)
+        self.internalTicker.start()

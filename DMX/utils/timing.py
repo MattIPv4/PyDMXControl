@@ -69,7 +69,7 @@ class Ticker:
             self.__callbacks.remove(callback)
 
     def clear_callbacks(self):
-        self.__callbacks = {}
+        self.__callbacks = []
 
     def stop(self):
         # Stop the threaded loop
