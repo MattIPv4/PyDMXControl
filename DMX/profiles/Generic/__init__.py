@@ -1,6 +1,3 @@
-"""from DMX.ImportUtil import ImportUtil
-
-globals().update(ImportUtil.loader(__name__, __file__))"""
 from .Custom import Custom
 from .Custom import Custom as Generic_Custom
 from .Dimmer import Dimmer

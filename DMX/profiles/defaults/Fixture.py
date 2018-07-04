@@ -1,9 +1,9 @@
 from datetime import datetime
 from threading import Thread
-from time import sleep
-from time import time
+from time import sleep, time
 from typing import Union, List, Tuple
 from warnings import warn
+
 from DMX import Colors
 
 
