@@ -34,7 +34,5 @@ class uDMXController(transmittingController):
         data = self.get_frame()
         try:
             self.udmx.send_multi_value(1, data)
-        except USBError:
+        except:
             self.__init()
-        except ValueError:
-            pass
