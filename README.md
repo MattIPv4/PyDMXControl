@@ -7,9 +7,13 @@ Supports fixture profiling; Has defaults for a standard fixture and fixtures tha
 Prebuilt profiles for generic fixtures (Single dimmer, RGB LED, Custom (set your own number of channels)).
 
 Currently only supports actual output via uDMX.\
-There is also a print controller included that prints the DMX frames to console at the same rate it should output them to a data cable (this can cause issues though with other things printing as well).
+There is also a print controller included that prints the DMX frames to console at the same rate it should output them
+ to a data cable (this can cause issues though with other things printing as well).
 
 If someone wants to buy me an Enttec USB DMX Pro then I'll try make it work with that too.
+
+Thank you to Dave Hocker, author of [pyudmx](https://github.com/dhocker/udmx-pyusb/), for his work on pyudmx and his
+ advice via email in solving some of the issues making this library behave with uDMX.
 
 ## Discussion, Support and Issues
 For general support and discussion of this project, please join the Discord lounge server: https://discord.gg/qyXqA7y \

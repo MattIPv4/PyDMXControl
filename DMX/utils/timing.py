@@ -3,24 +3,30 @@ from time import sleep, time
 from typing import Callable
 
 DMXMINWAIT = 0.000001 * 92
+DMXMINWAIT = 0.01  # Provides far smoother animation
 
 
 class Ticker:
 
     @staticmethod
-    def __millis_now() -> float:
+    def millis_now() -> float:
         return time() * 1000.0
 
     def __init__(self):
         self.__interval = 1000.0
-        self.__last = self.__millis_now()
+        self.__last = None
         self.__callbacks = []
+        self.__paused = False
         self.__ticking = False
         self.thread = None
 
     def __ticker(self):
+        # New
+        if self.__last is None:
+            self.__last = self.millis_now()
+
         # If diff in milliseconds is interval
-        if self.__millis_now() - self.__last >= self.__interval:
+        if self.millis_now() - self.__last >= self.__interval:
             # If have any callbacks
             if self.__callbacks:
                 # Loop over each callback
@@ -29,14 +35,20 @@ class Ticker:
                     if callback and callable(callback):
                         callback()
             # Finished, update last tick time
-            self.__last = self.__millis_now()
+            self.__last = self.millis_now()
 
     def __ticker__loop(self):
+        # Reset
+        self.__last = None
+        self.__paused = False
         # Use a variable so loop can be stopped
         self.__ticking = True
         while self.__ticking:
-            # Call ticker and sleep DMX delay time
-            self.__ticker()
+            # Allow for pausing
+            if not self.__paused:
+                # Call ticker
+                self.__ticker()
+            # Sleep DMX delay time
             sleep(DMXMINWAIT)
 
         return
@@ -57,12 +69,25 @@ class Ticker:
         if callback in self.__callbacks:
             self.__callbacks.remove(callback)
 
+    def clear_callbacks(self):
+        self.__callbacks = []
+
     def stop(self):
         # Stop the threaded loop
         self.__ticking = False
 
+    @property
+    def paused(self) -> bool:
+        return self.__paused
+
+    def pause(self) -> bool:
+        # Toggle pause state
+        self.__paused = not self.__paused
+        return self.paused
+
     def start(self):
-        # Create the thread and run loop
-        self.thread = Thread(target=self.__ticker__loop)
-        self.thread.daemon = True
-        self.thread.start()
+        if not self.__ticking:
+            # Create the thread and run loop
+            self.thread = Thread(target=self.__ticker__loop)
+            self.thread.daemon = True
+            self.thread.start()

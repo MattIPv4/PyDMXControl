@@ -1,10 +1,11 @@
 from datetime import datetime
 from threading import Thread
-from time import sleep
-from time import time
-from typing import Union, List, Tuple
+from time import sleep, time
+from typing import Union, List, Tuple, Type
 from warnings import warn
+
 from DMX import Colors
+from DMX.effects.defaults import Effect
 
 
 class Channel:
@@ -30,6 +31,7 @@ class Fixture:
 
         self.__start_channel = start_channel
         self.__channels = []
+        self.__effects = []
         self.__id = 0
         self.__name = name
         self.__channel_aliases = {}
@@ -43,6 +45,8 @@ class Fixture:
             (self.__start_channel + len(self.__channels) - 1),
             len(self.__channels)
         )
+
+    # Internal
 
     def _register_channel(self, name: str) -> int:
         if self.__start_channel + len(self.__channels) > 512:
@@ -82,6 +86,8 @@ class Fixture:
     def _set_name(self, name: str) -> None:
         self.__name = name
 
+    # Properties
+
     @staticmethod
     def _valid_channel_value(value: int) -> bool:
         if value < 0 or value > 255:
@@ -107,6 +113,8 @@ class Fixture:
         for i, chan in enumerate(self.__channels):
             channels[self.__start_channel + i] = {'name': chan.name, 'value': self.get_channel_value(i)}
         return channels
+
+    # Channels
 
     def get_channel_id(self, channel: Union[str, int]) -> int:
         channel = str(channel)
@@ -160,7 +168,48 @@ class Fixture:
 
         return self
 
-    ## HELPERS
+    # Effects
+
+    def add_effect(self, effect: Type[Effect], speed: float, *args, **kwargs) -> 'Fixture':
+        # Instantiate
+        effect = effect(self, speed, *args, **kwargs)
+        # Start
+        effect.start()
+        # Save
+        self.__effects.append(effect)
+
+        return self
+
+    def get_effect_by_effect(self, effect: Type[Effect]) -> List[Effect]:
+        matches = []
+
+        # Iterate over each effect
+        for fx in self.__effects:
+            # If it matches the given effect
+            if isinstance(fx, effect):
+                # Store
+                matches.append(fx)
+
+        # Return any matches
+        return matches
+
+    def remove_effect(self, effect: Effect) -> 'Fixture':
+        if effect in self.__effects:
+            effect.stop()
+            self.__effects.remove(effect)
+
+        return self
+
+    def clear_effects(self) -> 'Fixture':
+        # Stop
+        for effect in self.__effects:
+            effect.stop()
+        # Clear
+        self.__effects = []
+
+        return self
+
+    # Helpers
 
     def __dim(self, current, target, millis, channel):
         start = time() * 1000.0
