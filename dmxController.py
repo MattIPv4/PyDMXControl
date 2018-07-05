@@ -4,6 +4,9 @@ from DMX import Colors
 from DMX.controllers import uDMXController as Controller
 from DMX.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
+# This is my home setup, which also acts as a great demo of some of what this library is capabple of doing.
+# See the tests directory for other recent/new features that I've possibly been working on.
+
 # Create our controller
 dmx = Controller()
 
@@ -57,6 +60,7 @@ times = [
 ]
 
 
+# Create the callback to turn lights on/off and change colors at certain times
 def callback():
     global last_state, last_state_type, times
 
