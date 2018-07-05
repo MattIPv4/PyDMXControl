@@ -14,6 +14,12 @@ class Chase(Effect):
         self.__colors = kwargs['colors'].copy()
         del kwargs['colors']
 
+        self.__snap = False
+        if 'snap' in kwargs and isinstance(kwargs['snap'], bool):
+            self.__snap = kwargs['snap']
+        if 'snap' in kwargs:
+            del kwargs['snap']
+
         super().__init__(*args, **kwargs)
 
         # Start of loop
@@ -50,6 +56,13 @@ class Chase(Effect):
         # Hit 0% & 100%
         if percent >= 0.99: percent = 1
         if percent <= 0.01: percent = 0
+
+        # Snapping
+        if self.__snap:
+            if percent <= 0.5:
+                percent = 0
+            else:
+                percent = 1
 
         # Generate color
         color = Colors.mix(self.__colors[previous_i], self.__colors[next_i], percent)
