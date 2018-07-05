@@ -1,3 +1,5 @@
+from usb.core import USBError
+
 from pyudmx import pyudmx
 from .transmittingController import transmittingController
 
@@ -5,10 +7,18 @@ from .transmittingController import transmittingController
 class uDMXController(transmittingController):
 
     def __init__(self, *args, **kwargs):
-        self.udmx = pyudmx.uDMXDevice()
-        self.udmx.open()
+        self.__init()
 
         super().__init__(*args, **kwargs)
+
+    def __init(self):
+        try:
+            self.udmx.close()
+        except:
+            pass
+
+        self.udmx = pyudmx.uDMXDevice()
+        self.udmx.open()
 
     def close(self):
         # uDMX
@@ -22,4 +32,9 @@ class uDMXController(transmittingController):
 
     def _send_data(self):
         data = self.get_frame()
-        self.udmx.send_multi_value(1, data)
+        try:
+            self.udmx.send_multi_value(1, data)
+        except USBError:
+            self.__init()
+        except ValueError:
+            pass
