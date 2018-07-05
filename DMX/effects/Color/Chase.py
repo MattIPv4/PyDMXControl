@@ -47,6 +47,10 @@ class Chase(Effect):
             return
         percent = 1 - (progress_index - 1 - previous_i)
 
+        # Hit 0% & 100%
+        if percent >= 0.99: percent = 1
+        if percent <= 0.01: percent = 0
+
         # Generate color
         color = Colors.mix(self.__colors[previous_i], self.__colors[next_i], percent)
 
