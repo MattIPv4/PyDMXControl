@@ -15,12 +15,6 @@ class Dim(Effect):
             self.__start = self.ticker.millis_now()
 
         offset = self.speed * self.offset  # Calculate offset duration
-
-        # Initial offset
-        if (self.ticker.millis_now() - self.__start) <= offset:
-            self.fixture.set_channel('dimmer', 0)
-            return
-
         delay = self.speed * self.delay  # Calculate delay period after effect
         total = self.speed + delay  # Calculate total loop time (speed + delay)
 

@@ -11,8 +11,7 @@ class Chase(Effect):
         if 'colors' not in kwargs:
             raise MissingArgumentException('colors', True)
 
-        self.__colors = kwargs['colors']
-        self.__colors.append(self.__colors[0])
+        self.__colors = kwargs['colors'].copy()
         del kwargs['colors']
 
         super().__init__(*args, **kwargs)
@@ -25,12 +24,7 @@ class Chase(Effect):
         if self.__start is None:
             self.__start = self.ticker.millis_now()
 
-        offset = (self.speed / len(self.__colors)) * self.offset  # Calculate offset duration
-
-        # Initial offset
-        if (self.ticker.millis_now() - self.__start) <= offset:
-            return
-
+        offset = (self.speed / (len(self.__colors))) * self.offset  # Calculate offset duration
         start = self.__start + offset  # Account for initial offset
         since_start = self.ticker.millis_now() - start  # Calculate time since effect started
         since_last = since_start % self.speed  # Calculate time since this loop started
@@ -44,21 +38,19 @@ class Chase(Effect):
         while progress < 0:
             progress = 1 + progress
 
-        # Ensure we reach 100%
-        if progress >= 0.95:
-            progress = 1
-
         # Convert to color index
-        index = (len(self.__colors) - 1) * progress
-        previous_i = floor(index)
-        next_i = ceil(index)
+        progress_index = len(self.__colors) * progress
+        next_i = ceil(progress_index) - 1
+        previous_i = floor(progress_index) - 1
         total = next_i - previous_i
         if total == 0:
             return
-        percent = 1 - ((index - previous_i) / (next_i - previous_i))
+        percent = 1 - (progress_index - 1 - previous_i)
 
+        # Generate color
         color = Colors.mix(self.__colors[previous_i], self.__colors[next_i], percent)
 
+        # Apply color
         self.fixture.color(color, 0)
 
     def start(self):

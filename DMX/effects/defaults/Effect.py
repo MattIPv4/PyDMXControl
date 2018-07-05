@@ -36,12 +36,12 @@ class Effect:
         self.ticker.start()
 
     @classmethod
-    def group_apply(cls, fixtures: List['Fixture'], speed: float):
+    def group_apply(cls, fixtures: List['Fixture'], speed: float, *args, **kwargs):
         # Position
         index = 0
         total = len(fixtures) - 1
 
         # Iterate over each
         for fixture in fixtures:
-            fixture.add_effect(cls, speed, delay=total * 100, offset=index * 100)
+            fixture.add_effect(cls, speed, delay=total * 100, offset=index * 100, *args, **kwargs)
             index += 1
