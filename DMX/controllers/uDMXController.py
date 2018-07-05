@@ -1,5 +1,3 @@
-from usb.core import USBError
-
 from pyudmx import pyudmx
 from .transmittingController import transmittingController
 
@@ -7,14 +5,11 @@ from .transmittingController import transmittingController
 class uDMXController(transmittingController):
 
     def __init__(self, *args, **kwargs):
-        self.__opening = False
         self.__init()
 
         super().__init__(*args, **kwargs)
 
     def __init(self):
-        self.__opening = True
-
         try:
             self.udmx.close()
         except:
@@ -22,8 +17,6 @@ class uDMXController(transmittingController):
 
         self.udmx = pyudmx.uDMXDevice()
         self.udmx.open()
-
-        self.__opening = False
 
     def close(self):
         # uDMX
@@ -36,10 +29,18 @@ class uDMXController(transmittingController):
         return
 
     def _send_data(self):
+        # Get the data
         data = self.get_frame()
-        if not self.__opening:
+
+        # Attempt to send data max 5 times
+        # Thanks to Dave Hocker (pyudmx author) for giving me this solution to the random usb errors
+        success = False
+        retry_count = 0
+        while not success:
             try:
                 self.udmx.send_multi_value(1, data)
+                success = True
             except Exception as e:
-                print(e)
-                self.__init()
+                retry_count += 1
+                if retry_count > 5:
+                    raise e

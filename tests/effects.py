@@ -2,23 +2,28 @@ from DMX import Colors
 from DMX.controllers import uDMXController as Controller
 from DMX.effects.Intensity import Dim
 from DMX.effects.Color import Chase
-from DMX.profiles.Stairville import Quad_Par_Profile
+from DMX.profiles.Stairville import LED_Par_10mm, LED_Par_36, Quad_Par_Profile
 
 dmx = Controller()
 
 # Fixtures
+dmx.add_fixture(LED_Par_10mm, name="Flood")
+dmx.add_fixture(LED_Par_36, name="CL")
+dmx.add_fixture(LED_Par_36, name="FL")
+dmx.add_fixture(LED_Par_36, name="FR")
+dmx.add_fixture(LED_Par_36, name="CR")
+"""dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)
-dmx.add_fixture(Quad_Par_Profile, mode=8)
-dmx.add_fixture(Quad_Par_Profile, mode=8)
+dmx.add_fixture(Quad_Par_Profile, mode=8)"""
 
 # Effect
 dmx.all_locate()
 
-Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Red, Colors.Yellow, Colors.Green, Colors.Blue])
-# Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Black, Colors.White, Colors.Black])
+# Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Red, Colors.Yellow, Colors.Green, Colors.Blue])
+Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Blue, Colors.Cyan, Colors.White])
 # Dim.group_apply(dmx.get_all_fixtures(), 100)
 
 dmx.debug_control()
