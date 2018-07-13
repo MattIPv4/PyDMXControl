@@ -1,2 +1,5 @@
 .idea/
 venv/
+PyDMXControl.egg-info/
+build/
+dist/
