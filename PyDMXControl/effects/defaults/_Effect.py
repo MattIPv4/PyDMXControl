@@ -6,13 +6,12 @@
 
 from typing import List
 
-from PyDMXControl.profiles.defaults import _Fixture
 from PyDMXControl.utils.timing import Ticker
 
 
 class Effect:
 
-    def __init__(self, fixture: _Fixture, speed: int, *, delay: float = 0, offset: float = 0):
+    def __init__(self, fixture: 'Fixture', speed: int, *, delay: float = 0, offset: float = 0):
         # The fixture effect is applied to
         self.fixture = fixture
 
@@ -42,7 +41,7 @@ class Effect:
         self.ticker.start()
 
     @classmethod
-    def group_apply(cls, fixtures: List['_Fixture'], speed: float, *args, **kwargs):
+    def group_apply(cls, fixtures: List['Fixture'], speed: float, *args, **kwargs):
         # Position
         index = 0
         total = len(fixtures) - 1

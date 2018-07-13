@@ -7,7 +7,7 @@
 from inspect import signature, Parameter
 from typing import List, Tuple, Union
 
-from PyDMXControl.profiles.defaults import _Fixture, Vdim
+from PyDMXControl.profiles.defaults import Fixture, Vdim
 
 
 class Debugger:
@@ -115,14 +115,14 @@ class Debugger:
 
         return
 
-    def __fixture_channels(self, fixture: _Fixture) -> List[str]:
+    def __fixture_channels(self, fixture: Fixture) -> List[str]:
         names = ["'" + f['name'] + "'" for f in fixture.channels.values()]
         print(issubclass(type(fixture), Vdim))
         if issubclass(type(fixture), Vdim):
             names.append("'dimmer'")
         return names
 
-    def __fixture_channel_value(self, fixture: _Fixture, channel: Union[str, int]) -> int:
+    def __fixture_channel_value(self, fixture: Fixture, channel: Union[str, int]) -> int:
         if issubclass(type(fixture), Vdim):
             return fixture.get_channel_value(channel, False)[0]
         return fixture.get_channel_value(channel)[0]
