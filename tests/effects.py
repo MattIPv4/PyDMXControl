@@ -1,8 +1,8 @@
-from DMX import Colors
-from DMX.controllers import uDMXController as Controller
-from DMX.effects.Intensity import Dim
-from DMX.effects.Color import Chase
-from DMX.profiles.Stairville import LED_Par_10mm, LED_Par_36, Quad_Par_Profile
+from PyDMXControl import Colors
+from PyDMXControl.controllers import uDMXController as Controller
+from PyDMXControl.effects.Intensity import Dim
+from PyDMXControl.effects.Color import Chase
+from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36, Quad_Par_Profile
 
 dmx = Controller()
 

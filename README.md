@@ -1,6 +1,6 @@
 # PyDMXControl
 ![PyDMXControl](brand/PyDMXControl-500x60.png)\
-**A Python 3.6 module to control DMX via Python. Featuring fixture profiles and working with uDMX.**
+**A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.**
 
 Just messing around with using Python to control/send DMX.\
 Supports fixture profiling; Has defaults for a standard fixture and fixtures that need virtual dimmers.\
