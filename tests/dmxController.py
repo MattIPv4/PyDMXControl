@@ -4,7 +4,7 @@ from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
-# This is my home setup, which also acts as a great demo of some of what this library is capabple of doing.
+# This is my home setup, which also acts as a great demo of some of what this library is capable of doing.
 # See the tests directory for other recent/new features that I've possibly been working on.
 
 # Create our controller
