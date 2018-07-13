@@ -1,4 +1,4 @@
-[![PyPI](https://img.shields.io/pypi/v/PyDMXControl.py.svg)](https://pypi.org/project/PyDMXControl/)
+[![PyPI](https://img.shields.io/pypi/v/PyDMXControl.svg)](https://pypi.org/project/PyDMXControl/)
 
 # PyDMXControl
 ![PyDMXControl](brand/PyDMXControl-500x60.png)\
