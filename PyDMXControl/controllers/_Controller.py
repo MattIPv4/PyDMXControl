@@ -186,6 +186,10 @@ class Controller:
         for fixture in self.get_all_fixtures():
             fixture.color(color, milliseconds)
 
+    def clear_all_effects(self):
+        for fixture in self.get_all_fixtures():
+            fixture.clear_effects()
+
     def debug_control(self, callbacks: dict = None):
         if callbacks is None: callbacks = {}
         Debugger(self, callbacks).run()
