@@ -58,5 +58,7 @@ setup(
     },
 )
 
-# python3 setup.py sdist bdist_wheel bdist_egg
-# python3 -m twine upload dist/*
+# How2Ship:tm:
+# 1. Update version in PyDMXControl/__init__.py
+# 2. Run python3 setup.py sdist bdist_wheel bdist_egg
+# 3. Run python3 -m twine upload dist/*
