@@ -16,17 +16,30 @@ from PyDMXControl.effects.defaults import Effect
 
 class Channel:
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, parked: Union[bool, int]):
         self.name = name
         self.value = 0
         self.updated = datetime.utcnow()
+        self.parked = parked if parked is False else (0 if parked is True else parked)
 
-    def set_value(self, value: int):
-        self.value = value
+    def __updated(self):
         self.updated = datetime.utcnow()
 
+    def set_value(self, value: int):
+        if self.parked is False:
+            self.value = value
+            self.__updated()
+
     def get_value(self) -> Tuple[int, datetime]:
-        return self.value, self.updated
+        return (self.value if self.parked is False else self.parked), self.updated
+
+    def park(self, value: int = 0):
+        self.parked = value
+        self.__updated()
+
+    def unpark(self):
+        self.parked = False
+        self.__updated()
 
 
 class Fixture:
@@ -54,7 +67,7 @@ class Fixture:
 
     # Internal
 
-    def _register_channel(self, name: str) -> int:
+    def _register_channel(self, name: str, *, parked: Union[bool, int] = False) -> int:
         if self.__start_channel + len(self.__channels) > 512:
             warn('Not enough space in universe for channel `{}`.'.format(name))
             return -1
@@ -65,7 +78,7 @@ class Fixture:
             warn('Name `{}` already in use for channel (or alias).'.format(name))
             return -1
 
-        self.__channels.append(Channel(name.lower().strip()))
+        self.__channels.append(Channel(name.lower().strip(), parked))
         return len(self.__channels) - 1
 
     def _register_channel_aliases(self, channel: str, *aliases: str) -> bool:
