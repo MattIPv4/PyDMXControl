@@ -117,7 +117,6 @@ class Debugger:
 
     def __fixture_channels(self, fixture: Fixture) -> List[str]:
         names = ["'" + f['name'] + "'" for f in fixture.channels.values()]
-        print(issubclass(type(fixture), Vdim))
         if issubclass(type(fixture), Vdim):
             names.append("'dimmer'")
         return names
@@ -127,7 +126,9 @@ class Debugger:
             return fixture.get_channel_value(channel, False)[0]
         return fixture.get_channel_value(channel)[0]
 
-    def run_fixture(self, fixture: str):
+    def run_fixture(self):
+        fixture = input("\n[Fixture Debug] Fixture ID/Name: ").strip()
+
         # Find the fixture
         if not fixture.isdigit():
             fixture = self.cont.get_fixtures_by_name(fixture)
@@ -138,14 +139,14 @@ class Debugger:
             return
 
         # Fixture debug control
-        print("[Fixture Debug] Fixture selected:", fixture)
+        print("\n[Fixture Debug] Fixture selected:", fixture)
         # Give Channels
         print("[Fixture Debug] Available channels:",
               ", ".join(self.__fixture_channels(fixture)))
         while True:
 
             # Channel selection / exit fixture debug
-            channel = input("[Fixture Debug] Channel Number/Name (or 'exit'): ").strip()
+            channel = input("\n[Fixture Debug] Channel Number/Name (or 'exit'): ").strip()
             if channel == 'exit':
                 break
             channel = fixture.get_channel_id(channel)
@@ -167,18 +168,34 @@ class Debugger:
         print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.cont.next_channel - 1))
         while True:
             # Selection
-            fixture = input("[DMX Debug] Fixture ID/Name or 'callbacks' (or 'exit'): ").strip()
+            select = input("\n[DMX Debug] '1': Fixture Select by ID/Name"
+                           "\n            '2': Fixture List"
+                           "\n            '3': Callbacks"
+                           "\n            '4': Exit"
+                           "\nSelection: ").strip()
 
-            # Allow exit
-            if fixture == 'exit':
-                break
+            # Fixture id/name
+            if select == '1':
+                self.run_fixture()
+                continue
 
-            # Callback control
-            if fixture == 'callbacks':
+            # Fixture list
+            if select == '2':
+                # Compile list
+                fixtures = []
+                for f in self.cont.get_all_fixtures():
+                    fixtures.extend(["\n", f])
+                # Output
+                print("\n[DMX Debug] Fixture List:", *fixtures)
+                continue
+
+            # Callbacks
+            if select == '3':
                 self.run_callbacks()
                 continue
 
-            # Fixture control
-            self.run_fixture(fixture)
+            # Exit
+            if select == '4':
+                break
 
         return
