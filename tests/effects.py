@@ -1,9 +1,11 @@
+from time import sleep
+
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
-from PyDMXControl.effects.Intensity import Dim
 from PyDMXControl.effects.Color import Chase
-from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36, Quad_Par_Profile
+from PyDMXControl.effects.Intensity import Dim
 from PyDMXControl.profiles.Eyourlife import Small_Flat_Par
+from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
 dmx = Controller()
 
@@ -22,14 +24,33 @@ dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)"""
 
-# Effect
+# Dim all up
 dmx.all_locate()
 
+# Apply effect 1
 Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Red, Colors.Yellow, Colors.Green, Colors.Blue])
-# Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Blue, Colors.Cyan, Colors.White])
-# Dim.group_apply(dmx.get_all_fixtures(), 100)
 
+# Wait then clear
+sleep(15)
+dmx.clear_all_effects()
+dmx.all_locate()
+sleep(5)
+
+# Apply effect 2
+Chase.group_apply(dmx.get_all_fixtures(), 5000, colors=[Colors.Blue, Colors.Cyan, Colors.White])
+
+# Wait then clear
+sleep(15)
+dmx.clear_all_effects()
+dmx.all_locate()
+sleep(5)
+
+# Apply effect 3
+Dim.group_apply(dmx.get_all_fixtures(), 100)
+
+# Debug
 dmx.debug_control()
 
+# Done
 dmx.sleep_till_enter()
 dmx.close()

@@ -30,8 +30,8 @@ def run():
     else:
         path = "./venv/bin/python3"
 
-    print("\n\nSpawning: {} {}\n\n".format(os.path.abspath(path), "tests/dmxController.py"))
-    proc = Popen([os.path.abspath(path), "tests/dmxController.py"],
+    print("\n\nSpawning: {} {}\n\n".format(os.path.abspath(path), "tests/home.py"))
+    proc = Popen([os.path.abspath(path), "tests/home.py"],
                  cwd=os.getcwd(), env=env)
 
     proc.communicate()
