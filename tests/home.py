@@ -69,13 +69,13 @@ standard_lights()
 last_state = None
 last_state_type = None
 times = [
-    [(700, 750), (1600, 2130)],  # Monday
-    [(700, 750), (1600, 2130)],  # Tuesday
-    [(700, 750), (1330, 2130)],  # Wednesday
-    [(700, 750), (1600, 2130)],  # Thursday
+    [(700, 750), (1600, 2200)],  # Monday
+    [(700, 750), (1600, 2200)],  # Tuesday
+    [(700, 750), (1330, 2200)],  # Wednesday
+    [(700, 750), (1600, 2200)],  # Thursday
     [(700, 750), (1330, 2200)],  # Friday
-    [(830, 2200)],  # Saturday
-    [(830, 2130)],  # Sunday
+    [(800, 2200)],  # Saturday
+    [(800, 2200)],  # Sunday
 ]
 
 
