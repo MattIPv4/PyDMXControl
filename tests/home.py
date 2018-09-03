@@ -68,16 +68,15 @@ standard_lights()
 # Timed lights
 last_state = None
 last_state_type = None
-"""times = [
-    [(700, 750), (1500, 2130)],  # Monday
+times = [
+    [(700, 750), (1600, 2130)],  # Monday
     [(700, 750), (1600, 2130)],  # Tuesday
-    [(700, 750), (1600, 2130)],  # Wednesday
+    [(700, 750), (1330, 2130)],  # Wednesday
     [(700, 750), (1600, 2130)],  # Thursday
     [(700, 750), (1330, 2200)],  # Friday
-    [(900, 2200)],  # Saturday
-    [(900, 2130)],  # Sunday
-]"""
-times = [[(830, 2200)]] * 7  # Holiday mode:tm:
+    [(830, 2200)],  # Saturday
+    [(830, 2130)],  # Sunday
+]
 
 
 # Create the callback to turn lights on/off and change colors at certain times
