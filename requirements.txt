@@ -1,1 +1,2 @@
 pyusb
+udmx-pyusb

@@ -18,7 +18,9 @@ class ExtendedEnvBuilder(venv.EnvBuilder):
             pip = "./venv/Scripts/pip.exe"
         else:
             pip = "./venv/bin/pip"
-        proc = Popen([pip, "install", "pyusb"])
+        with open("requirements.txt", "r") as f:
+            requirements = f.readlines()
+        proc = Popen([pip, "install"] + requirements)
         proc.communicate()
 
 

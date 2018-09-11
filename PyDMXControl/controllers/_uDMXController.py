@@ -4,7 +4,8 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
-from PyDMXControl.pyudmx import pyudmx
+from pyudmx import pyudmx
+
 from ._transmittingController import transmittingController
 
 

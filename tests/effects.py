@@ -46,7 +46,8 @@ dmx.all_locate()
 sleep(5)
 
 # Apply effect 3
-Dim.group_apply(dmx.get_all_fixtures(), 100)
+dmx.all_off()
+Dim.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 1000)
 
 # Debug
 dmx.debug_control()
