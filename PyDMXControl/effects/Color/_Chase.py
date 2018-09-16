@@ -6,9 +6,9 @@
 
 from math import ceil, floor
 
-from PyDMXControl import Colors
-from PyDMXControl.utils.exceptions import MissingArgumentException
 from ..defaults import Effect
+from ... import Colors
+from ...utils.exceptions import MissingArgumentException
 
 
 class Chase(Effect):

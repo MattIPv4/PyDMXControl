@@ -10,8 +10,8 @@ from time import sleep, time
 from typing import Union, List, Tuple, Type
 from warnings import warn
 
-from PyDMXControl import Colors
-from PyDMXControl.effects.defaults import Effect
+from ... import Colors
+from ...effects.defaults import Effect
 
 
 class Channel:

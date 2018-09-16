@@ -6,7 +6,7 @@
 
 from typing import List
 
-from PyDMXControl.utils.timing import Ticker
+from ...utils.timing import Ticker
 
 
 class Effect:

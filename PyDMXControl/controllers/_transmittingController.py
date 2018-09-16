@@ -4,8 +4,8 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
-from PyDMXControl.utils.timing import Ticker
 from ._Controller import Controller
+from ..utils.timing import Ticker
 
 
 class transmittingController(Controller):
