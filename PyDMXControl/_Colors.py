@@ -64,6 +64,10 @@ class Colors(list, Enum):
         """ Assumes RGBWA """
         return [(k, v) for k, v in Colors.to_dict(colors).items()]
 
+    @staticmethod
+    def to_print(colors: List[int], separator: str = ", ") -> str:
+        return separator.join([str(f) for f in colors])
+
     Black = [000, 000, 000, 000]
     White = [255, 255, 255, 255]
     Warm = [255, 127, 78, 000]

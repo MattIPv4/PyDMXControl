@@ -4,10 +4,13 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+from collections import namedtuple
 from inspect import signature, Parameter
+from re import compile
 from typing import List, Tuple, Union
 
-from PyDMXControl.profiles.defaults import Fixture, Vdim
+from ... import Colors
+from ...profiles.defaults import Fixture, Vdim
 
 
 class Debugger:
@@ -84,11 +87,11 @@ class Debugger:
         self.__check_callbacks()
 
         # Give callbacks
-        print("[Callbacks Debug] Available callbacks:",
+        print("\n[Callbacks Debug] Available callbacks:",
               ", ".join(["'" + f + "'" for f in self.cbs.keys()]))
         while True:
             # Selection
-            callback = input("[Callbacks Debug] Callback Name (or 'exit'): ").strip()
+            callback = input("\n[Callbacks Debug] Callback Name (or 'exit'): ").strip()
 
             # Allow exit
             if callback == 'exit':
@@ -140,32 +143,88 @@ class Debugger:
 
         # Fixture debug control
         print("\n[Fixture Debug] Fixture selected:", fixture)
-        # Give Channels
-        print("[Fixture Debug] Available channels:",
-              ", ".join(self.__fixture_channels(fixture)))
         while True:
 
-            # Channel selection / exit fixture debug
-            channel = input("\n[Fixture Debug] Channel Number/Name (or 'exit'): ").strip()
-            if channel == 'exit':
+            # Selection
+            select = input("\n[Fixture Debug] '1': Channel Select by Number/Name"
+                           "\n            '2': Channel List"
+                           "\n            '3': Color (if fixture supports)"
+                           "\n            '4': Color List"
+                           "\n            '5': Exit"
+                           "\nSelection: ").strip()
+
+            # Channel number/name
+            if select == '1':
+                # Select
+                channel = input("\n[Channel Debug] Channel Number/Name: ").strip()
+
+                # Find
+                channel = fixture.get_channel_id(channel)
+
+                # Abort if not found
+                if channel == -1:
+                    continue
+
+                # Value
+                value = str(self.__fixture_channel_value(fixture, channel))
+                value = input("[Channel Debug] Channel Value (Currently " + value + ", leave blank to abort): ").strip()
+
+                # Abort if bad value
+                if value == "":
+                    continue
+                if not value.isdigit():
+                    continue
+
+                # Apply
+                value = int(value)
+                fixture.set_channel(channel, value)
+                print("[Channel Debug] Channel '" + channel + "' set to " + fixture.get_channel_value(channel))
+                continue
+
+            # Channel list
+            if select == '2':
+                print("\n[Fixture Debug] Channel List:", ", ".join(self.__fixture_channels(fixture)))
+                continue
+
+            # Color select
+            if select == '3':
+                # Select
+                select = input("\n[Fixture Debug] Color Name: ").strip().lower()
+
+                # Try finding enum
+                color = [c for c in Colors if c.name.lower() == select]
+
+                # If not enum, try regex, else fetch enum
+                if not color:
+                    pattern = compile("^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
+                    match = pattern.match(select)
+                    if not match:
+                        continue
+                    color = {"name": "User Input", "value": [int(f) for f in match.groups() if f]}
+                    color = namedtuple("Color", color.keys())(*color.values())
+                else:
+                    color = color[0]
+
+                # Apply
+                fixture.color(color.value)
+                print("[Fixture Debug] Color set to " + color.name + " (" + Colors.to_print(color.value) + ")")
+                continue
+
+            # Color list
+            if select == '4':
+                print("\n[Fixture Debug] Color List:", ", ".join([color.name for color in Colors]))
+                continue
+
+            # Exit
+            if select == '5':
                 break
-            channel = fixture.get_channel_id(channel)
-            if channel == -1:
-                continue
-            value = str(self.__fixture_channel_value(fixture, channel))
-            value = input("[Fixture Debug] Channel Value (Currently " + value + ", leave blank to abort): ").strip()
-            if value == "":
-                continue
-            if not value.isdigit():
-                continue
-            value = int(value)
-            fixture.set_channel(channel, value)
 
         return
 
     def run(self):
         # DMX debug control
-        print("[DMX Debug] Currently operating in channels: 1->{}.".format(self.cont.next_channel - 1))
+        print("[DMX Debug] Currently operating in channels: {}".format("1->{}.".format(self.cont.next_channel - 1) if
+                                                                       self.cont.next_channel > 1 else "None"))
         while True:
             # Selection
             select = input("\n[DMX Debug] '1': Fixture Select by ID/Name"

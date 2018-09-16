@@ -7,11 +7,11 @@
 from time import sleep
 from typing import Type, List, Union, Dict, Tuple
 
-from PyDMXControl import Colors
-from PyDMXControl.utils.exceptions import LTPCollisionException
-from PyDMXControl.utils.timing import DMXMINWAIT, Ticker
 from .utils.debug import Debugger
+from .. import Colors
 from ..profiles.defaults._Fixture import Channel, Fixture
+from ..utils.exceptions import LTPCollisionException
+from ..utils.timing import DMXMINWAIT, Ticker
 
 
 class Controller:
