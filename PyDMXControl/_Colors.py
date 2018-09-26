@@ -65,6 +65,15 @@ class Colors(list, Enum):
         return [(k, v) for k, v in Colors.to_dict(colors).items()]
 
     @staticmethod
+    def to_hex(colors: List[int]) -> str:
+        def clamp(x): return max(0, min(x, 255))
+
+        result = "#"
+        for color in colors:
+            result += "{:02x}".format(clamp(color))
+        return result
+
+    @staticmethod
     def to_print(colors: List[int], separator: str = ", ") -> str:
         return separator.join([str(f) for f in colors])
 

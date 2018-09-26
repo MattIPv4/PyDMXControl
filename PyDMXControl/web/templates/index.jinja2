@@ -1,0 +1,55 @@
+{% extends "base.jinja2" %}
+
+{% block body %}
+    <h1>Home
+        <small> - PyDMXControl Web Controller</small>
+    </h1>
+
+    <section>
+
+        <article>
+            <h2>Fixture List</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Fixture ID</th>
+                    <th>Fixture Name</th>
+                    <th>Fixture Channels</th>
+                    <th>Control</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for fixture in controller.get_all_fixtures() %}
+                    <tr>
+                        <td>#{{ fixture.id }}</td>
+                        <td>{{ fixture.name }}</td>
+                        <td>{{ fixture.channel_usage }}</td>
+                        <td><a href="{{ url_for('.fixture', fid=fixture.id) }}">Control</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </article>
+
+        <article>
+            <h2>Callback List</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Callback Name</th>
+                    <th>Run</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for name in callbacks.keys() %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td><a href="{{ url_for('.callback', cb=name) }}">Run</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </article>
+
+    </section>
+{% endblock body %}

@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+    <title>PyDMXControl Web Controller</title>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            background: #222;
+            color: #eee;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        body {
+            padding: 2em;
+        }
+
+        table, form {
+            margin: 1em 0;
+            min-width: 300px;
+            background: #34495E;
+            border-radius: .4em;
+            overflow-y: scroll;
+            max-width: 100%;
+        }
+
+        table th, form label {
+            color: #dd5;
+            font-weight: bold;
+        }
+
+        table tr {
+            border-top: 1px solid #46637f;
+            border-bottom: 1px solid #46637f;
+        }
+
+        table th, table td, form label, form input {
+            text-align: left;
+            padding: .5em 1em;
+        }
+
+        small {
+            font-size: 50%;
+        }
+
+        section, form {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        article {
+            display: inline-block;
+            padding: .5em 1em;
+        }
+
+        form input:not([type="submit"]) {
+            flex-grow: 1;
+        }
+
+        form input[type=submit] {
+            background: #dd5;
+            border: 0 none;
+            cursor: pointer;
+        }
+
+        a, a:visited {
+            color: #57f;
+        }
+
+        a:hover, a:focus {
+            color: #35d;
+        }
+    </style>
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>

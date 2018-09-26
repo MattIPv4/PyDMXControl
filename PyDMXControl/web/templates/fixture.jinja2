@@ -1,0 +1,98 @@
+{% extends "base.jinja2" %}
+
+{% block body %}
+    <h1>{{ fixture.title }}
+        <small> - PyDMXControl Web Controller</small>
+    </h1>
+    <a href="{{ url_for('.home') }}">&lt; Home</a>
+
+    <section>
+
+        <article>
+            <h2>Channel List</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Channel No.</th>
+                    <th>Channel Name</th>
+                    <th>Channel Value</th>
+                    <th>Control</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i, channel in enumerate(fixture_channels(fixture)) %}
+                    <tr>
+                        <td>{{ (i + fixture.start_channel if i + 1 < fixture.next_channel else "-") }}</td>
+                        <td>{{ channel[0] }}</td>
+                        <td>{{ channel[1] }}</td>
+                        <td><a href="{{ url_for('.channel', fid=fixture.id, cid=i) }}">Control</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </article>
+
+        <article>
+            {% if fixture.get_color() is not none %}
+                <h2>Color List</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Color Name</th>
+                        <th>Color Value</th>
+                        <th>Apply</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for color in colors %}
+                        <tr>
+                            <td>{{ color.name }}</td>
+                            <td>{{ color.value }}</td>
+                            <td><a href="{{ url_for('.color', fid=fixture.id,
+                            val=colors.to_print(color.value, ',')) }}">Apply</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <form id="color">
+                    <label for="value">Custom Color</label>
+                    <input id="value" name="value" type="color" value="{{ colors.to_hex(fixture.get_color()) }}"
+                           required/>
+                    <input type="submit" value="Update" id="submit" name="submit"/>
+                </form>
+            {% else %}
+                <h2>
+                    <small>This fixture does not support color</small>
+                </h2>
+            {% endif %}
+        </article>
+
+    </section>
+
+    <script>
+        function hexToRgb(hex) {
+            // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                return r + r + g + g + b + b;
+            });
+
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? [
+                parseInt(result[1], 16),
+                parseInt(result[2], 16),
+                parseInt(result[3], 16)
+            ] : null;
+        }
+
+        document.getElementById("color").addEventListener("submit", function (e) {
+            e.preventDefault();
+            var color = hexToRgb(document.getElementById("value").value);
+            if (color) {
+                window.location.href = "{{ url_for('.color', fid=fixture.id, val='') }}" +
+                    encodeURIComponent(color.join(','));
+            }
+        });
+    </script>
+{% endblock body %}

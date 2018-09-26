@@ -56,14 +56,7 @@ class Fixture:
         self.__channel_aliases = {}
 
     def __str__(self):
-        return "Fixture #{} ('{}') of type {} using channels {}->{} ({}).".format(
-            self.id,
-            self.name,
-            self.__class__.__name__,
-            self.__start_channel,
-            (self.__start_channel + len(self.__channels) - 1),
-            len(self.__channels)
-        )
+        return self.title
 
     # Internal
 
@@ -123,6 +116,10 @@ class Fixture:
         return self.__name
 
     @property
+    def start_channel(self) -> int:
+        return self.__start_channel
+
+    @property
     def next_channel(self) -> int:
         return len(self.__channels) + 1
 
@@ -130,8 +127,25 @@ class Fixture:
     def channels(self) -> dict:
         channels = {}
         for i, chan in enumerate(self.__channels):
-            channels[self.__start_channel + i] = {'name': chan.name, 'value': self.get_channel_value(i)}
+            channels[self.start_channel + i] = {'name': chan.name, 'value': self.get_channel_value(i)}
         return channels
+
+    @property
+    def channel_usage(self) -> str:
+        return "{}->{} ({})".format(
+            self.start_channel,
+            (self.start_channel + len(self.__channels) - 1),
+            len(self.__channels)
+        )
+
+    @property
+    def title(self) -> str:
+        return "Fixture #{} ('{}') of type {} using channels {}.".format(
+            self.id,
+            self.name,
+            self.__class__.__name__,
+            self.channel_usage
+        )
 
     # Channels
 
@@ -154,7 +168,8 @@ class Fixture:
         return -1
 
     def get_channel_value(self, channel: int) -> Tuple[int, datetime]:
-        if channel >= len(self.__channels): return -1, datetime.utcnow()
+        channel = self.get_channel_id(channel)
+        if channel >= len(self.__channels) or channel < 0: return -1, datetime.utcnow()
         return self.__channels[channel].get_value()
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
@@ -273,6 +288,21 @@ class Fixture:
 
         # Apply
         self.anim(milliseconds, *color)
+
+    def get_color(self) -> Union[None, List[int]]:
+        red = self.get_channel_value(self.get_channel_id("r"))
+        green = self.get_channel_value(self.get_channel_id("g"))
+        blue = self.get_channel_value(self.get_channel_id("b"))
+        white = self.get_channel_value(self.get_channel_id("w"))
+        amber = self.get_channel_value(self.get_channel_id("a"))
+        if red[0] == -1 or green[0] == -1 or blue[0] == -1:
+            return None
+        color = [red[0], green[0], blue[0]]
+        if white[0] != -1:
+            color.append(white[0])
+            if amber[0] != -1:
+                color.append(amber[0])
+        return color
 
     def locate(self):
         self.color([255, 255, 255, 255, 255])

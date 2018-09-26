@@ -5,13 +5,14 @@
 """
 
 from time import sleep
-from typing import Type, List, Union, Dict, Tuple
+from typing import Type, List, Union, Dict, Tuple, Callable
 
 from .utils.debug import Debugger
 from .. import Colors
 from ..profiles.defaults._Fixture import Channel, Fixture
 from ..utils.exceptions import LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
+from ..web import WebController
 
 
 class Controller:
@@ -190,9 +191,17 @@ class Controller:
         for fixture in self.get_all_fixtures():
             fixture.clear_effects()
 
-    def debug_control(self, callbacks: dict = None):
+    def debug_control(self, callbacks: Dict[str, Callable] = None):
         if callbacks is None: callbacks = {}
         Debugger(self, callbacks).run()
+
+    def web_control(self, callbacks: Dict[str, Callable] = None):
+        if hasattr(self, "web"):
+            try:
+                self.web.stop()
+            except:
+                pass
+        self.web = WebController(self, callbacks)
 
     def run(self, *args, **kwargs):
         # Method used in transmitting controllers
@@ -207,5 +216,10 @@ class Controller:
         for fixture in self.__fixtures.values():
             fixture.clear_effects()
         print("CLOSE: all effects cleared")
+
+        # Stop web
+        if hasattr(self, "web"):
+            self.web.stop()
+            print("CLOSE: web controller stopped")
 
         return

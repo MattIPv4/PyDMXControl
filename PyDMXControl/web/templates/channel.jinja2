@@ -1,0 +1,40 @@
+{% extends "base.jinja2" %}
+
+{% block body %}
+    <h1>{{ fixture.title }}
+        <small> - PyDMXControl Web Controller</small>
+    </h1>
+    <a href="{{ url_for('.fixture', fid=fixture.id) }}">&lt; Fixture</a>
+
+    <section>
+
+        <article>
+            <h2>{{ channel[0] }}
+                <small> - Channel Control</small>
+            </h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Channel No.</th>
+                    <th>Channel Name</th>
+                    <th>Channel Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ (cid + fixture.start_channel if cid + 1 < fixture.next_channel else "-") }}</td>
+                    <td>{{ channel[0] }}</td>
+                    <td>{{ channel[1] }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <form action="" method="post">
+                <label for="value">New Value</label>
+                <input id="value" name="value" type="number" min="0" max="255" step="1" value="{{ channel[1] }}"
+                       required/>
+                <input type="submit" value="Update" id="submit" name="submit"/>
+            </form>
+        </article>
+
+    </section>
+{% endblock body %}

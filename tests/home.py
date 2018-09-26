@@ -119,10 +119,12 @@ dmx.ticker.set_interval(500)
 dmx.ticker.set_callback(callback)
 
 # Debug
-dmx.debug_control({
+callbacks = {
     "normal": normal,
     "dimmer": dimmer
-})
+}
+dmx.web_control(callbacks)
+# dmx.debug_control(callbacks)
 
 # Close the controller once we're done
 dmx.sleep_till_enter()

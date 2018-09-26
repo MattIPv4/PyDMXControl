@@ -7,7 +7,7 @@
 from collections import namedtuple
 from inspect import signature, Parameter
 from re import compile
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Dict, Callable
 
 from ... import Colors
 from ...profiles.defaults import Fixture, Vdim
@@ -15,7 +15,7 @@ from ...profiles.defaults import Fixture, Vdim
 
 class Debugger:
 
-    def __init__(self, controller: 'Controller', callbacks: dict = None):
+    def __init__(self, controller: 'Controller', callbacks: Dict[str, Callable] = None):
         self.cont = controller
         self.cbs = {} if callbacks is None else callbacks
 
@@ -24,7 +24,7 @@ class Debugger:
         if not 'all_on' in self.cbs: self.cbs['all_on'] = self.cont.all_on
         if not 'on' in self.cbs: self.cbs['on'] = self.cont.all_on
 
-        if not 'all_off' in self.cbs: self.cbs['all_of'] = self.cont.all_off
+        if not 'all_off' in self.cbs: self.cbs['all_off'] = self.cont.all_off
         if not 'off' in self.cbs: self.cbs['off'] = self.cont.all_off
 
         if not 'all_locate' in self.cbs: self.cbs['all_locate'] = self.cont.all_locate
@@ -178,7 +178,8 @@ class Debugger:
                 # Apply
                 value = int(value)
                 fixture.set_channel(channel, value)
-                print("[Channel Debug] Channel '" + channel + "' set to " + fixture.get_channel_value(channel))
+                print("[Channel Debug] Channel '" + channel + "' set to " + str(
+                    self.__fixture_channel_value(fixture, channel)))
                 continue
 
             # Channel list
