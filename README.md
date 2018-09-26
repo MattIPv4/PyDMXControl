@@ -17,6 +17,7 @@ Install via pip (recommended)
 * uDMX works out of the box
 * CUSTOM callbacks supported with an internal ticker
 * THREADED to allow continuous runtime
+* WEBSITE control panel built in
 
 ## Example
 
