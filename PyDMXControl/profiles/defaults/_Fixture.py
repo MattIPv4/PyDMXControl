@@ -103,7 +103,7 @@ class Fixture:
     @staticmethod
     def _valid_channel_value(value: int) -> bool:
         if value < 0 or value > 255:
-            warn('DMX value must be between 0 and 255.')
+            warn('{} DMX value must be between 0 and 255. Received value {}'.format(self.title, value))
             return False
         return True
 

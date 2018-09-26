@@ -1,3 +1,8 @@
+{#
+ *  PyDMXControl: A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.
+ *  <https://github.com/MattIPv4/PyDMXControl/>
+ *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ #}
 <!doctype html>
 <html>
 <head>
@@ -21,7 +26,7 @@
             min-width: 300px;
             background: #34495E;
             border-radius: .4em;
-            overflow-y: scroll;
+            overflow: auto;
             max-width: 100%;
         }
 
@@ -76,5 +81,10 @@
 </head>
 <body>
 {% block body %}{% endblock %}
+<h5>
+    This DMX web controller is powered by <a href="https://github.com/MattIPv4/PyDMXControl/" target="_blank">
+    PyDMXControl</a>, an open source Python DMX controller created by <a href="https://mattcowley.co.uk/"
+                                                                         target="_blank">Matt Cowley.</a>
+</h5>
 </body>
 </html>

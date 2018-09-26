@@ -14,52 +14,54 @@ dmx = Controller()
 # Create some fixtures (auto insert at next chan)
 dmx.add_fixture(LED_Par_10mm, name="Flood")
 
-dmx.add_fixture(LED_Par_36, name="S1")
-dmx.add_fixture(LED_Par_36, name="S2")
-dmx.add_fixture(LED_Par_36, name="S3")
-dmx.add_fixture(LED_Par_36, name="S4")
+dmx.add_fixture(LED_Par_36, name="S1 Art Left")
+dmx.add_fixture(LED_Par_36, name="S2 Board")
+dmx.add_fixture(LED_Par_36, name="S3 Art Right")
+dmx.add_fixture(LED_Par_36, name="S4 Books")
 
-dmx.add_fixture(Small_Flat_Par, name="F1")
-dmx.add_fixture(Small_Flat_Par, name="F2")
+dmx.add_fixture(Small_Flat_Par, name="F1 Desk Right")
+dmx.add_fixture(Small_Flat_Par, name="F2 Desk Left")
 
 
 # Define all the methods the callback will use
 def standard_lights():
-    dmx.get_fixtures_by_name("Flood")[0].set_channels(Colors.Black, 0, 0, 0, 0)
-    dmx.get_fixtures_by_name("S1")[0].set_channels(0, Colors.Black, 0, 0)
-    dmx.get_fixtures_by_name("S2")[0].set_channels(0, Colors.Black, 0, 0)
-    dmx.get_fixtures_by_name("S3")[0].set_channels(0, Colors.Black, 0, 0)
-    dmx.get_fixtures_by_name("S4")[0].set_channels(0, Colors.Black, 0, 0)
-    dmx.get_fixtures_by_name("F1")[0].set_channels(0, 0, 0, Colors.Black)
-    dmx.get_fixtures_by_name("F2")[0].set_channels(0, 0, 0, Colors.Black)
+    dmx.get_fixture(1).set_channels(Colors.Black, 0, 0, 0, 0)
+
+    dmx.get_fixture(2).set_channels(0, Colors.Black, 0, 0)
+    dmx.get_fixture(3).set_channels(0, Colors.Black, 0, 0)
+    dmx.get_fixture(4).set_channels(0, Colors.Black, 0, 0)
+    dmx.get_fixture(5).set_channels(0, Colors.Black, 0, 0)
+
+    dmx.get_fixture(6).set_channels(0, 0, 0, Colors.Black)
+    dmx.get_fixture(7).set_channels(0, 0, 0, Colors.Black)
 
 
 def normal():
-    dmx.get_fixtures_by_name("Flood")[0].color(Colors.White, 10000)
+    dmx.get_fixture(1).color(Colors.White, 10000)
 
     c1 = [0, 16, 255]
     # Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 15 * 1000, colors=[Colors.Blue, Colors.Cyan])
-    dmx.get_fixtures_by_name("S1")[0].color(c1, 10000)
-    dmx.get_fixtures_by_name("S2")[0].color(c1, 10000)
-    dmx.get_fixtures_by_name("S3")[0].color(c1, 10000)
-    dmx.get_fixtures_by_name("S4")[0].color(c1, 10000)
+    dmx.get_fixture(2).color(c1, 10000)
+    dmx.get_fixture(3).color(c1, 10000)
+    dmx.get_fixture(4).color(c1, 10000)
+    dmx.get_fixture(5).color(c1, 10000)
 
     c2 = [255, 140, 100]
-    dmx.get_fixtures_by_name("F1")[0].color(c2, 10000)
-    dmx.get_fixtures_by_name("F2")[0].color(c2, 10000)
+    dmx.get_fixture(6).color(c2, 10000)
+    dmx.get_fixture(7).color(c2, 10000)
 
 
 def dimmer():
-    dmx.get_fixtures_by_name("Flood")[0].color(Colors.Warm, 10000)
+    dmx.get_fixture(1).color(Colors.Warm, 10000)
 
-    dmx.clear_all_effects()
-    dmx.get_fixtures_by_name("S1")[0].color(Colors.Warm, 10000)
-    dmx.get_fixtures_by_name("S2")[0].color(Colors.Warm, 10000)
-    dmx.get_fixtures_by_name("S3")[0].color(Colors.Warm, 10000)
-    dmx.get_fixtures_by_name("S4")[0].color(Colors.Warm, 10000)
+    # dmx.clear_all_effects()
+    dmx.get_fixture(2).color(Colors.Warm, 10000)
+    dmx.get_fixture(3).color(Colors.Warm, 10000)
+    dmx.get_fixture(4).color(Colors.Warm, 10000)
+    dmx.get_fixture(5).color(Colors.Warm, 10000)
 
-    dmx.get_fixtures_by_name("F1")[0].color(Colors.Warm, 10000)
-    dmx.get_fixtures_by_name("F2")[0].color(Colors.Warm, 10000)
+    dmx.get_fixture(6).color(Colors.Warm, 10000)
+    dmx.get_fixture(7).color(Colors.Warm, 10000)
 
 
 # Set some values
