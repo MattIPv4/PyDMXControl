@@ -71,7 +71,7 @@ class WebController:
         while self.__running:
             # Run flask if not yet launched
             if not has_run:
-                self.__app.run(host=self.__host, port=self.__port, threaded=True)
+                self.__app.run(host=self.__host, port=self.__port)
                 has_run = True
             # Sleep DMX delay time
             sleep(DMXMINWAIT)
