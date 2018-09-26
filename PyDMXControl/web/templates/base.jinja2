@@ -92,8 +92,48 @@
     function get(url) {
         var http = new XMLHttpRequest();
         http.onreadystatechange = function () {
-            if (http.readyState == 4 && http.status == 200) {
-                // TODO: show error/success message from json, update elements by ID
+            if (http.readyState == 4) {
+                var data = JSON.parse(http.responseText);
+                var elm;
+
+                if ('elements' in data) {
+                    for (var id in data['elements']) {
+                        if (!data['elements'].hasOwnProperty(id)) continue;
+                        var text = data['elements'][id];
+                        elm = document.getElementById(id);
+                        if (elm) {
+                            if (elm.tagName.toLowerCase() == "input") {
+                                elm.value = text;
+                            } else {
+                                elm.innerText = text;
+                            }
+                        }
+                    }
+                }
+
+                elm = document.getElementById("message-success");
+                if (elm) {
+                    elm.remove();
+                }
+                if ('message' in data) {
+                    elm = document.createElement("h3");
+                    elm.id = "message-success";
+                    elm.style.color = "#37BC9B";
+                    elm.innerText = data['message'];
+                    document.body.insertBefore(elm, document.body.children[1]);
+                }
+
+                elm = document.getElementById("message-error");
+                if (elm) {
+                    elm.remove();
+                }
+                if ('error' in data) {
+                    elm = document.createElement("h3");
+                    elm.id = "message-error";
+                    elm.style.color = "#DA4453";
+                    elm.innerText = data['error'];
+                    document.body.insertBefore(elm, document.body.children[1]);
+                }
             }
         };
         http.open("GET", url);

@@ -27,9 +27,10 @@
                 <tbody>
                 {% for i, channel in enumerate(fixture_channels(fixture)) %}
                     <tr>
-                        <td>{{ (i + fixture.start_channel if i + 1 < fixture.next_channel else "-") }}</td>
-                        <td>{{ channel[0] }}</td>
-                        <td>{{ channel[1] }}</td>
+                        <td>
+                            {{ (i + fixture.start_channel if i + 1 < fixture.next_channel else "-") }}</td>
+                        <td id="channel-{{ i }}-name">{{ channel[0] }}</td>
+                        <td id="channel-{{ i }}-value">{{ channel[1] }}</td>
                         <td><a href="{{ url_for('.channel', fid=fixture.id, cid=i) }}">Control</a></td>
                     </tr>
                 {% endfor %}
@@ -71,6 +72,26 @@
                     <small>This fixture does not support color</small>
                 </h2>
             {% endif %}
+        </article>
+
+        <article>
+            <h2>Helper List</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Helper Name</th>
+                    <th>Run</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for helper in helpers %}
+                    <tr>
+                        <td>{{ helper }}</td>
+                        <td><a href="{{ url_for('.helper', fid=fixture.id, val=helper) }}" data-no-reload>Run</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </article>
 
     </section>

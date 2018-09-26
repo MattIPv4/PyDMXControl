@@ -100,9 +100,10 @@ class Fixture:
 
     # Properties
 
-    def _valid_channel_value(self, value: int) -> bool:
+    def _valid_channel_value(self, value: int, channel: Union[str, int]) -> bool:
         if value < 0 or value > 255:
-            warn('{} DMX value must be between 0 and 255. Received value {}'.format(self.title, value))
+            warn('{} DMX value must be between 0 and 255. Received value {} for channel {}'.format(
+                self.title, value, channel))
             return False
         return True
 
@@ -172,7 +173,7 @@ class Fixture:
         return self.__channels[channel].get_value()
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
-        if not self._valid_channel_value(value):
+        if not self._valid_channel_value(value, channel):
             return self
 
         channel = self.get_channel_id(channel)
@@ -302,6 +303,12 @@ class Fixture:
             if amber[0] != -1:
                 color.append(amber[0])
         return color
+
+    def on(self):
+        self.dim(255)
+
+    def off(self):
+        self.dim(0)
 
     def locate(self):
         self.color([255, 255, 255, 255, 255])

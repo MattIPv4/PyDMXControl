@@ -5,7 +5,7 @@
 """
 
 from datetime import datetime
-from typing import Union, Tuple
+from typing import Union, Tuple, List
 
 from ._Fixture import Fixture
 
@@ -65,7 +65,22 @@ class Vdim(Fixture):
 
     def set_vdim(self, value: int) -> Fixture:
         # Update the vdim value
-        if not self._valid_channel_value(value): return self
+        if not self._valid_channel_value(value, 'vdim'): return self
         self.__vdim = value
         self.__vdimUpdated = datetime.utcnow()
         return self
+
+    def get_color(self) -> Union[None, List[int]]:
+        red = self.get_channel_value(self.get_channel_id("r"), False)
+        green = self.get_channel_value(self.get_channel_id("g"), False)
+        blue = self.get_channel_value(self.get_channel_id("b"), False)
+        white = self.get_channel_value(self.get_channel_id("w"), False)
+        amber = self.get_channel_value(self.get_channel_id("a"), False)
+        if red[0] == -1 or green[0] == -1 or blue[0] == -1:
+            return None
+        color = [red[0], green[0], blue[0]]
+        if white[0] != -1:
+            color.append(white[0])
+            if amber[0] != -1:
+                color.append(amber[0])
+        return color
