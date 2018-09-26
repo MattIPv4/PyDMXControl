@@ -49,7 +49,7 @@
                 {% for name in callbacks.keys() %}
                     <tr>
                         <td>{{ name }}</td>
-                        <td><a href="{{ url_for('.callback', cb=name) }}">Run</a></td>
+                        <td><a href="{{ url_for('.callback', cb=name) }}" data-no-reload>Run</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

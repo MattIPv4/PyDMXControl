@@ -54,7 +54,7 @@
                             <td>{{ color.name }}</td>
                             <td>{{ color.value }}</td>
                             <td><a href="{{ url_for('.color', fid=fixture.id,
-                            val=colors.to_print(color.value, ',')) }}">Apply</a>
+                            val=colors.to_print(color.value, ',')) }}" data-no-reload>Apply</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -95,8 +95,8 @@
             e.preventDefault();
             var color = hexToRgb(document.getElementById("value").value);
             if (color) {
-                window.location.href = "{{ url_for('.color', fid=fixture.id, val='') }}" +
-                    encodeURIComponent(color.join(','));
+                get("{{ url_for('.color', fid=fixture.id, val='') }}" +
+                    encodeURIComponent(color.join(',')));
             }
         });
     </script>

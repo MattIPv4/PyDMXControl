@@ -7,6 +7,8 @@
 <html>
 <head>
     <title>PyDMXControl Web Controller</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"/>
     <style>
         html, body {
             padding: 0;
@@ -86,5 +88,27 @@
     PyDMXControl</a>, an open source Python DMX controller created by <a href="https://mattcowley.co.uk/"
                                                                          target="_blank">Matt Cowley.</a>
 </h5>
+<script>
+    function get(url) {
+        var http = new XMLHttpRequest();
+        http.onreadystatechange = function () {
+            if (http.readyState == 4 && http.status == 200) {
+                // TODO: show error/success message from json, update elements by ID
+            }
+        };
+        http.open("GET", url);
+        http.send();
+    }
+
+    (function () {
+        var elms = document.querySelectorAll("a[data-no-reload]");
+        elms.forEach(function (elm) {
+            elm.addEventListener("click", function (e) {
+                e.preventDefault();
+                get(elm.getAttribute("href"));
+            }, true);
+        });
+    })();
+</script>
 </body>
 </html>
