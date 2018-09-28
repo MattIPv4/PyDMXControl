@@ -33,6 +33,8 @@ class WebController:
         self.__port = port
         self.__app = Flask("PyDMXControl Web Controller")
         self.__app.template_folder = path.dirname(__file__) + "/templates"
+        self.__app.static_url_path = "/static"
+        self.__app.static_folder = path.dirname(__file__) + "/static"
         self.__app.register_blueprint(routes)
         self.__app.parent = self
 

@@ -6,223 +6,34 @@
 <!doctype html>
 <html>
 <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
     <title>PyDMXControl Web Controller</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1,
-    user-scalable=no, minimal-ui"/>
+    <link rel="shortcut icon" href="/static/icon.png"/>
+    <link rel="icon" type="image/png" href="/static/icon.png"/>
+
     <meta name="apple-mobile-web-app-title" content="PyDMX"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <style>
-        html, body {
-            padding: 0;
-            margin: 0;
-            background: #222;
-            color: #eee;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        }
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="apple-touch-icon" href="/static/icon.png"/>
+    <meta name="theme-color" content="#34495E"/>
 
-        body {
-            padding: 2em;
-        }
-
-        html, body, section, article, table, form, div {
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Table */
-
-        table, form {
-            margin: 1em 0;
-            background: #34495E;
-            border-radius: .4em;
-            overflow: auto;
-        }
-
-        table th, form label, table td:before {
-            color: #dd5;
-            font-weight: bold;
-        }
-
-        table tr {
-            border-top: 1px solid #46637f;
-            border-bottom: 1px solid #46637f;
-        }
-
-        table th, table td, form label, form input {
-            text-align: left;
-            padding: .5em 1em;
-        }
-
-        table td a {
-            background: #dd5;
-            border-radius: .4em;
-            padding: .25em .5em;
-            line-height: 1.5em;
-        }
-
-        /* Responsive Table */
-
-        @media (max-width: 480px) {
-            section, article, table, form, div {
-                width: 100%;
-            }
-
-            article {
-                padding: 0;
-            }
-
-            table th {
-                display: none;
-            }
-
-            table td {
-                display: block;
-            }
-
-            table tr:not(:last-child) td:last-child {
-                border-bottom: 1px solid #dd5;
-            }
-
-            table td:before {
-                content: attr(data-th) ": ";
-                /*width: 6.5em;
-                max-width: 50%;
-                display: inline-block;*/
-            }
-        }
-
-        /* Other */
-
-        small {
-            font-size: 50%;
-        }
-
-        section, form {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-
-        article {
-            display: inline-block;
-            padding: .5em 1em;
-        }
-
-        form input:not([type="submit"]) {
-            flex-grow: 1;
-        }
-
-        form input[type=submit] {
-            background: #dd5;
-            border: 0 none;
-            cursor: pointer;
-        }
-
-        a, a:visited {
-            color: #57f;
-        }
-
-        a:hover, a:focus {
-            color: #35d;
-        }
-
-        /* Alerts */
-
-        #message-success, #message-error {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.5);
-            width: 100%;
-            padding: .5em 1em;
-            margin-top: 0;
-        }
-    </style>
+    <link href="/static/web.css" rel="stylesheet"/>
 </head>
 <body>
+
 {% block body %}{% endblock %}
+
 <h5>
     This DMX web controller is powered by <a href="https://github.com/MattIPv4/PyDMXControl/" target="_blank">
     PyDMXControl</a>, an open source Python DMX controller created by <a href="https://mattcowley.co.uk/"
                                                                          target="_blank">Matt Cowley.</a>
 </h5>
-<script>
-    function get(url) {
-        var http = new XMLHttpRequest();
-        http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-                var data = JSON.parse(http.responseText);
-                var elm, tm;
 
-                if ('elements' in data) {
-                    for (var id in data['elements']) {
-                        if (!data['elements'].hasOwnProperty(id)) continue;
-                        var text = data['elements'][id];
-                        elm = document.getElementById(id);
-                        if (elm) {
-                            if (elm.tagName.toLowerCase() == "input") {
-                                elm.value = text;
-                            } else {
-                                elm.innerText = text;
-                            }
-                        }
-                    }
-                }
+<script src="/static/get.js"></script>
 
-                elm = document.getElementById("message-success");
-                if (elm) {
-                    clearTimeout(parseInt(elm.getAttribute("data-tm")));
-                    elm.remove();
-                }
-                if ('message' in data) {
-                    elm = document.createElement("h3");
-                    elm.id = "message-success";
-                    elm.style.color = "#37BC9B";
-                    elm.innerText = data['message'];
-                    tm = setTimeout(function () {
-                        document.getElementById("message-success").remove();
-                    }, 15 * 1000);
-                    elm.setAttribute("data-tm", tm);
-                    document.body.insertBefore(elm, document.body.children[1]);
-                }
-
-                elm = document.getElementById("message-error");
-                if (elm) {
-                    clearTimeout(parseInt(elm.getAttribute("data-tm")));
-                    elm.remove();
-                }
-                if ('error' in data) {
-                    elm = document.createElement("h3");
-                    elm.id = "message-error";
-                    elm.style.color = "#DA4453";
-                    elm.innerText = data['error'];
-                    tm = setTimeout(function () {
-                        document.getElementById("message-error").remove();
-                    }, 15 * 1000);
-                    elm.setAttribute("data-tm", tm);
-                    document.body.insertBefore(elm, document.body.children[1]);
-                }
-            }
-        };
-        http.open("GET", url);
-        http.send();
-    }
-
-    (function () {
-        var elms = [].slice.call(document.getElementsByTagName("a")); // NodeList to Array
-        elms.forEach(function (elm) {
-            elm.addEventListener("click", function (e) {
-                e.preventDefault();
-                console.log(elm.getAttribute("data-no-reload"));
-                if (elm.getAttribute("data-no-reload") !== null) get(elm.getAttribute("href"));
-                else window.location = elm.getAttribute("href");
-                return false
-            }, true);
-        });
-    })();
-</script>
 </body>
 </html>
