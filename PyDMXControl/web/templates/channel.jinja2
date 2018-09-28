@@ -27,9 +27,12 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>{{ (cid + fixture.start_channel if cid + 1 < fixture.next_channel else "-") }}</td>
-                    <td id="channel-{{ cid }}-name">{{ channel[0] }}</td>
-                    <td id="channel-{{ cid }}-value">{{ channel[1] }}</td>
+                    <td data-th="Channel No.">
+                        {{ (cid + fixture.start_channel if cid + 1 < fixture.next_channel else "-") }}</td>
+                    <td data-th="Channel Name" id="channel-{{ cid }}-name">
+                        {{ channel[0] }}</td>
+                    <td data-th="Channel Value" id="channel-{{ cid }}-value">
+                        {{ channel[1] }}</td>
                 </tr>
                 </tbody>
             </table>
