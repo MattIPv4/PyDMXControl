@@ -62,10 +62,6 @@
             display: block;
         }
 
-        table tr:not(:last-child) td:last-child {
-            border-bottom: 1px solid #dd5;
-        }
-
         @media (min-width: 480px) {
 
             article {
@@ -84,6 +80,10 @@
         @media (max-width: 480px) {
             section, article, table, form, div {
                 width: 100%;
+            }
+
+            table tr:not(:last-child) td:last-child {
+                border-bottom: 1px solid #dd5;
             }
 
             table td:before {
@@ -133,6 +133,19 @@
         a:hover, a:focus {
             color: #35d;
         }
+
+        /* Alerts */
+
+        #message-success, #message-error {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            padding: .5em 1em;
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
@@ -148,7 +161,7 @@
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
                 var data = JSON.parse(http.responseText);
-                var elm;
+                var elm, tm;
 
                 if ('elements' in data) {
                     for (var id in data['elements']) {
@@ -167,6 +180,7 @@
 
                 elm = document.getElementById("message-success");
                 if (elm) {
+                    clearTimeout(parseInt(elm.getAttribute("data-tm")));
                     elm.remove();
                 }
                 if ('message' in data) {
@@ -174,11 +188,16 @@
                     elm.id = "message-success";
                     elm.style.color = "#37BC9B";
                     elm.innerText = data['message'];
+                    tm = setTimeout(function () {
+                        document.getElementById("message-success").remove();
+                    }, 15 * 1000);
+                    elm.setAttribute("data-tm", tm);
                     document.body.insertBefore(elm, document.body.children[1]);
                 }
 
                 elm = document.getElementById("message-error");
                 if (elm) {
+                    clearTimeout(parseInt(elm.getAttribute("data-tm")));
                     elm.remove();
                 }
                 if ('error' in data) {
@@ -186,6 +205,10 @@
                     elm.id = "message-error";
                     elm.style.color = "#DA4453";
                     elm.innerText = data['error'];
+                    tm = setTimeout(function () {
+                        document.getElementById("message-error").remove();
+                    }, 15 * 1000);
+                    elm.setAttribute("data-tm", tm);
                     document.body.insertBefore(elm, document.body.children[1]);
                 }
             }
