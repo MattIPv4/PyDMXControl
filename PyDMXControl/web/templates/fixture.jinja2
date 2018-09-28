@@ -21,7 +21,8 @@
                     <th>Channel No.</th>
                     <th>Channel Name</th>
                     <th>Channel Value</th>
-                    <th>Control</th>
+                    <th>Quick Control</th>
+                    <th>Full Control</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,7 +34,14 @@
                             {{ channel[0] }}</td>
                         <td data-th="Channel Value" id="channel-{{ i }}-value">
                             {{ channel[1] }}</td>
-                        <td data-th="Control">
+                        <td data-th="Quick Control">
+                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=0) }}" data-no-reload>
+                                0%</a>
+                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=128) }}" data-no-reload>
+                                50%</a>
+                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=255) }}" data-no-reload>
+                                100%</a></td>
+                        <td data-th="Full Control">
                             <a href="{{ url_for('.channel', fid=fixture.id, cid=i) }}">Control</a></td>
                     </tr>
                 {% endfor %}

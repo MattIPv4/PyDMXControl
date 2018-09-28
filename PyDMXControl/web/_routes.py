@@ -38,7 +38,7 @@ def fixture_helpers(fixture: Fixture) -> Dict[str, Callable]:
 # Home
 @routes.route('', methods=['GET'])
 def home():
-    return render_template("index.jinja2")
+    return render_template("index.jinja2", helpers=helpers)
 
 
 # Fixture Home

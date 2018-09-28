@@ -55,34 +55,30 @@
             padding: .5em 1em;
         }
 
+        table td a {
+            background: #dd5;
+            border-radius: .4em;
+            padding: .25em .5em;
+            line-height: 1.5em;
+        }
+
         /* Responsive Table */
-
-        table th {
-            display: none;
-        }
-
-        table td {
-            display: block;
-        }
-
-        @media (min-width: 480px) {
-
-            article {
-                padding: .5em 1em;
-            }
-
-            table td:before {
-                display: none;
-            }
-
-            table th, table td {
-                display: table-cell;
-            }
-        }
 
         @media (max-width: 480px) {
             section, article, table, form, div {
                 width: 100%;
+            }
+
+            article {
+                padding: 0;
+            }
+
+            table th {
+                display: none;
+            }
+
+            table td {
+                display: block;
             }
 
             table tr:not(:last-child) td:last-child {
@@ -91,15 +87,9 @@
 
             table td:before {
                 content: attr(data-th) ": ";
-                width: 6.5em;
+                /*width: 6.5em;
                 max-width: 50%;
-                display: inline-block;
-            }
-
-            table td a {
-                background: #dd5;
-                border-radius: .4em;
-                padding: .25em .5em;
+                display: inline-block;*/
             }
         }
 
@@ -117,6 +107,7 @@
 
         article {
             display: inline-block;
+            padding: .5em 1em;
         }
 
         form input:not([type="submit"]) {

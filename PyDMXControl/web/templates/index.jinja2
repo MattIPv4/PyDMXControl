@@ -6,9 +6,7 @@
 {% extends "base.jinja2" %}
 
 {% block body %}
-    <h1>Home
-        <small> - PyDMXControl Web Controller</small>
-    </h1>
+    <h1>Home - PyDMXControl Web Controller</h1>
 
     <section>
 
@@ -20,7 +18,8 @@
                     <th>Fixture ID</th>
                     <th>Fixture Name</th>
                     <th>Fixture Channels</th>
-                    <th>Control</th>
+                    <th>Quick Control</th>
+                    <th>Full Control</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,7 +31,12 @@
                             {{ fixture.name }}</td>
                         <td data-th="Fixture Channels">
                             {{ fixture.channel_usage }}</td>
-                        <td data-th="Control">
+                        <td data-th="Quick Control">
+                            {% for helper in helpers %}
+                                <a href="{{ url_for('.helper', fid=fixture.id, val=helper) }}" data-no-reload>
+                                    {{ helper }}</a>
+                            {% endfor %}</td>
+                        <td data-th="Full Control">
                             <a href="{{ url_for('.fixture', fid=fixture.id) }}">Control</a></td>
                     </tr>
                 {% endfor %}
