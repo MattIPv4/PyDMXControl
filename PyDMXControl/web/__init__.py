@@ -15,3 +15,5 @@
  *   along with this program. If not, please see
  *   <https://github.com/MattIPv4/PyDMXControl/blob/master/LICENSE> or <http://www.gnu.org/licenses/>.
 """
+
+from ._webController import WebController

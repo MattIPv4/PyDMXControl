@@ -24,6 +24,9 @@ dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)
 dmx.add_fixture(Quad_Par_Profile, mode=8)"""
 
+# Debug
+dmx.web_control()
+
 # Dim all up
 dmx.all_locate()
 

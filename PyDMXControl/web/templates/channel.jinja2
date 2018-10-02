@@ -1,0 +1,55 @@
+{#
+ *  PyDMXControl: A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.
+ *  <https://github.com/MattIPv4/PyDMXControl/>
+ *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ #}
+{% extends "base.jinja2" %}
+
+{% block body %}
+    <h1>{{ fixture.title }}
+        <small> - PyDMXControl Web Controller</small>
+    </h1>
+    <a href="{{ url_for('.fixture', fid=fixture.id) }}">&lt; Fixture</a>
+
+    <section>
+
+        <article>
+            <h2>{{ channel[0] }}
+                <small> - Channel Control</small>
+            </h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Channel No.</th>
+                    <th>Channel Name</th>
+                    <th>Channel Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td data-th="Channel No.">
+                        {{ (cid + fixture.start_channel if cid + 1 < fixture.next_channel else "-") }}</td>
+                    <td data-th="Channel Name" id="channel-{{ cid }}-name">
+                        {{ channel[0] }}</td>
+                    <td data-th="Channel Value" id="channel-{{ cid }}-value">
+                        {{ channel[1] }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <form id="channel">
+                <label for="value">New Value</label>
+                <input id="value" name="value" type="number" min="0" max="255" step="1" value="{{ channel[1] }}"
+                       required/>
+                <input type="submit" value="Update" id="submit" name="submit"/>
+            </form>
+        </article>
+
+    </section>
+    <script>
+        document.getElementById("channel").addEventListener("submit", function (e) {
+            e.preventDefault();
+            var channel = document.getElementById("value").value;
+            get("{{ url_for('.channel_val', fid=fixture.id, cid=cid, val=0) }}" + encodeURIComponent(channel));
+        });
+    </script>
+{% endblock body %}

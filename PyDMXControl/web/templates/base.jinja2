@@ -1,0 +1,39 @@
+{#
+ *  PyDMXControl: A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.
+ *  <https://github.com/MattIPv4/PyDMXControl/>
+ *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ #}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>PyDMXControl Web Controller</title>
+    <link rel="shortcut icon" href="/static/icon.png"/>
+    <link rel="icon" type="image/png" href="/static/icon.png"/>
+
+    <meta name="apple-mobile-web-app-title" content="PyDMX"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="apple-touch-icon" href="/static/icon.png"/>
+    <meta name="theme-color" content="#34495E"/>
+
+    <link href="/static/web.css" rel="stylesheet"/>
+</head>
+<body>
+
+{% block body %}{% endblock %}
+
+<h5>
+    This DMX web controller is powered by <a href="https://github.com/MattIPv4/PyDMXControl/" target="_blank">
+    PyDMXControl</a>, an open source Python DMX controller created by <a href="https://mattcowley.co.uk/"
+                                                                         target="_blank">Matt Cowley.</a>
+</h5>
+
+<script src="/static/get.js"></script>
+
+</body>
+</html>

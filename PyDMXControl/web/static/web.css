@@ -1,0 +1,132 @@
+/*
+ *  PyDMXControl: A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.
+ *  <https://github.com/MattIPv4/PyDMXControl/>
+ *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ */
+html, body {
+    padding: 0;
+    margin: 0;
+    background: #222;
+    color: #eee;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+    padding: 2em;
+}
+
+html, body, section, article, table, form, div {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Table */
+
+table, form {
+    margin: 1em 0;
+    background: #34495E;
+    border-radius: .4em;
+    overflow: auto;
+}
+
+table th, form label, table td:before {
+    color: #dd5;
+    font-weight: bold;
+}
+
+table tr {
+    border-top: 1px solid #46637f;
+    border-bottom: 1px solid #46637f;
+}
+
+table th, table td, form label, form input {
+    text-align: left;
+    padding: .5em 1em;
+}
+
+table td a {
+    background: #dd5;
+    border-radius: .4em;
+    padding: .25em .5em;
+    line-height: 1.5em;
+}
+
+/* Responsive Table */
+
+@media (max-width: 480px) {
+    section, article, table, form, div {
+        width: 100%;
+    }
+
+    article {
+        padding: 0;
+    }
+
+    table th {
+        display: none;
+    }
+
+    table td {
+        display: block;
+    }
+
+    table tr:not(:last-child) td:last-child {
+        border-bottom: 1px solid #dd5;
+    }
+
+    table td:before {
+        content: attr(data-th) ": ";
+        /*width: 6.5em;
+        max-width: 50%;
+        display: inline-block;*/
+    }
+}
+
+/* Other */
+
+small {
+    font-size: 50%;
+}
+
+section, form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+article {
+    display: inline-block;
+    padding: .5em 1em;
+}
+
+form input:not([type="submit"]) {
+    flex-grow: 1;
+}
+
+form input[type=submit] {
+    background: #dd5;
+    border: 0 none;
+    cursor: pointer;
+}
+
+a, a:visited {
+    color: #57f;
+}
+
+a:hover, a:focus {
+    color: #35d;
+}
+
+/* Alerts */
+
+.alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    padding: .5em 1em;
+    margin-top: 0;
+}
