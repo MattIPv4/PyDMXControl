@@ -100,6 +100,28 @@ a:hover, a:focus {
     margin-top: 0;
 }
 
+/* Brand */
+
+.brand {
+    text-shadow: -2px 2px #646464;
+}
+
+.brand span:nth-child(1) {
+    color: #4584b6; /* P */
+}
+
+.brand span:nth-child(2) {
+    color: #ffde57; /* y */
+}
+
+.brand span:nth-child(3) {
+    color: #4a89dc; /* DMX */
+}
+
+.brand span:nth-child(4) {
+    color: #b3b3b3; /* Control */
+}
+
 /* Responsive */
 
 @media (max-width: 480px) {

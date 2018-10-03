@@ -6,9 +6,7 @@
 {% extends "base.jinja2" %}
 
 {% block body %}
-    <h1>{{ fixture.title }}
-        <small> - PyDMXControl Web Controller</small>
-    </h1>
+    <h2>{{ fixture.title }}</h2>
     <a href="{{ url_for('.fixture', fid=fixture.id) }}" class="button">&lt; Fixture</a>
 
     <section>
