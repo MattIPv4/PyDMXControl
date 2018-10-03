@@ -50,8 +50,7 @@ class WebController:
         # Setup template context
         @self.__app.context_processor
         def variables() -> dict:
-            brand = "<span class='brand'><span>P</span><span>y</span><span>DMX</span><span>Control</span></span>"
-            return dict({"controller": self.controller, "callbacks": self.callbacks, "brand": brand},
+            return dict({"controller": self.controller, "callbacks": self.callbacks},
                         **dict(globals(), **builtins.__dict__))  # Dictionary stacking to concat
 
         # Setup thread
