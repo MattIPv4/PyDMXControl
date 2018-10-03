@@ -28,16 +28,16 @@
                         <td data-th="Fixture ID">
                             #{{ fixture.id }}</td>
                         <td data-th="Fixture Name">
-                            {{ fixture.name }}</td>
+                            {{ fixture.name if fixture.name else "<i>None</i>" }}</td>
                         <td data-th="Fixture Channels">
                             {{ fixture.channel_usage }}</td>
                         <td data-th="Quick Control">
                             {% for helper in helpers %}
-                                <a href="{{ url_for('.helper', fid=fixture.id, val=helper) }}" data-no-reload>
-                                    {{ helper }}</a>
+                                <a href="{{ url_for('.helper', fid=fixture.id, val=helper) }}" data-no-reload
+                                   class="button">{{ helper }}</a>
                             {% endfor %}</td>
                         <td data-th="Full Control">
-                            <a href="{{ url_for('.fixture', fid=fixture.id) }}">Control</a></td>
+                            <a href="{{ url_for('.fixture', fid=fixture.id) }}" class="button">Control</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -59,7 +59,7 @@
                         <td data-th="Callback Name">
                             {{ name }}</td>
                         <td data-th="Run">
-                            <a href="{{ url_for('.callback', cb=name) }}" data-no-reload>Run</a></td>
+                            <a href="{{ url_for('.callback', cb=name) }}" data-no-reload class="button">Run</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

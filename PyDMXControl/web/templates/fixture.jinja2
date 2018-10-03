@@ -9,7 +9,7 @@
     <h1>{{ fixture.title }}
         <small> - PyDMXControl Web Controller</small>
     </h1>
-    <a href="{{ url_for('.home') }}">&lt; Home</a>
+    <a href="{{ url_for('.home') }}" class="button">&lt; Home</a>
 
     <section>
 
@@ -35,14 +35,14 @@
                         <td data-th="Channel Value" id="channel-{{ i }}-value">
                             {{ channel[1] }}</td>
                         <td data-th="Quick Control">
-                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=0) }}" data-no-reload>
-                                0%</a>
-                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=128) }}" data-no-reload>
-                                50%</a>
-                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=255) }}" data-no-reload>
-                                100%</a></td>
+                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=0) }}" data-no-reload
+                               class="button">0%</a>
+                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=128) }}" data-no-reload
+                               class="button">50%</a>
+                            <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=255) }}" data-no-reload
+                               class="button">100%</a></td>
                         <td data-th="Full Control">
-                            <a href="{{ url_for('.channel', fid=fixture.id, cid=i) }}">Control</a></td>
+                            <a href="{{ url_for('.channel', fid=fixture.id, cid=i) }}" class="button">Control</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -69,7 +69,7 @@
                                 {{ color.value }}</td>
                             <td data-th="Apply">
                                 <a href="{{ url_for('.color', fid=fixture.id, val=colors.to_print(color.value, ',')) }}"
-                                   data-no-reload>Apply</a></td>
+                                   data-no-reload class="button">Apply</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -102,7 +102,8 @@
                         <td data-th="Helper Name">
                             {{ helper }}</td>
                         <td data-th="Run">
-                            <a href="{{ url_for('.helper', fid=fixture.id, val=helper) }}" data-no-reload>Run</a></td>
+                            <a href="{{ url_for('.helper', fid=fixture.id, val=helper) }}" data-no-reload
+                               class="button">Run</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
