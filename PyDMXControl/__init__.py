@@ -20,7 +20,7 @@ __title__ = 'PyDMXControl'
 __author__ = 'MattIPv4'
 __license__ = 'GPL'
 __copyright__ = 'Copyright 2018, MattIPv4'
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 
 name = "PyDMXControl"
 
@@ -30,6 +30,6 @@ from ._Colors import Colors
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=1, minor=3, micro=0, releaselevel='final', serial=0)
+version_info = VersionInfo(major=1, minor=4, micro=0, releaselevel='final', serial=0)
 
 
