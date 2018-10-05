@@ -30,6 +30,7 @@ dmx = uDMXController() # create the controller
 fixture = dmx.add_fixture(Dimmer, name="My_First_Dimmer") # add the Dimmer and give it a name for quick reference
 fixture.dim(255, 5000) # dim to full over 5 seconds
 
+dmx.web_control() # start the web control panel (runs in background)
 dmx.debug_control() # enter shell debug mode
 
 dmx.sleep_till_enter() # sleep till enter pressed in shell (once debug mode exited)
@@ -40,6 +41,10 @@ dmx.close() # cleanly close PyDMXControl
 Just messing around with using Python to control/send DMX.\
 Supports fixture profiling; Has defaults for a standard fixture and fixtures that need virtual dimmers.\
 Prebuilt profiles for generic fixtures (Single dimmer, RGB LED, Custom (set your own number of channels)).
+
+Has a debug shell that allows control of fixture channel values and access to general callbacks. Additionally, provides 
+an advanced web control panel with access to global callbacks, fixture helpers, fixture colors and control over 
+individual fixture channels.
 
 Currently only supports actual output via uDMX.\
 There is also a print controller included that prints the DMX frames to console at the same rate it should output them

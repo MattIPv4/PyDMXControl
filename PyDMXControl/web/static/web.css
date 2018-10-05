@@ -45,44 +45,6 @@ table th, table td, form label, form input {
     padding: .5em 1em;
 }
 
-table td a {
-    background: #dd5;
-    border-radius: .4em;
-    padding: .25em .5em;
-    line-height: 1.5em;
-}
-
-/* Responsive Table */
-
-@media (max-width: 480px) {
-    section, article, table, form, div {
-        width: 100%;
-    }
-
-    article {
-        padding: 0;
-    }
-
-    table th {
-        display: none;
-    }
-
-    table td {
-        display: block;
-    }
-
-    table tr:not(:last-child) td:last-child {
-        border-bottom: 1px solid #dd5;
-    }
-
-    table td:before {
-        content: attr(data-th) ": ";
-        /*width: 6.5em;
-        max-width: 50%;
-        display: inline-block;*/
-    }
-}
-
 /* Other */
 
 small {
@@ -118,6 +80,13 @@ a:hover, a:focus {
     color: #35d;
 }
 
+.button {
+    background: #dd5;
+    border-radius: .4em;
+    padding: .25em .5em;
+    line-height: 1.5em;
+}
+
 /* Alerts */
 
 .alert {
@@ -125,8 +94,91 @@ a:hover, a:focus {
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     width: 100%;
     padding: .5em 1em;
     margin-top: 0;
+}
+
+/* Brand */
+
+.brand {
+    text-shadow: -2px 2px #646464;
+}
+
+.brand span:nth-child(1) {
+    color: #4584b6; /* P */
+}
+
+.brand span:nth-child(2) {
+    color: #ffde57; /* y */
+}
+
+.brand span:nth-child(3) {
+    color: #4a89dc; /* DMX */
+}
+
+.brand span:nth-child(4) {
+    color: #b3b3b3; /* Control */
+}
+
+/* Responsive */
+
+@media (max-width: 480px) {
+    section {
+        flex-direction: column-reverse;
+    }
+
+    section, article, table, form, div {
+        width: 100%;
+    }
+
+    article {
+        padding: 0;
+    }
+
+    table th {
+        display: none;
+    }
+
+    table td {
+        display: block;
+    }
+
+    table tr:not(:last-child) td:last-child {
+        border-bottom: 1px solid #dd5;
+    }
+
+    table td:before {
+        content: attr(data-th) ": ";
+    }
+
+    form input[type=submit] {
+        display: block;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .button {
+        display: block;
+        padding: .5em 1em;
+    }
+
+    .button:nth-child(even) {
+        background: #cc4;
+    }
+
+    .button:not(:first-of-type) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .button:not(:last-of-type) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    table td .button:first-of-type {
+        margin-top: .5em;
+    }
 }

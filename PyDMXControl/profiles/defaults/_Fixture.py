@@ -140,9 +140,9 @@ class Fixture:
 
     @property
     def title(self) -> str:
-        return "Fixture #{} ('{}') of type {} using channels {}.".format(
+        return "Fixture #{} {} of type {} using channels {}.".format(
             self.id,
-            self.name,
+            "('{}')".format(self.name) if self.name else "",
             self.__class__.__name__,
             self.channel_usage
         )

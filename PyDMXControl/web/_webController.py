@@ -29,6 +29,7 @@ class WebController:
     def __init__(self, controller: 'Controller', callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
                  port: int = 8080):
         # Setup flask
+        self.__thread = None
         self.__host = host
         self.__port = port
         self.__app = Flask("PyDMXControl Web Controller")
@@ -58,9 +59,12 @@ class WebController:
 
     def __default_callbacks(self):
         # Some default callbacks
-        if not 'all_on' in self.callbacks: self.callbacks['all_on'] = self.controller.all_on
-        if not 'all_off' in self.callbacks: self.callbacks['all_off'] = self.controller.all_off
-        if not 'all_locate' in self.callbacks: self.callbacks['all_locate'] = self.controller.all_locate
+        if 'all_on' not in self.callbacks:
+            self.callbacks['all_on'] = self.controller.all_on
+        if 'all_off' not in self.callbacks:
+            self.callbacks['all_off'] = self.controller.all_off
+        if 'all_locate' not in self.callbacks:
+            self.callbacks['all_locate'] = self.controller.all_locate
 
     def __check_callbacks(self):
         for key in self.callbacks.keys():
