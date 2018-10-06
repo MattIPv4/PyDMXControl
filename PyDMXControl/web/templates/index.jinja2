@@ -66,5 +66,39 @@
             </table>
         </article>
 
+        <article>
+            <h2>Global Intensity</h2>
+            <i>Will update all fixture dimmers on change.</i>
+            <form id="intensity">
+                <div class="button-group">
+                    <a href="javascript:change_input(0, true)" class="button">0%</a>
+                    <a href="javascript:change_input(128, true)" class="button">50%</a>
+                    <a href="javascript:change_input(255, true)" class="button">100%</a>
+                </div>
+                <div class="slider">
+                    <input title="Global Intensity" type="range" min="0" max="255" step="1" id="intensity_value"/>
+                </div>
+                <label for="intensity_value"></label>
+            </form>
+        </article>
+
     </section>
 {% endblock body %}
+
+{% block script %}
+    <script>
+        function change_input(value, update) {
+            document.getElementById("intensity_value").value = value;
+            input_change(update);
+        }
+
+        function input_change(update) {
+            document.querySelector("label[for='intensity_value']").innerText = "Last Value: " + String(document.getElementById("intensity_value").value);
+            if (update) get("{{ url_for('.global_intensity', val=0) }}" + encodeURIComponent(document.getElementById("intensity_value").value));
+        }
+
+        document.getElementById("intensity_value").addEventListener("input", function (e) {
+            input_change(true);
+        });
+    </script>
+{% endblock script %}

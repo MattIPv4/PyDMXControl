@@ -41,6 +41,15 @@ def home():
     return render_template("index.jinja2", helpers=helpers)
 
 
+# Global Intensity
+@routes.route('intensity/<int:val>', methods=['GET'])
+def global_intensity(val: int):
+    if val < 0 or val > 255:
+        return jsonify({"error": "Value {} is invalid".format(val)}), 400
+    current_app.parent.controller.all_dim(val)
+    return jsonify({"message": "All dimmers updated to {}".format(val)}), 200
+
+
 # Fixture Home
 @routes.route('fixture/<int:fid>', methods=['GET'])
 def fixture(fid: int):
@@ -81,7 +90,8 @@ def channel_val(fid: int, cid: int, val: int):
     val = fixture_channel_value(fixture, chan)
     return jsonify({"message": "Channel updated to {}".format(val), "elements": {
         "channel-{}-value".format(chan): val,
-        "value": val
+        "value": val,
+        "slider_value": val
     }}), 200
 
 
@@ -103,6 +113,28 @@ def color(fid: int, val: str):
         })}), 200
 
 
+# Fixture Intensity
+@routes.route('fixture/<int:fid>/intensity/<int:val>', methods=['GET'])
+def intensity(fid: int, val: int):
+    fixture = current_app.parent.controller.get_fixture(fid)
+    if not fixture:
+        return jsonify({"error": "Fixture {} not found".format(fid)}), 404
+    chan = fixture.get_channel_id("dimmer")
+    if chan == -1:
+        return jsonify({"error": "Dimmer channel not found"}), 404
+
+    if val < 0 or val > 255:
+        return jsonify({"error": "Value {} is invalid".format(val)}), 400
+
+    fixture.set_channel(chan, val)
+    val = fixture_channel_value(fixture, chan)
+    return jsonify({"message": "Dimmer updated to {}".format(val), "elements": {
+        "channel-{}-value".format(chan): val,
+        "value": val,
+        "intensity_value": val
+    }}), 200
+
+
 # Fixture Helpers
 @routes.route('fixture/<int:fid>/helper/<string:val>', methods=['GET'])
 def helper(fid: int, val: str):
@@ -120,9 +152,10 @@ def helper(fid: int, val: str):
     except:
         return jsonify({"error": "Helper {} failed to execute".format(val)}), 500
     return jsonify({"message": "Helper {} executed".format(val), "elements":
-        dict({"value": Colors.to_hex(fixture.get_color())}, **{
-            "channel-{}-value".format(i): f[1] for i, f in enumerate(fixture_channels(fixture))
-        })}), 200
+        dict({"value": Colors.to_hex(fixture.get_color()),
+              "intensity_value": fixture.get_channel_value(fixture.get_channel_id("dimmer"))[0]},
+             **{"channel-{}-value".format(i): f[1] for i, f in enumerate(fixture_channels(fixture))}
+             )}), 200
 
 
 # Callbacks

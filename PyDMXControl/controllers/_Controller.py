@@ -183,6 +183,10 @@ class Controller:
         for fixture in self.get_all_fixtures():
             fixture.locate()
 
+    def all_dim(self, value: int, milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.dim(value, milliseconds)
+
     def all_color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
         for fixture in self.get_all_fixtures():
             fixture.color(color, milliseconds)

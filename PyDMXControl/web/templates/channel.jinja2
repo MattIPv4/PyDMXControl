@@ -34,8 +34,21 @@
                 </tr>
                 </tbody>
             </table>
+
+            <form id="slider">
+                <div class="button-group">
+                    <a href="javascript:change_input(0, true)" class="button">0%</a>
+                    <a href="javascript:change_input(128, true)" class="button">50%</a>
+                    <a href="javascript:change_input(255, true)" class="button">100%</a>
+                </div>
+                <div class="slider">
+                    <input title="Value" type="range" min="0" max="255" step="1" id="slider_value"/>
+                </div>
+                <label for="slider_value"></label>
+            </form>
+
             <form id="channel">
-                <label for="value">New Value</label>
+                <label for="value">Manual Input</label>
                 <input id="value" name="value" type="number" min="0" max="255" step="1" value="{{ channel[1] }}"
                        required/>
                 <input type="submit" value="Update" id="submit" name="submit"/>
@@ -43,11 +56,28 @@
         </article>
 
     </section>
+{% endblock body %}
+
+{% block script %}
     <script>
+        function change_input(value, update) {
+            document.getElementById("slider_value").value = value;
+            input_change(update);
+        }
+
+        function input_change(update) {
+            document.querySelector("label[for='slider_value']").innerText = "Current Value: " + String(document.getElementById("slider_value").value);
+            if (update) get("{{ url_for('.channel_val', fid=fixture.id, cid=cid, val=0) }}" + encodeURIComponent(document.getElementById("slider_value").value));
+        }
+
+        change_input({{ channel[1] }}, false);
+        document.getElementById("slider_value").addEventListener("input", function (e) {
+            input_change(true);
+        });
+
         document.getElementById("channel").addEventListener("submit", function (e) {
             e.preventDefault();
-            var channel = document.getElementById("value").value;
-            get("{{ url_for('.channel_val', fid=fixture.id, cid=cid, val=0) }}" + encodeURIComponent(channel));
+            change_input(document.getElementById("value").value, true)
         });
     </script>
-{% endblock body %}
+{% endblock script %}

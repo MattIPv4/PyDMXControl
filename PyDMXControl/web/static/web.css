@@ -84,7 +84,13 @@ a:hover, a:focus {
     background: #dd5;
     border-radius: .4em;
     padding: .25em .5em;
+    margin: .25em;
     line-height: 1.5em;
+}
+
+.button-group {
+    display: block;
+    margin: .5em;
 }
 
 /* Alerts */
@@ -98,6 +104,50 @@ a:hover, a:focus {
     width: 100%;
     padding: .5em 1em;
     margin-top: 0;
+}
+
+/* Slider */
+
+.slider {
+    width: 100%; /* Width of the outside container */
+}
+
+.slider input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 0;
+
+    padding: 0 1em;
+    margin: 1em 0;
+    height: 1em;
+
+    background: #ccc;
+    transition: background .2s;
+}
+
+.slider input[type="range"]:hover {
+    background: #eee;
+}
+
+.slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+
+    width: 1em;
+    height: 2em;
+    background: #dd5;
+    cursor: pointer;
+}
+
+.slider input[type="range"]::-moz-range-thumb {
+    width: 1em;
+    height: 2em;
+    background: #dd5;
+    cursor: pointer;
 }
 
 /* Brand */
@@ -162,6 +212,7 @@ a:hover, a:focus {
     .button {
         display: block;
         padding: .5em 1em;
+        margin: 0;
     }
 
     .button:nth-child(even) {
@@ -180,5 +231,20 @@ a:hover, a:focus {
 
     table td .button:first-of-type {
         margin-top: .5em;
+    }
+
+    .slider input[type="range"] {
+        margin: 1.5em 0;
+        height: 1.2em;
+    }
+
+    .slider input[type="range"]::-webkit-slider-thumb {
+        width: 2em;
+        height: 3.5em;
+    }
+
+    .slider input[type="range"]::-moz-range-thumb {
+        width: 2em;
+        height: 3.5em;
     }
 }

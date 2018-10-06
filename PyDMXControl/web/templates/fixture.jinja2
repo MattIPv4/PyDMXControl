@@ -108,8 +108,25 @@
             </table>
         </article>
 
-    </section>
+        <article>
+            <h2>Intensity</h2>
+            <form id="intensity">
+                <div class="button-group">
+                    <a href="javascript:change_input(0, true)" class="button">0%</a>
+                    <a href="javascript:change_input(128, true)" class="button">50%</a>
+                    <a href="javascript:change_input(255, true)" class="button">100%</a>
+                </div>
+                <div class="slider">
+                    <input title="Intensity" type="range" min="0" max="255" step="1" id="intensity_value"/>
+                </div>
+                <label for="intensity_value"></label>
+            </form>
+        </article>
 
+    </section>
+{% endblock body %}
+
+{% block script %}
     <script>
         function hexToRgb(hex) {
             // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -134,5 +151,20 @@
                     encodeURIComponent(color.join(',')));
             }
         });
+
+        function change_input(value, update) {
+            document.getElementById("intensity_value").value = value;
+            input_change(update);
+        }
+
+        function input_change(update) {
+            document.querySelector("label[for='intensity_value']").innerText = "Current Value: " + String(document.getElementById("intensity_value").value);
+            if (update) get("{{ url_for('.intensity', fid=fixture.id, val=0) }}" + encodeURIComponent(document.getElementById("intensity_value").value));
+        }
+
+        change_input({{ fixture.get_channel_value(fixture.get_channel_id('dimmer'))[0] }}, false);
+        document.getElementById("intensity_value").addEventListener("input", function (e) {
+            input_change(true);
+        });
     </script>
-{% endblock body %}
+{% endblock script %}

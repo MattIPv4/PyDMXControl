@@ -30,6 +30,7 @@ dmx.web_control()
 # Dim all up
 dmx.all_locate()
 
+"""
 # Apply effect 1
 Chase.group_apply(dmx.get_all_fixtures(), 1000, colors=[Colors.Red, Colors.Yellow, Colors.Green, Colors.Blue])
 
@@ -51,6 +52,7 @@ sleep(5)
 # Apply effect 3
 dmx.all_off()
 Dim.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 1000)
+"""
 
 # Debug
 dmx.debug_control()
