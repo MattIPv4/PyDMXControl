@@ -21,6 +21,13 @@ function get(url) {
                         } else {
                             elm.innerText = text;
                         }
+                        if ("createEvent" in document) {
+                            var evt = document.createEvent("HTMLEvents");
+                            evt.initEvent("change", false, true);
+                            elm.dispatchEvent(evt);
+                        } else {
+                            elm.fireEvent("onchange");
+                        }
                     }
                 }
             }

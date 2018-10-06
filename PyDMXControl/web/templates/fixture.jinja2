@@ -47,8 +47,8 @@
             </table>
         </article>
 
-        <article>
-            {% if fixture.get_color() is not none %}
+        {% if fixture.get_color() is not none %}
+            <article>
                 <h2>Color List</h2>
                 <table>
                     <thead>
@@ -78,12 +78,8 @@
                            required/>
                     <input type="submit" value="Update" id="submit" name="submit"/>
                 </form>
-            {% else %}
-                <h2>
-                    <small>This fixture does not support color</small>
-                </h2>
-            {% endif %}
-        </article>
+            </article>
+        {% endif %}
 
         <article>
             <h2>Helper List</h2>
@@ -162,9 +158,13 @@
             if (update) get("{{ url_for('.intensity', fid=fixture.id, val=0) }}" + encodeURIComponent(document.getElementById("intensity_value").value));
         }
 
-        change_input({{ fixture.get_channel_value(fixture.get_channel_id('dimmer'))[0] }}, false);
+        change_input({{ fixture.get_channel_value(fixture.get_channel_id("dimmer"))[0] }}, false);
         document.getElementById("intensity_value").addEventListener("input", function (e) {
             input_change(true);
+        });
+
+        document.getElementById("intensity_value").addEventListener("change", function (e) {
+            input_change(false);
         });
     </script>
 {% endblock script %}

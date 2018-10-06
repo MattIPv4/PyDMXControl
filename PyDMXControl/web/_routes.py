@@ -88,11 +88,15 @@ def channel_val(fid: int, cid: int, val: int):
 
     fixture.set_channel(chan, val)
     val = fixture_channel_value(fixture, chan)
-    return jsonify({"message": "Channel updated to {}".format(val), "elements": {
-        "channel-{}-value".format(chan): val,
-        "value": val,
-        "slider_value": val
-    }}), 200
+    data = {"message": "Channel {} {} updated to {}".format(chan + 1, fixture.channels[chan + 1]["name"], val),
+            "elements": {
+                "channel-{}-value".format(chan): val,
+                "value": val,
+                "slider_value": val
+            }}
+    if chan == fixture.get_channel_id("dimmer"):
+        data["elements"]["intensity_value"] = val
+    return jsonify(data), 200
 
 
 # Fixture Color
@@ -130,7 +134,6 @@ def intensity(fid: int, val: int):
     val = fixture_channel_value(fixture, chan)
     return jsonify({"message": "Dimmer updated to {}".format(val), "elements": {
         "channel-{}-value".format(chan): val,
-        "value": val,
         "intensity_value": val
     }}), 200
 
