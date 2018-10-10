@@ -5,6 +5,7 @@ This is copied in part from https://docs.python.org/3/library/venv.html.
 """
 
 import os.path
+import sys
 import venv
 from subprocess import Popen
 
@@ -32,14 +33,16 @@ def run():
     else:
         path = "./venv/bin/python3"
 
-    print("\n\nSpawning: {} {}\n\n".format(os.path.abspath(path), "tests/home.py"))
-    proc = Popen([os.path.abspath(path), "tests/home.py"],
+    print("\n\nSpawning: {} tests/{}\n\n".format(os.path.abspath(path), sys.argv[1]))
+    proc = Popen([os.path.abspath(path), "tests/{}".format(sys.argv[1])],
                  cwd=os.getcwd(), env=env)
 
     proc.communicate()
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        sys.argv.append("home.py")
 
     print("Need to create environment:", not os.path.exists("./venv"))
     if not os.path.exists("./venv"):

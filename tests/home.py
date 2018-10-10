@@ -36,29 +36,31 @@ def standard_lights():
     dmx.get_fixture(7).set_channels(0, 0, 0, Colors.Black)
 
 
+custom_blue = [0, 16, 255]
+custom_white = [255, 140, 100]
+
+
 def normal():
     dmx.get_fixture(1).color(Colors.White, 10000)
 
-    c1 = [0, 16, 255]
     # Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 15 * 1000, colors=[Colors.Blue, Colors.Cyan])
-    dmx.get_fixture(2).color(c1, 10000)
-    dmx.get_fixture(3).color(c1, 10000)
-    dmx.get_fixture(4).color(c1, 10000)
-    dmx.get_fixture(5).color(c1, 10000)
+    dmx.get_fixture(2).color(custom_blue, 10000)
+    dmx.get_fixture(3).color(custom_blue, 10000)
+    dmx.get_fixture(4).color(custom_blue, 10000)
+    dmx.get_fixture(5).color(custom_blue, 10000)
 
-    c2 = [255, 140, 100]
-    dmx.get_fixture(6).color(c2, 10000)
-    dmx.get_fixture(7).color(c2, 10000)
+    dmx.get_fixture(6).color(custom_white, 10000)
+    dmx.get_fixture(7).color(custom_white, 10000)
 
 
 def dimmer():
-    dmx.get_fixture(1).color(Colors.Warm, 10000)
+    dmx.get_fixture(1).color(Colors.Black, 10000)
 
     # dmx.clear_all_effects()
-    dmx.get_fixture(2).color(Colors.Warm, 10000)
-    dmx.get_fixture(3).color(Colors.Warm, 10000)
-    dmx.get_fixture(4).color(Colors.Warm, 10000)
-    dmx.get_fixture(5).color(Colors.Warm, 10000)
+    dmx.get_fixture(2).color(custom_blue, 10000)
+    dmx.get_fixture(3).color(custom_blue, 10000)
+    dmx.get_fixture(4).color(custom_blue, 10000)
+    dmx.get_fixture(5).color(custom_blue, 10000)
 
     dmx.get_fixture(6).color(Colors.Warm, 10000)
     dmx.get_fixture(7).color(Colors.Warm, 10000)

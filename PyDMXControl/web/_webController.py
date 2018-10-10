@@ -50,12 +50,24 @@ class WebController:
         # Setup template context
         @self.__app.context_processor
         def variables() -> dict:
-            return dict({"controller": self.controller, "callbacks": self.callbacks},
+            return dict({"controller": self.controller, "callbacks": self.callbacks,
+                         "web_resource": WebController.web_resource},
                         **dict(globals(), **builtins.__dict__))  # Dictionary stacking to concat
 
         # Setup thread
         self.__running = False
         self.run()
+
+    @staticmethod
+    def filemtime(file: str) -> int:
+        try:
+            return path.getmtime(file)
+        except:
+            return 0
+
+    @staticmethod
+    def web_resource(file: str) -> str:
+        return "{}?v={:.0f}".format(file, WebController.filemtime(path.dirname(__file__) + file))
 
     def __default_callbacks(self):
         # Some default callbacks

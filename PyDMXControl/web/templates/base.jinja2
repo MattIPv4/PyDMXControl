@@ -11,17 +11,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <title>PyDMXControl Web Controller</title>
-    <link rel="shortcut icon" href="/static/icon.png"/>
-    <link rel="icon" type="image/png" href="/static/icon.png"/>
+    <link rel="shortcut icon" href="{{ web_resource('/static/icon.png') }}"/>
+    <link rel="icon" type="image/png" href="{{ web_resource('/static/icon.png') }}"/>
 
     <meta name="apple-mobile-web-app-title" content="PyDMX"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="format-detection" content="telephone=no"/>
-    <link rel="apple-touch-icon" href="/static/icon.png"/>
+    <link rel="apple-touch-icon" href="{{ web_resource('/static/icon.png') }}"/>
     <meta name="theme-color" content="#34495E"/>
 
-    <link href="/static/web.css" rel="stylesheet"/>
+    <link href="{{ web_resource('/static/web.css') }}" rel="stylesheet"/>
 </head>
 <body>
 
@@ -35,7 +35,8 @@
                                                                          target="_blank">Matt Cowley.</a>
 </h5>
 
-<script src="/static/get.js"></script>
+<script src="{{ web_resource('/static/get.js') }}"></script>
+{% block script %}{% endblock %}
 
 </body>
 </html>
