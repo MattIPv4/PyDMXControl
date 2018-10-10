@@ -37,6 +37,8 @@ dmx.sleep_till_enter() # sleep till enter pressed in shell (once debug mode exit
 dmx.close() # cleanly close PyDMXControl
 ```
 
+> For a "real life" example, please take a look at `tests/home.py` which is the setup I use in my office.
+
 ## Ramble
 Just messing around with using Python to control/send DMX.\
 Supports fixture profiling; Has defaults for a standard fixture and fixtures that need virtual dimmers.\
