@@ -1,3 +1,5 @@
+<img src="brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon" align="right" width="200"/>
+
 [![PyPi Version](https://img.shields.io/pypi/v/PyDMXControl.svg?maxAge=2592000&style=flat-square)](https://pypi.org/project/PyDMXControl/)
 [![License](https://img.shields.io/pypi/l/PyDMXControl.svg?maxAge=2592000&style=flat-square)](LICENSE)
 [![Python Versions](https://img.shields.io/pypi/pyversions/PyDMXControl.svg?maxAge=2592000&style=flat-square)](https://pypi.org/project/PyDMXControl/)
@@ -6,9 +8,8 @@
 
 # PyDMXControl
 
-**A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.**
-
-<img style="float: right;" src="brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon"/>
+**A Python 3 module to control DMX via Python using uDMX.**
+**Featuring fixture profiles, built-in effects and a web control panel.**
 
 ## Installation
 
