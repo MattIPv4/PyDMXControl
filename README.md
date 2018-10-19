@@ -48,9 +48,9 @@ Install via pip (recommended)
 ## Example
 
 An example of how to get a single dimmer working with PyDMXControl, 
-providing the web control panel and the shell debug system once started.
+providing the web control panel and the console debug system once started.
 
-```Python
+```python
 # Import the uDMX controller from PyDMXControl,
 #  this will be how the data is outputted.
 from PyDMXControl.controllers import uDMXController
