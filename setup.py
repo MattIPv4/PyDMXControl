@@ -17,7 +17,8 @@
 """
 
 from setuptools import setup
-import re
+
+from PyDMXControl import __version__
 
 with open("requirements.txt", "r") as f:
     requirements = f.readlines()
@@ -25,36 +26,55 @@ with open("requirements.txt", "r") as f:
 with open("README.md", "r") as f:
     readme = f.read()
 
-with open("PyDMXControl/__init__.py", "r") as f:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
-
-if not version:
-    raise RuntimeError('version is not set')
-
 setup(
     name="PyDMXControl",
     author="MattIPv4",
     url="https://github.com/MattIPv4/PyDMXControl/",
-    version=version,
-    packages=['PyDMXControl'],
+    version=__version__,
+    packages=["PyDMXControl"],
     python_requires=">= 3.5",
     include_package_data=True,
     install_requires=requirements,
-    description='A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.',
+    description="A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.",
     long_description=readme,
     long_description_content_type="text/markdown",
-    keywords="lighting light lights control dmx theatre fixtures udmx",
+    keywords="lighting light lights "
+             "fixtures fixture-profiles "
+             "controller control control-dmx "
+             "dmx dmx-512 dmx-interface dmx-channels dmx-dimmer dmx-library "
+             "theatre udmx",
     classifiers=(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+
         "Programming Language :: Python :: 3",
-        "Natural Language :: English",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
+        "Intended Audience :: Other Audience",
+
+        "Environment :: Console",
+        "Environment :: Web Environment",
+        "Framework :: Flask",
+
+        "Natural Language :: English",
         "Operating System :: OS Independent",
+
+        "Topic :: Home Automation",
+        "Topic :: Internet",
+        "Topic :: Multimedia",
+        "Topic :: Software Development :: Embedded Systems",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Software Development :: User Interfaces",
     ),
     project_urls={
-        'Funding': 'http://patreon.mattcowley.co.uk/',
-        'Support': 'http://discord.mattcowley.co.uk/',
-        'Source': 'https://github.com/MattIPv4/PyDMXControl/',
+        "Source": "https://github.com/MattIPv4/PyDMXControl/tree/master",
+        "Funding": "http://patreon.mattcowley.co.uk/",
+        "Patreon": "http://patreon.mattcowley.co.uk/",
+        "Support": "http://discord.mattcowley.co.uk/",
+        "Discord": "http://discord.mattcowley.co.uk/",
     },
 )
 
