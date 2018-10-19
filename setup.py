@@ -18,7 +18,7 @@
 
 from setuptools import setup
 
-from PyDMXControl import __version__
+from PyDMXControl import __title__, __author__, __email__, __version__, name
 
 with open("requirements.txt", "r") as f:
     requirements = f.readlines()
@@ -27,11 +27,12 @@ with open("README.md", "r") as f:
     readme = f.read()
 
 setup(
-    name="PyDMXControl",
-    author="MattIPv4",
+    name=__title__,
+    author=__author__,
+    author_email=__email__,
     url="https://github.com/MattIPv4/PyDMXControl/",
     version=__version__,
-    packages=["PyDMXControl"],
+    packages=[name],
     python_requires=">= 3.5",
     include_package_data=True,
     install_requires=requirements,

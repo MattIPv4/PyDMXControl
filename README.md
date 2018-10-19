@@ -1,12 +1,17 @@
-<img src="brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon" align="right" width="200"/>
+<img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl-500x60.png" alt="PyDMXControl" align="center" width="500"/>
 
-[![PyPi Version](https://img.shields.io/pypi/v/PyDMXControl.svg?maxAge=2592000&style=flat-square)](https://pypi.org/project/PyDMXControl/)
-[![License](https://img.shields.io/pypi/l/PyDMXControl.svg?maxAge=2592000&style=flat-square)](LICENSE)
-[![Python Versions](https://img.shields.io/pypi/pyversions/PyDMXControl.svg?maxAge=2592000&style=flat-square)](https://pypi.org/project/PyDMXControl/)
-[![Project Size](https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?maxAge=2592000&style=flat-square)](PyDMXControl)
-[![Commit Activity](https://img.shields.io/github/commit-activity/y/MattIPv4/PyDMXControl.svg?maxAge=2592000&style=flat-square)](https://github.com/MattIPv4/PyDMXControl/commits)
+<p align="center">
 
-# PyDMXControl
+[![PyPi Version](https://img.shields.io/pypi/v/PyDMXControl.svg?style=flat-square)](https://pypi.org/project/PyDMXControl/)
+[![License](https://img.shields.io/pypi/l/PyDMXControl.svg?style=flat-square)](https://github.com/MattIPv4/PyDMXControl/tree/master/LICENSE)
+[![Python Versions](https://img.shields.io/pypi/pyversions/PyDMXControl.svg?style=flat-square)](https://pypi.org/project/PyDMXControl/)
+[![Code Size](https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square)](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl)
+
+</p>
+
+----
+
+<img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon" align="right" width="150"/>
 
 **A Python 3 module to control DMX via Python using uDMX.**
 
@@ -20,12 +25,12 @@ Install via pip (recommended)
 
 ## Features
 
-* FIXTURE profiles per manufacturer ([see all included profiles](PyDMXControl/profiles))
+* FIXTURE profiles per manufacturer ([see all included profiles](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/profiles))
   * Generic dimmer fixture included, single channel
   * RGB (3-channel) fixture with virtual dimmer built-in
 
 
-* EFFECT module/library support ([see all packaged effects](PyDMXControl/effects))
+* EFFECT module/library support ([see all packaged effects](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/effects))
   * Intensity dim chase provided, configurable speed and offset provided
   * Included is a fixture color chase effect, unlimited number of colors supported
   * Effects can be applied to individual fixtures or multiple as a group
@@ -44,6 +49,9 @@ Install via pip (recommended)
   
   
 * WEBSITE control panel built in
+  * Global and individual fixture intensity control via sliders
+  * Quick access to callback functions globally and for each fixture
+  * Color picker for individual fixtures as well as specific channel control
 
 ## Example
 
@@ -96,7 +104,7 @@ dmx.sleep_till_enter()
 dmx.close()
 ```
 
-> For a "real life" example, please take a look at [tests/home.py](tests/home.py) which is the setup I use in my office.
+> For a "real life" example, please take a look at [tests/home.py](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/home.py) which is the setup I use in my office.
 
 ## What is the point of this?
 

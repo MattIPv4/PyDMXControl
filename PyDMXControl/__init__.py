@@ -17,10 +17,13 @@
 """
 
 __title__ = 'PyDMXControl'
-__author__ = 'MattIPv4'
+__author__ = 'Matt Cowley (MattIPv4)'
+__maintainer__ = 'Matt Cowley (MattIPv4)'
+__email__ = 'me@mattcowley.co.uk'
 __license__ = 'GPL'
-__copyright__ = 'Copyright 2018, MattIPv4'
-__version__ = '1.4.1'
+__copyright__ = 'Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)'
+__version__ = '1.4.2'
+__status__ = 'Production'
 
 name = "PyDMXControl"
 
@@ -30,6 +33,4 @@ from ._Colors import Colors
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=1, minor=4, micro=1, releaselevel='final', serial=0)
-
-
+version_info = VersionInfo(major=1, minor=4, micro=2, releaselevel='final', serial=0)
