@@ -4,23 +4,23 @@
 
 <p align="center">
     <a href="https://pypi.org/project/PyDMXControl/">
-        <img src="https://img.shields.io/pypi/v/PyDMXControl.svg?style=flat-square" alt="PyPi Version">
+        <img src="https://img.shields.io/pypi/v/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="PyPi Version">
     </a>
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/LICENSE">
-        <img src="https://img.shields.io/pypi/l/PyDMXControl.svg?style=flat-square" alt="License">
+        <img src="https://img.shields.io/pypi/l/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="License">
     </a>
     <a href="https://pypi.org/project/PyDMXControl/">
-        <img src="https://img.shields.io/pypi/pyversions/PyDMXControl.svg?style=flat-square" alt="Python Versions">
+        <img src="https://img.shields.io/pypi/pyversions/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Python Versions">
     </a>
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl">
-        <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square" alt="Code Size"></a>
+        <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size"></a>
 </p>
 
 <img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon" align="right" width="150"/>
 
 ----
 
-**A Python 3 module to control DMX via Python using uDMX.**
+**A Python 3 module to control DMX in Python using uDMX.**
 
 **Featuring fixture profiles, built-in effects and a web control panel.**
 
