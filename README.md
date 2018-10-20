@@ -59,6 +59,11 @@ Install via pip (recommended)
   * Global and individual fixture intensity control via sliders
   * Quick access to callback functions globally and for each fixture
   * Color picker for individual fixtures as well as specific channel control
+  
+ 
+* JSON fixture configurations
+  * Load fixture configurations from JSON files into the controller
+  * Save your current set of fixtures out to JSON files for later use
 
 ## Example
 
@@ -113,6 +118,8 @@ dmx.close()
 ```
 
 > For a "real life" example, please take a look at [tests/home.py](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/home.py) which is the setup I use in my office.
+
+Browse the tests from the [tests folder](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/) to see examples of other features within the library being tested out.
 
 ## What is the point of this?
 
