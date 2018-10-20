@@ -15,5 +15,5 @@ class Custom(Fixture):
 
         super().__init__(*args, **kwargs)
 
-        for _ in range(self.kwargs["channels"]):
+        for _ in range(kwargs["channels"]):
             self._register_channel(str(_ + 1))

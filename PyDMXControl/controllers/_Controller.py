@@ -6,7 +6,7 @@
 
 from time import sleep
 from typing import Type, List, Union, Dict, Tuple, Callable
-from json import load, JSONDecodeError
+from json import load, dumps, JSONDecodeError
 import re
 from importlib import import_module
 from warnings import warn
@@ -108,6 +108,21 @@ class Controller:
             fixtures.append(self.add_fixture(module, *args, **dict(item)))
 
         return fixtures
+
+    def save_json_config(self, filename: Union[str, None] = None, pretty_print: bool = True) -> str:
+        data = []
+        for fixture in self.__fixtures.values():
+            data.append(fixture.json_data)
+        if pretty_print:
+            data = dumps(data, indent=4)
+        else:
+            data = dumps(data)
+
+        if filename:
+            with open(filename, "w+") as f:
+                f.write(data)
+
+        return data
 
     def del_fixture(self, fixture_id: int) -> bool:
         # Check if the id exists
