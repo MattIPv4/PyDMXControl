@@ -90,7 +90,7 @@ fixture = dmx.add_fixture(Dimmer, name="My_First_Dimmer")
 fixture.dim(255, 5000)
 
 # We can now start the web control panel built into PyDMXControl.
-# This will output the web address in console, but should be http://0.0.0.0:8000
+# This will output the web address in console, but should be http://0.0.0.0:8080
 # This runs in the background and so we can continue to do other things still.
 dmx.web_control()
 

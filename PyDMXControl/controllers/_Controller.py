@@ -201,10 +201,10 @@ class Controller:
             callbacks = {}
         Debugger(self, callbacks).run()
 
-    def web_control(self, callbacks: Dict[str, Callable] = None):
+    def web_control(self, *args, **kwargs):
         if self.web is not None:
             self.web.stop()
-        self.web = WebController(self, callbacks)
+        self.web = WebController(self, *args, **kwargs)
 
     def run(self):
         # Method used in transmitting controllers

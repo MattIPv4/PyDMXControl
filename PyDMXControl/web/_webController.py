@@ -26,7 +26,7 @@ log.setLevel(logging.ERROR)
 # WebController
 class WebController:
 
-    def __init__(self, controller: 'Controller', callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
+    def __init__(self, controller: 'Controller', *, callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
                  port: int = 8080):
         # Setup flask
         self.__thread = None
