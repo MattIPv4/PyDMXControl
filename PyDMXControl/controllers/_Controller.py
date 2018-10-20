@@ -6,11 +6,15 @@
 
 from time import sleep
 from typing import Type, List, Union, Dict, Tuple, Callable
+from json import load, JSONDecodeError
+import re
+from importlib import import_module
+from warnings import warn
 
 from .utils.debug import Debugger
 from .. import Colors
 from ..profiles.defaults import Fixture_Channel, Fixture
-from ..utils.exceptions import LTPCollisionException
+from ..utils.exceptions import JSONConfigException, LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
 from ..web import WebController
 
@@ -51,6 +55,53 @@ class Controller:
 
         # Return the updated fixture
         return self.__fixtures[fixture_id]
+
+    def load_json_config(self, filename: str) -> List[Fixture]:
+        fixtures = []
+
+        try:
+            with open(filename) as f:
+                data = load(f)
+        except (FileNotFoundError, OSError):
+            raise JSONConfigException(filename)
+        except JSONDecodeError:
+            raise JSONConfigException(filename, "unable to parse contents")
+
+        if not isinstance(data, list):
+            raise JSONConfigException(filename, "expected list of dicts, got {}".format(type(data)))
+
+        for index, item in enumerate(data):
+            if not isinstance(item, dict):
+                warn("Failed to load item {} from JSON, expected dict, got {}".format(index, type(item)))
+                continue
+
+            if 'type' not in item:
+                warn("Failed to load item {} from JSON, expected a type property".format(index))
+                continue
+
+            pattern = re.compile(r"^(([\w\d.]+)\.)*([\w\d]+)$", re.IGNORECASE)
+            match = pattern.match(item['type'])
+            if not match:
+                warn("Failed to load item {} from JSON, failed to parse type '{}'".format(index, item['type']))
+                continue
+
+            try:
+                module = import_module(".{}".format(match.group(2)), 'PyDMXControl.profiles')
+            except ModuleNotFoundError:
+                warn("Failed to load item {} from JSON, profile module '{}' not found".format(index, match.group(2)))
+                continue
+
+            try:
+                module = getattr(module, match.group(3))
+            except AttributeError:
+                warn("Failed to load item {} from JSON, profile type '{}' not found in '{}'".format(
+                    index, match.group(3), match.group(2)))
+                continue
+
+            del item['type']
+            fixtures.append(self.add_fixture(module, **dict(item)))
+
+        return fixtures
 
     def del_fixture(self, fixture_id: int) -> bool:
         # Check if the id exists

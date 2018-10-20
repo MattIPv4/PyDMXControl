@@ -20,3 +20,10 @@ class MissingArgumentException(PyDMXControlException, ValueError):
     def __init__(self, argument: str, kwarg: bool = False):
         super().__init__("Argument '{}' ({}) missing from call.".format(
             argument, "Positional" if not kwarg else "Keyword"))
+
+
+class JSONConfigException(PyDMXControlException):
+
+    def __init__(self, filename: str, extra_info: str = ""):
+        super().__init__("Failed to load JSON file '{}'{}.".format(
+            filename, ", {}".format(extra_info) if extra_info else ""))
