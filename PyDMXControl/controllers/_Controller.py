@@ -14,7 +14,7 @@ from warnings import warn
 from .utils.debug import Debugger
 from .. import Colors
 from ..profiles.defaults import Fixture_Channel, Fixture
-from ..utils.exceptions import JSONConfigException, LTPCollisionException
+from ..utils.exceptions import JSONConfigLoadException, LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
 from ..web import WebController
 
@@ -63,12 +63,12 @@ class Controller:
             with open(filename) as f:
                 data = load(f)
         except (FileNotFoundError, OSError):
-            raise JSONConfigException(filename)
+            raise JSONConfigLoadException(filename)
         except JSONDecodeError:
-            raise JSONConfigException(filename, "unable to parse contents")
+            raise JSONConfigLoadException(filename, "unable to parse contents")
 
         if not isinstance(data, list):
-            raise JSONConfigException(filename, "expected list of dicts, got {}".format(type(data)))
+            raise JSONConfigLoadException(filename, "expected list of dicts, got {}".format(type(data)))
 
         for index, item in enumerate(data):
             if not isinstance(item, dict):

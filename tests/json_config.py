@@ -11,6 +11,7 @@ dmx.load_json_config('tests/fixtures.json')
 # TODO: before saving, update any args/kwargs possible, name etc if changed since instantiation
 
 dmx.all_locate()
+print(dmx.get_fixture(1).json_data)
 dmx.debug_control()
 
 # Close the controller once we're done

@@ -24,6 +24,18 @@ class MissingArgumentException(PyDMXControlException, ValueError):
 
 class JSONConfigException(PyDMXControlException):
 
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class JSONConfigLoadException(JSONConfigException):
+
     def __init__(self, filename: str, extra_info: str = ""):
         super().__init__("Failed to load JSON file '{}'{}.".format(
             filename, ", {}".format(extra_info) if extra_info else ""))
+
+
+class JSONConfigSaveException(JSONConfigException):
+
+    def __init__(self, message: str):
+        super().__init__(message)

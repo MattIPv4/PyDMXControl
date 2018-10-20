@@ -4,6 +4,7 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+import re
 from datetime import datetime
 from threading import Thread
 from time import sleep, time
@@ -12,6 +13,7 @@ from warnings import warn
 
 from ... import Colors
 from ...effects.defaults import Effect
+from ...utils.exceptions import JSONConfigSaveException
 
 
 class Channel:
@@ -148,6 +150,18 @@ class Fixture:
             self.__class__.__name__,
             self.channel_usage
         )
+
+    @property
+    def json_data(self) -> dict:
+        pattern = re.compile(r"^PyDMXControl\.profiles\.(([\w\d.]+)\.)*_[\w\d]+$", re.IGNORECASE)
+        match = pattern.match(__name__)
+        if not match:
+            raise JSONConfigSaveException("Failed to generate JSON data for fixture #{}".format(self.id))
+        return {
+            "type": "{}.{}".format(match.group(2), self.__class__.__name__),
+            "name": self.name,
+            "start_channel": self.start_channel
+        }
 
     # Channels
 
