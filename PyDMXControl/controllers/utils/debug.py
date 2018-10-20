@@ -21,19 +21,19 @@ class Debugger:
 
     def __default_callbacks(self):
         # Some default callbacks
-        if not 'all_on' in self.cbs:
+        if 'all_on' not in self.cbs:
             self.cbs['all_on'] = self.cont.all_on
-        if not 'on' in self.cbs:
+        if 'on' not in self.cbs:
             self.cbs['on'] = self.cont.all_on
 
-        if not 'all_off' in self.cbs:
+        if 'all_off' not in self.cbs:
             self.cbs['all_off'] = self.cont.all_off
-        if not 'off' in self.cbs:
+        if 'off' not in self.cbs:
             self.cbs['off'] = self.cont.all_off
 
-        if not 'all_locate' in self.cbs:
+        if 'all_locate' not in self.cbs:
             self.cbs['all_locate'] = self.cont.all_locate
-        if not 'locate' in self.cbs:
+        if 'locate' not in self.cbs:
             self.cbs['locate'] = self.cont.all_locate
 
     def __check_callbacks(self):
@@ -186,7 +186,7 @@ class Debugger:
                 # Apply
                 value = int(value)
                 fixture.set_channel(channel, value)
-                print("[Channel Debug] Channel '" + channel + "' set to " + str(
+                print("[Channel Debug] Channel '" + str(channel) + "' set to " + str(
                     self.__fixture_channel_value(fixture, channel)))
                 continue
 
