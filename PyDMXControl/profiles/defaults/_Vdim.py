@@ -47,14 +47,14 @@ class Vdim(Fixture):
             return -1, datetime.utcnow()
 
         # Apply vdim to value if applicable
-        newVal = super_call[0]
-        newTime = super_call[1]
+        new_val = super_call[0]
+        new_time = super_call[1]
         if apply_vdim and self.get_channel_id(channel) in self.__vdims:
-            newVal = int(newVal * (self.__vdim / 255))
-            if self.__vdimUpdated > newTime:
-                newTime = self.__vdimUpdated
+            new_val = int(new_val * (self.__vdim / 255))
+            if self.__vdimUpdated > new_time:
+                new_time = self.__vdimUpdated
 
-        return newVal, newTime
+        return new_val, new_time
 
     def set_channel(self, channel: Union[str, int], value: int) -> Fixture:
         # Allow setting of vdim

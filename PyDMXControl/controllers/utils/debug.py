@@ -6,7 +6,7 @@
 
 from collections import namedtuple
 from inspect import signature, Parameter
-from re import compile
+from re import compile as re_compile
 from typing import List, Tuple, Union, Dict, Callable
 
 from ... import Colors
@@ -21,21 +21,28 @@ class Debugger:
 
     def __default_callbacks(self):
         # Some default callbacks
-        if not 'all_on' in self.cbs: self.cbs['all_on'] = self.cont.all_on
-        if not 'on' in self.cbs: self.cbs['on'] = self.cont.all_on
+        if not 'all_on' in self.cbs:
+            self.cbs['all_on'] = self.cont.all_on
+        if not 'on' in self.cbs:
+            self.cbs['on'] = self.cont.all_on
 
-        if not 'all_off' in self.cbs: self.cbs['all_off'] = self.cont.all_off
-        if not 'off' in self.cbs: self.cbs['off'] = self.cont.all_off
+        if not 'all_off' in self.cbs:
+            self.cbs['all_off'] = self.cont.all_off
+        if not 'off' in self.cbs:
+            self.cbs['off'] = self.cont.all_off
 
-        if not 'all_locate' in self.cbs: self.cbs['all_locate'] = self.cont.all_locate
-        if not 'locate' in self.cbs: self.cbs['locate'] = self.cont.all_locate
+        if not 'all_locate' in self.cbs:
+            self.cbs['all_locate'] = self.cont.all_locate
+        if not 'locate' in self.cbs:
+            self.cbs['locate'] = self.cont.all_locate
 
     def __check_callbacks(self):
         for key in self.cbs.keys():
             if not self.cbs[key] or not callable(self.cbs[key]):
                 del self.cbs[key]
 
-    def __callbacks_parameters(self, parameters: List[Parameter]) -> Tuple[list, dict]:
+    @staticmethod
+    def __callbacks_parameters(parameters: List[Parameter]) -> Tuple[list, dict]:
         # Given params
         ordered_params = []
         keyword_params = {}
@@ -53,19 +60,19 @@ class Debugger:
 
             def valid(this):
                 # Not started
-                if this is None: return False
+                if this is None:
+                    return False
 
                 # Default?
                 if this.strip() == "":
                     if has_default:
                         return param.default
-                    else:
-                        return False
+                    return False
 
                 # Normal
                 try:
                     return param.annotation(this)
-                except:
+                except Exception:
                     return this
 
             # Get input
@@ -116,15 +123,15 @@ class Debugger:
             else:
                 print("[Callbacks Debug] Callback '" + callback + "' succeed and returned:", res)
 
-        return
-
-    def __fixture_channels(self, fixture: Fixture) -> List[str]:
+    @staticmethod
+    def __fixture_channels(fixture: Fixture) -> List[str]:
         names = ["'" + f['name'] + "'" for f in fixture.channels.values()]
         if issubclass(type(fixture), Vdim):
             names.append("'dimmer'")
         return names
 
-    def __fixture_channel_value(self, fixture: Fixture, channel: Union[str, int]) -> int:
+    @staticmethod
+    def __fixture_channel_value(fixture: Fixture, channel: Union[str, int]) -> int:
         if issubclass(type(fixture), Vdim):
             return fixture.get_channel_value(channel, False)[0]
         return fixture.get_channel_value(channel)[0]
@@ -135,7 +142,8 @@ class Debugger:
         # Find the fixture
         if not fixture.isdigit():
             fixture = self.cont.get_fixtures_by_name(fixture)
-            if fixture: fixture = fixture[0]
+            if fixture:
+                fixture = fixture[0]
         else:
             fixture = self.cont.get_fixture(int(fixture))
         if not fixture:
@@ -197,7 +205,8 @@ class Debugger:
 
                 # If not enum, try regex, else fetch enum
                 if not color:
-                    pattern = compile("^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
+                    pattern = re_compile(
+                        r"^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
                     match = pattern.match(select)
                     if not match:
                         continue
@@ -219,8 +228,6 @@ class Debugger:
             # Exit
             if select == '5':
                 break
-
-        return
 
     def run(self):
         # DMX debug control
@@ -257,5 +264,3 @@ class Debugger:
             # Exit
             if select == '4':
                 break
-
-        return

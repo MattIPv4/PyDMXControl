@@ -4,7 +4,7 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
-from re import compile  # Regex
+from re import compile as re_compile  # Regex
 from typing import List, Union, Tuple, Dict, Callable  # Typing
 
 from flask import Blueprint, render_template, current_app, redirect, url_for, jsonify  # Flask
@@ -105,16 +105,16 @@ def color(fid: int, val: str):
     this_fixture = current_app.parent.controller.get_fixture(fid)
     if not this_fixture:
         return jsonify({"error": "Fixture {} not found".format(fid)}), 404
-    pattern = compile("^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
+    pattern = re_compile(r"^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
     match = pattern.match(val)
     if not match:
         return jsonify({"error": "Invalid color {} supplied".format(val)}), 400
     this_color = [int(f) for f in match.groups() if f]
     this_fixture.color(this_color)
-    return jsonify({"message": "Color updated to {}".format(this_color), "elements": dict({
-        "value": Colors.to_hex(this_fixture.get_color())},
-        **{"channel-{}-value".format(i): f[1] for i, f in enumerate(fixture_channels(this_fixture))}
-    )}), 200
+    return jsonify({"message": "Color updated to {}".format(this_color),
+                    "elements": dict({"value": Colors.to_hex(this_fixture.get_color())},
+                                     **{"channel-{}-value".format(i): f[1] for i, f in
+                                        enumerate(fixture_channels(this_fixture))})}), 200
 
 
 # Fixture Intensity
@@ -154,11 +154,10 @@ def helper(fid: int, val: str):
         this_helpers[val]()
     except Exception:
         return jsonify({"error": "Helper {} failed to execute".format(val)}), 500
-    return jsonify({"message": "Helper {} executed".format(val), "elements": dict({
-        "value": Colors.to_hex(this_fixture.get_color()),
-        "intensity_value": this_fixture.get_channel_value(this_fixture.get_channel_id("dimmer"))[0]},
-        **{"channel-{}-value".format(i): f[1] for i, f in enumerate(fixture_channels(this_fixture))}
-    )}), 200
+    return jsonify({"message": "Helper {} executed".format(val), "elements": dict(
+        {"value": Colors.to_hex(this_fixture.get_color()),
+         "intensity_value": this_fixture.get_channel_value(this_fixture.get_channel_id("dimmer"))[0]},
+        **{"channel-{}-value".format(i): f[1] for i, f in enumerate(fixture_channels(this_fixture))})}), 200
 
 
 # Callbacks

@@ -54,9 +54,9 @@ class Colors(list, Enum):
         """ Assumes RGBWA """
         keys = list('RGBWA')
         result = {}
-        for i in range(len(colors)):
+        for i, color in enumerate(colors):
             if i < len(keys):
-                result[keys[i]] = colors[i]
+                result[keys[i]] = color
         return result
 
     @staticmethod
@@ -66,7 +66,8 @@ class Colors(list, Enum):
 
     @staticmethod
     def to_hex(colors: List[int]) -> str:
-        def clamp(x): return max(0, min(x, 255))
+        def clamp(x):
+            return max(0, min(x, 255))
 
         result = "#"
         for color in colors:

@@ -49,7 +49,7 @@ class WebController:
 
         # Setup template context
         @self.__app.context_processor
-        def variables() -> dict:
+        def variables() -> dict:  # pylint: disable=unused-variable
             return dict({"controller": self.controller, "callbacks": self.callbacks,
                          "web_resource": WebController.web_resource},
                         **dict(globals(), **builtins.__dict__))  # Dictionary stacking to concat
@@ -93,8 +93,6 @@ class WebController:
                 has_run = True
             # Sleep DMX delay time
             sleep(DMXMINWAIT)
-
-        return
 
     def run(self):
         if not self.__running:

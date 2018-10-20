@@ -12,18 +12,10 @@ from ._transmittingController import transmittingController
 class uDMXController(transmittingController):
 
     def __init__(self, *args, **kwargs):
-        self.__init()
-
-        super().__init__(*args, **kwargs)
-
-    def __init(self):
-        try:
-            self.udmx.close()
-        except:
-            pass
-
         self.udmx = pyudmx.uDMXDevice()
         self.udmx.open()
+
+        super().__init__(*args, **kwargs)
 
     def close(self):
         # uDMX
@@ -32,8 +24,6 @@ class uDMXController(transmittingController):
 
         # Parent
         super().close()
-
-        return
 
     def _send_data(self):
         # Get the data

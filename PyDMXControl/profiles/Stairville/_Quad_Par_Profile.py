@@ -65,6 +65,8 @@ class Quad_Par_Profile_8(Fixture):
 class Quad_Par_Profile(Fixture):
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         modes = [4, 6, 8]
         if 'mode' not in kwargs or kwargs['mode'] not in modes:
             mode = modes[-1]

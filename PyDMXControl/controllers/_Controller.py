@@ -76,7 +76,7 @@ class Controller:
         matches = []
 
         # Iterate over each fixture id
-        for fixture_id in self.__fixtures.keys():
+        for fixture_id in self.__fixtures:
             # If it matches the given profile
             if isinstance(self.__fixtures[fixture_id], profile):
                 # Store
@@ -89,7 +89,7 @@ class Controller:
         matches = []
 
         # Iterate over each fixture id
-        for fixture_id in self.__fixtures.keys():
+        for fixture_id in self.__fixtures:
             # If it matches the given name
             if self.__fixtures[fixture_id].name.lower() == name.lower():
                 # Store
@@ -106,9 +106,6 @@ class Controller:
     def sleep_till_enter() -> None:
         # Hold
         input("Press Enter to end sleep...")
-
-        # We're done
-        return None
 
     @staticmethod
     def sleep_till_interrupt() -> None:
@@ -136,7 +133,7 @@ class Controller:
         return self.__frame
 
     @property
-    def channels(self) -> Dict[int, Channel]:
+    def channels(self) -> Dict[int, Fixture_Channel]:
         channels = {}
 
         # Channels for each registered fixture
@@ -209,11 +206,11 @@ class Controller:
             self.web.stop()
         self.web = WebController(self, callbacks)
 
-    def run(self, *args, **kwargs):
+    def run(self):
         # Method used in transmitting controllers
         pass
 
-    def close(self, *args, **kwargs):
+    def close(self):
         # Stop the ticker
         self.ticker.stop()
         print("CLOSE: ticker stopped")
@@ -227,5 +224,3 @@ class Controller:
         if hasattr(self, "web"):
             self.web.stop()
             print("CLOSE: web controller stopped")
-
-        return
