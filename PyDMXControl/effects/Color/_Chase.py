@@ -60,8 +60,10 @@ class Chase(Effect):
         percent = 1 - (progress_index - 1 - previous_i)
 
         # Hit 0% & 100%
-        if percent >= 0.99: percent = 1
-        if percent <= 0.01: percent = 0
+        if percent >= 0.99:
+            percent = 1
+        if percent <= 0.01:
+            percent = 0
 
         # Snapping
         if self.__snap:

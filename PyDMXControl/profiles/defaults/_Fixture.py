@@ -92,8 +92,10 @@ class Fixture:
             self.__channel_aliases[alias] = channel
         return True
 
-    def _set_id(self, fixture_id: int) -> None:
+    def set_id(self, fixture_id: int) -> None:
         self.__id = fixture_id
+        # Self destruct so id can't be set again
+        delattr(self, 'set_id')
 
     def _set_name(self, name: str) -> None:
         self.__name = name

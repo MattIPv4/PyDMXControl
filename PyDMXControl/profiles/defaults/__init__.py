@@ -17,4 +17,5 @@
 """
 
 from ._Fixture import Fixture
+from ._Fixture import Channel as Fixture_Channel
 from ._Vdim import Vdim

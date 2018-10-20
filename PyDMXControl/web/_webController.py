@@ -62,7 +62,7 @@ class WebController:
     def filemtime(file: str) -> int:
         try:
             return path.getmtime(file)
-        except:
+        except Exception:
             return 0
 
     @staticmethod

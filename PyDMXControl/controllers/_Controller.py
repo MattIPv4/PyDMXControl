@@ -9,7 +9,7 @@ from typing import Type, List, Union, Dict, Tuple, Callable
 
 from .utils.debug import Debugger
 from .. import Colors
-from ..profiles.defaults._Fixture import Channel, Fixture
+from ..profiles.defaults import Fixture_Channel, Fixture
 from ..utils.exceptions import LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
 from ..web import WebController
@@ -32,6 +32,9 @@ class Controller:
         self.ticker = Ticker()
         self.ticker.start()
 
+        # Web control attr
+        self.web = None
+
     def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
         if isinstance(fixture, type):
@@ -41,7 +44,7 @@ class Controller:
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
 
         # Tell the fixture its id
-        fixture._set_id(fixture_id)
+        fixture.set_id(fixture_id)
 
         # Store the fixture
         self.__fixtures[fixture_id] = fixture
@@ -141,7 +144,8 @@ class Controller:
             # Channels in this fixture
             for chanid, chanval in chans.items():
                 chanval = chanval['value']
-                if chanval[0] == -1: chanval[0] = 0
+                if chanval[0] == -1:
+                    chanval[0] = 0
 
                 # If channel id already set
                 if chanid in channels.keys():
@@ -196,15 +200,13 @@ class Controller:
             fixture.clear_effects()
 
     def debug_control(self, callbacks: Dict[str, Callable] = None):
-        if callbacks is None: callbacks = {}
+        if callbacks is None:
+            callbacks = {}
         Debugger(self, callbacks).run()
 
     def web_control(self, callbacks: Dict[str, Callable] = None):
-        if hasattr(self, "web"):
-            try:
-                self.web.stop()
-            except:
-                pass
+        if self.web is not None:
+            self.web.stop()
         self.web = WebController(self, callbacks)
 
     def run(self, *args, **kwargs):
