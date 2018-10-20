@@ -9,7 +9,7 @@ from typing import Type, List, Union, Dict, Tuple, Callable
 
 from .utils.debug import Debugger
 from .. import Colors
-from ..profiles.defaults._Fixture import Channel, Fixture
+from ..profiles.defaults import Fixture_Channel, Fixture
 from ..utils.exceptions import LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
 from ..web import WebController
@@ -32,6 +32,9 @@ class Controller:
         self.ticker = Ticker()
         self.ticker.start()
 
+        # Web control attr
+        self.web = None
+
     def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
         if isinstance(fixture, type):
@@ -41,7 +44,7 @@ class Controller:
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
 
         # Tell the fixture its id
-        fixture._set_id(fixture_id)
+        fixture.set_id(fixture_id)
 
         # Store the fixture
         self.__fixtures[fixture_id] = fixture
@@ -73,7 +76,7 @@ class Controller:
         matches = []
 
         # Iterate over each fixture id
-        for fixture_id in self.__fixtures.keys():
+        for fixture_id in self.__fixtures:
             # If it matches the given profile
             if isinstance(self.__fixtures[fixture_id], profile):
                 # Store
@@ -86,7 +89,7 @@ class Controller:
         matches = []
 
         # Iterate over each fixture id
-        for fixture_id in self.__fixtures.keys():
+        for fixture_id in self.__fixtures:
             # If it matches the given name
             if self.__fixtures[fixture_id].name.lower() == name.lower():
                 # Store
@@ -103,9 +106,6 @@ class Controller:
     def sleep_till_enter() -> None:
         # Hold
         input("Press Enter to end sleep...")
-
-        # We're done
-        return None
 
     @staticmethod
     def sleep_till_interrupt() -> None:
@@ -133,7 +133,7 @@ class Controller:
         return self.__frame
 
     @property
-    def channels(self) -> Dict[int, Channel]:
+    def channels(self) -> Dict[int, Fixture_Channel]:
         channels = {}
 
         # Channels for each registered fixture
@@ -141,7 +141,8 @@ class Controller:
             # Channels in this fixture
             for chanid, chanval in chans.items():
                 chanval = chanval['value']
-                if chanval[0] == -1: chanval[0] = 0
+                if chanval[0] == -1:
+                    chanval[0] = 0
 
                 # If channel id already set
                 if chanid in channels.keys():
@@ -196,22 +197,20 @@ class Controller:
             fixture.clear_effects()
 
     def debug_control(self, callbacks: Dict[str, Callable] = None):
-        if callbacks is None: callbacks = {}
+        if callbacks is None:
+            callbacks = {}
         Debugger(self, callbacks).run()
 
-    def web_control(self, callbacks: Dict[str, Callable] = None):
-        if hasattr(self, "web"):
-            try:
-                self.web.stop()
-            except:
-                pass
-        self.web = WebController(self, callbacks)
+    def web_control(self, *args, **kwargs):
+        if self.web is not None:
+            self.web.stop()
+        self.web = WebController(self, *args, **kwargs)
 
-    def run(self, *args, **kwargs):
+    def run(self):
         # Method used in transmitting controllers
         pass
 
-    def close(self, *args, **kwargs):
+    def close(self):
         # Stop the ticker
         self.ticker.stop()
         print("CLOSE: ticker stopped")
@@ -225,5 +224,3 @@ class Controller:
         if hasattr(self, "web"):
             self.web.stop()
             print("CLOSE: web controller stopped")
-
-        return

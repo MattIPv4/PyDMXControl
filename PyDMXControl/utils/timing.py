@@ -57,8 +57,6 @@ class Ticker:
             # Sleep DMX delay time
             sleep(DMXMINWAIT)
 
-        return
-
     def set_interval(self, milliseconds: float):
         self.__interval = milliseconds
 

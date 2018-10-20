@@ -127,7 +127,7 @@ callbacks = {
     "normal": normal,
     "dimmer": dimmer
 }
-dmx.web_control(callbacks)
+dmx.web_control(callbacks=callbacks)
 # dmx.debug_control(callbacks)
 
 # Close the controller once we're done

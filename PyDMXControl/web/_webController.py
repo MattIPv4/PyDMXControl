@@ -26,7 +26,7 @@ log.setLevel(logging.ERROR)
 # WebController
 class WebController:
 
-    def __init__(self, controller: 'Controller', callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
+    def __init__(self, controller: 'Controller', *, callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
                  port: int = 8080):
         # Setup flask
         self.__thread = None
@@ -49,7 +49,7 @@ class WebController:
 
         # Setup template context
         @self.__app.context_processor
-        def variables() -> dict:
+        def variables() -> dict:  # pylint: disable=unused-variable
             return dict({"controller": self.controller, "callbacks": self.callbacks,
                          "web_resource": WebController.web_resource},
                         **dict(globals(), **builtins.__dict__))  # Dictionary stacking to concat
@@ -62,7 +62,7 @@ class WebController:
     def filemtime(file: str) -> int:
         try:
             return path.getmtime(file)
-        except:
+        except Exception:
             return 0
 
     @staticmethod
@@ -93,8 +93,6 @@ class WebController:
                 has_run = True
             # Sleep DMX delay time
             sleep(DMXMINWAIT)
-
-        return
 
     def run(self):
         if not self.__running:

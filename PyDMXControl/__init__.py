@@ -16,6 +16,10 @@
  *   <https://github.com/MattIPv4/PyDMXControl/blob/master/LICENSE> or <http://www.gnu.org/licenses/>.
 """
 
+from collections import namedtuple
+
+from ._Colors import Colors
+
 __title__ = 'PyDMXControl'
 __author__ = 'Matt Cowley (MattIPv4)'
 __maintainer__ = 'Matt Cowley (MattIPv4)'
@@ -26,10 +30,6 @@ __version__ = '1.4.2'
 __status__ = 'Production'
 
 name = "PyDMXControl"
-
-from collections import namedtuple
-
-from ._Colors import Colors
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 

@@ -15,7 +15,7 @@ class transmittingController(Controller):
 
         self.__auto = True
         if 'autostart' in kwargs:
-            if type(kwargs['autostart']) is bool:
+            if isinstance(kwargs['autostart'], bool):
                 self.__auto = kwargs['autostart']
 
         self.internalTicker = Ticker()
@@ -34,8 +34,6 @@ class transmittingController(Controller):
 
         # Parent
         super().close()
-
-        return
 
     def run(self):
         # Create the thread and transmit data

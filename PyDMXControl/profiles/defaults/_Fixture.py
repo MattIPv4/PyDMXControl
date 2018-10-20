@@ -51,7 +51,7 @@ class Fixture:
         self.__start_channel = start_channel
         self.__channels = []
         self.__effects = []
-        self.__id = 0
+        self.__id = None
         self.__name = name
         self.__channel_aliases = {}
 
@@ -66,7 +66,7 @@ class Fixture:
             return -1
 
         used_names = [f.name for f in self.__channels]
-        used_names.extend([f for f in self.__channel_aliases.keys()])
+        used_names.extend([f for f in self.__channel_aliases])
         if name.lower().strip() in used_names:
             warn('Name `{}` already in use for channel (or alias).'.format(name))
             return -1
@@ -92,8 +92,10 @@ class Fixture:
             self.__channel_aliases[alias] = channel
         return True
 
-    def _set_id(self, fixture_id: int) -> None:
-        self.__id = fixture_id
+    def set_id(self, fixture_id: int) -> None:
+        # Only ever set once
+        if self.__id is None:
+            self.__id = fixture_id
 
     def _set_name(self, name: str) -> None:
         self.__name = name
@@ -109,7 +111,7 @@ class Fixture:
 
     @property
     def id(self) -> int:
-        return self.__id
+        return self.__id if self.__id is not None else 0
 
     @property
     def name(self) -> str:
@@ -169,7 +171,8 @@ class Fixture:
 
     def get_channel_value(self, channel: int) -> Tuple[int, datetime]:
         channel = self.get_channel_id(channel)
-        if channel >= len(self.__channels) or channel < 0: return -1, datetime.utcnow()
+        if channel >= len(self.__channels) or channel < 0:
+            return -1, datetime.utcnow()
         return self.__channels[channel].get_value()
 
     def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
@@ -218,11 +221,11 @@ class Fixture:
         matches = []
 
         # Iterate over each effect
-        for fx in self.__effects:
+        for this_effect in self.__effects:
             # If it matches the given effect
-            if isinstance(fx, effect):
+            if isinstance(this_effect, effect):
                 # Store
-                matches.append(fx)
+                matches.append(this_effect)
 
         # Return any matches
         return matches
@@ -256,8 +259,6 @@ class Fixture:
                 sleep(0.000001)
         self.set_channel(channel, int(target))
 
-        return
-
     def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
@@ -276,7 +277,7 @@ class Fixture:
 
     def color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
         # Handle string color names
-        if type(color) is str:
+        if isinstance(color, str):
             if color in Colors:
                 color = Colors[color]
             else:
