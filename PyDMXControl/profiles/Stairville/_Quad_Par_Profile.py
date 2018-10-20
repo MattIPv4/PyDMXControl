@@ -69,15 +69,12 @@ class Quad_Par_Profile(Fixture):
 
         modes = [4, 6, 8]
         if 'mode' not in kwargs or kwargs['mode'] not in modes:
-            mode = modes[-1]
-            warn('No/invalid mode keyword argument given, default mode {} applied.'.format(mode))
-        else:
-            mode = kwargs['mode']
-            del kwargs['mode']
+            kwargs['mode'] = modes[-1]
+            warn('No/invalid mode keyword argument given, default mode {} applied.'.format(kwargs['mode']))
 
-        if mode == 4:
+        if kwargs['mode'] == 4:
             new = Quad_Par_Profile_4(*args, **kwargs)
-        elif mode == 6:
+        elif kwargs['mode'] == 6:
             new = Quad_Par_Profile_6(*args, **kwargs)
         else:
             new = Quad_Par_Profile_8(*args, **kwargs)

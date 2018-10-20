@@ -46,16 +46,24 @@ class Channel:
 
 class Fixture:
 
-    def __init__(self, start_channel, *, name: str = ""):
-        if start_channel < 1 or start_channel > 512:
+    def __init__(self, *args, **kwargs):
+        if "start_channel" not in kwargs:
+            raise TypeError("__init__() missing 1 required keyword-only argument: 'start_channel'")
+
+        if kwargs["start_channel"] < 1 or kwargs["start_channel"] > 512:
             raise ValueError('Start Channel must be between 1 and 512.')
 
-        self.__start_channel = start_channel
+        if "name" not in kwargs:
+            kwargs["name"] = ""
+
+        self.__start_channel = kwargs["start_channel"]
         self.__channels = []
         self.__effects = []
         self.__id = None
-        self.__name = name
+        self.__name = kwargs["name"]
         self.__channel_aliases = {}
+        self.__kwargs = kwargs
+        self.__args = args
 
     def __str__(self):
         return self.title
@@ -154,14 +162,19 @@ class Fixture:
     @property
     def json_data(self) -> dict:
         pattern = re.compile(r"^PyDMXControl\.profiles\.(([\w\d.]+)\.)*_[\w\d]+$", re.IGNORECASE)
-        match = pattern.match(__name__)
+        match = pattern.match(self.__class__.__module__)
         if not match:
             raise JSONConfigSaveException("Failed to generate JSON data for fixture #{}".format(self.id))
-        return {
+        base = {
             "type": "{}.{}".format(match.group(2), self.__class__.__name__),
-            "name": self.name,
-            "start_channel": self.start_channel
+            "args": self.__args
         }
+        for kwarg, val in self.__kwargs.items():
+            if kwarg not in base:
+                if kwarg == "name":
+                    val = self.name
+                base[kwarg] = val
+        return base
 
     # Channels
 

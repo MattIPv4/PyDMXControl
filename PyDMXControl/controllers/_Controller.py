@@ -42,7 +42,9 @@ class Controller:
     def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
         if isinstance(fixture, type):
-            fixture = fixture(self.next_channel, *args, **kwargs)
+            if "start_channel" not in kwargs:
+                kwargs["start_channel"] = self.next_channel
+            fixture = fixture(*args, **kwargs)
 
         # Get the next id
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
@@ -99,7 +101,11 @@ class Controller:
                 continue
 
             del item['type']
-            fixtures.append(self.add_fixture(module, **dict(item)))
+            args = []
+            if 'args' in item:
+                args = item['args']
+                del item['args']
+            fixtures.append(self.add_fixture(module, *args, **dict(item)))
 
         return fixtures
 
