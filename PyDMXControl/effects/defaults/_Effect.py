@@ -11,7 +11,7 @@ from ...utils.timing import Ticker
 
 class Effect:
 
-    def __init__(self, fixture: 'Fixture', speed: int, *, delay: float = 0, offset: float = 0):
+    def __init__(self, fixture: 'Fixture', speed: float, *, delay: float = 0, offset: float = 0):
         # The fixture effect is applied to
         self.fixture = fixture
 

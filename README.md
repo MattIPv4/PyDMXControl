@@ -109,6 +109,7 @@ dmx.sleep_till_enter()
 #  the close method of the controller.
 # This will cleanly close any threads in use and stop DMX output.
 dmx.close()
+
 ```
 
 > For a "real life" example, please take a look at [tests/home.py](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/home.py) which is the setup I use in my office.
