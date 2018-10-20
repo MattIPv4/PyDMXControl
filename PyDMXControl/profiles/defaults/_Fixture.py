@@ -51,7 +51,7 @@ class Fixture:
         self.__start_channel = start_channel
         self.__channels = []
         self.__effects = []
-        self.__id = 0
+        self.__id = None
         self.__name = name
         self.__channel_aliases = {}
 
@@ -93,9 +93,9 @@ class Fixture:
         return True
 
     def set_id(self, fixture_id: int) -> None:
-        self.__id = fixture_id
-        # Self destruct so id can't be set again
-        delattr(self, 'set_id')
+        # Only ever set once
+        if self.__id is None:
+            self.__id = fixture_id
 
     def _set_name(self, name: str) -> None:
         self.__name = name
@@ -111,7 +111,7 @@ class Fixture:
 
     @property
     def id(self) -> int:
-        return self.__id
+        return self.__id if self.__id is not None else 0
 
     @property
     def name(self) -> str:
