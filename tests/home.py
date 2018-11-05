@@ -14,18 +14,26 @@ dmx = Controller()
 # Load some fixtures from JSON
 dmx.load_json_config('tests/json/home.json')
 
-# Add some extra fixtures
+"""
+dmx.add_fixture(LED_Par_10mm, name="Flood")
+
+dmx.add_fixture(LED_Par_36, name="S1 Art Left")
+dmx.add_fixture(LED_Par_36, name="S2 Board")
+dmx.add_fixture(LED_Par_36, name="S3 Art Right")
+dmx.add_fixture(LED_Par_36, name="S4 Books")
+
 dmx.add_fixture(Small_Flat_Par, name="F1 Desk Right")
 dmx.add_fixture(Small_Flat_Par, name="F2 Desk Left")
+"""
 
 # Define all the methods the callback will use
 custom_blue = [0, 16, 255]
-custom_white = [255, 140, 100]
+custom_white = [255, 140, 70]
 
 
 def normal():
     for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.White, 10000)
+        f.color(Colors.Warm, 10000)
 
     # Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 15 * 1000, colors=[Colors.Blue, Colors.Cyan])
     for f in dmx.get_fixtures_by_profile(LED_Par_36):
@@ -51,11 +59,11 @@ def dimmer():
 last_state = None
 last_state_type = None
 times = [
-    [(700, 750), (1600, 2200)],  # Monday
-    [(700, 750), (1600, 2200)],  # Tuesday
-    [(700, 750), (1330, 2200)],  # Wednesday
-    [(700, 750), (1600, 2200)],  # Thursday
-    [(700, 750), (1330, 2200)],  # Friday
+    [(700, 740), (1600, 2200)],  # Monday
+    [(700, 740), (1600, 2200)],  # Tuesday
+    [(700, 740), (1330, 2200)],  # Wednesday
+    [(700, 740), (1600, 2200)],  # Thursday
+    [(700, 740), (1330, 2200)],  # Friday
     [(800, 2200)],  # Saturday
     [(800, 2200)],  # Sunday
 ]

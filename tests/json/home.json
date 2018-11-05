@@ -28,5 +28,17 @@
         "args": [],
         "name": "S4 Books",
         "start_channel": 23
+    },
+    {
+        "type": "Eyourlife.Small_Flat_Par",
+        "args": [],
+        "name": "F1 Desk Right",
+        "start_channel": 28
+    },
+    {
+        "type": "Eyourlife.Small_Flat_Par",
+        "args": [],
+        "name": "F2 Desk Left",
+        "start_channel": 34
     }
 ]
