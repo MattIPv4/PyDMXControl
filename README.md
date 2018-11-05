@@ -1,6 +1,6 @@
-<h1 align="center">
+<p align="center">
     <img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl-500x60.png" alt="PyDMXControl" width="500"/>
-</h1>
+</p>
 
 <p align="center">
     <a href="https://pypi.org/project/PyDMXControl/">
@@ -24,13 +24,13 @@
 
 **Featuring fixture profiles, built-in effects and a web control panel.**
 
-## Installation
+# Installation
 
 Install via pip (recommended)
 
     pip install PyDMXControl
 
-## Features
+# Features
 
 * FIXTURE profiles per manufacturer ([see all included profiles](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/profiles))
   * Generic dimmer fixture included, single channel
@@ -41,6 +41,7 @@ Install via pip (recommended)
   * Intensity dim chase provided, configurable speed and offset provided
   * Included is a fixture color chase effect, unlimited number of colors supported
   * Effects can be applied to individual fixtures or multiple as a group
+  * [Demo: tests/effects.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/effects.py)
   
   
 * uDMX works out of the box
@@ -59,8 +60,15 @@ Install via pip (recommended)
   * Global and individual fixture intensity control via sliders
   * Quick access to callback functions globally and for each fixture
   * Color picker for individual fixtures as well as specific channel control
+  * [Demo: tests/web.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/web.py)
+  
+ 
+* JSON fixture configurations
+  * Load fixture configurations from JSON files into the controller
+  * Save your current set of fixtures out to JSON files for later use
+  * [Demo: tests/json_config.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/json_config.py)
 
-## Example
+# Example Usage
 
 An example of how to get a single dimmer working with PyDMXControl, 
 providing the web control panel and the console debug system once started.
@@ -109,11 +117,14 @@ dmx.sleep_till_enter()
 #  the close method of the controller.
 # This will cleanly close any threads in use and stop DMX output.
 dmx.close()
+
 ```
 
 > For a "real life" example, please take a look at [tests/home.py](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/home.py) which is the setup I use in my office.
 
-## What is the point of this?
+Browse the tests from the [tests folder](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/) to see examples of other features within the library being tested out.
+
+# What is the point of this?
 
 Just messing around with using Python to control/send DMX.\
 Supports fixture profiling; Has defaults for a standard fixture and fixtures that need virtual dimmers.\
@@ -132,7 +143,7 @@ If someone wants to buy me an Enttec USB DMX Pro then I'll try make it work with
 Thank you to Dave Hocker, author of [pyudmx](https://github.com/dhocker/udmx-pyusb/), for his work on pyudmx and his
  advice via email in solving some of the issues making this library behave with uDMX.
 
-## Discussion, Support and Issues
+# Discussion, Support and Issues
 
 For general support and discussion of this project, please join the Discord lounge server: https://discord.gg/qyXqA7y \
 [![Discord Server](https://discordapp.com/api/guilds/204663881799303168/widget.png?style=banner2)](https://discord.gg/qyXqA7y)

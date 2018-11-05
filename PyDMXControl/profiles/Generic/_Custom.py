@@ -10,9 +10,10 @@ from ..defaults import Fixture
 class Custom(Fixture):
 
     def __init__(self, *args, **kwargs):
-        chans = args[0]
-        args = args[1:]
+        if "channels" not in kwargs:
+            raise TypeError("__init__() missing 1 required keyword-only argument: 'channels'")
+
         super().__init__(*args, **kwargs)
 
-        for _ in range(chans):
+        for _ in range(kwargs["channels"]):
             self._register_channel(str(_ + 1))

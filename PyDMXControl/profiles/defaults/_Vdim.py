@@ -19,7 +19,6 @@ class Vdim(Fixture):
         self.__vdim = 255
         self.__vdimUpdated = datetime.utcnow()
 
-    # noinspection PyMethodOverriding
     def _register_channel(self, name: str, *, parked: Union[bool, int] = False, vdim: bool = False) -> int:
         super_call = super()._register_channel(name, parked=parked)
         if super_call == -1:

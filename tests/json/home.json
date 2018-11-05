@@ -1,0 +1,44 @@
+[
+    {
+        "type": "Stairville.LED_Par_10mm",
+        "args": [],
+        "name": "Flood",
+        "start_channel": 1
+    },
+    {
+        "type": "Stairville.LED_Par_36",
+        "args": [],
+        "name": "S1 Art Left",
+        "start_channel": 8
+    },
+    {
+        "type": "Stairville.LED_Par_36",
+        "args": [],
+        "name": "S2 Board",
+        "start_channel": 13
+    },
+    {
+        "type": "Stairville.LED_Par_36",
+        "args": [],
+        "name": "S3 Art Right",
+        "start_channel": 18
+    },
+    {
+        "type": "Stairville.LED_Par_36",
+        "args": [],
+        "name": "S4 Books",
+        "start_channel": 23
+    },
+    {
+        "type": "Eyourlife.Small_Flat_Par",
+        "args": [],
+        "name": "F1 Desk Right",
+        "start_channel": 28
+    },
+    {
+        "type": "Eyourlife.Small_Flat_Par",
+        "args": [],
+        "name": "F2 Desk Left",
+        "start_channel": 34
+    }
+]

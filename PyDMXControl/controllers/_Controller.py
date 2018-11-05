@@ -6,11 +6,15 @@
 
 from time import sleep
 from typing import Type, List, Union, Dict, Tuple, Callable
+from json import load, dumps, JSONDecodeError
+import re
+from importlib import import_module
+from warnings import warn
 
 from .utils.debug import Debugger
 from .. import Colors
 from ..profiles.defaults import Fixture_Channel, Fixture
-from ..utils.exceptions import LTPCollisionException
+from ..utils.exceptions import JSONConfigLoadException, LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
 from ..web import WebController
 
@@ -38,7 +42,9 @@ class Controller:
     def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
         if isinstance(fixture, type):
-            fixture = fixture(self.next_channel, *args, **kwargs)
+            if "start_channel" not in kwargs:
+                kwargs["start_channel"] = self.next_channel
+            fixture = fixture(*args, **kwargs)
 
         # Get the next id
         fixture_id = (max(list(self.__fixtures.keys()) or [0])) + 1
@@ -51,6 +57,72 @@ class Controller:
 
         # Return the updated fixture
         return self.__fixtures[fixture_id]
+
+    def load_json_config(self, filename: str) -> List[Fixture]:
+        fixtures = []
+
+        try:
+            with open(filename) as f:
+                data = load(f)
+        except (FileNotFoundError, OSError):
+            raise JSONConfigLoadException(filename)
+        except JSONDecodeError:
+            raise JSONConfigLoadException(filename, "unable to parse contents")
+
+        if not isinstance(data, list):
+            raise JSONConfigLoadException(filename, "expected list of dicts, got {}".format(type(data)))
+
+        for index, item in enumerate(data):
+            if not isinstance(item, dict):
+                warn("Failed to load item {} from JSON, expected dict, got {}".format(index, type(item)))
+                continue
+
+            if 'type' not in item:
+                warn("Failed to load item {} from JSON, expected a type property".format(index))
+                continue
+
+            pattern = re.compile(r"^(([\w\d.]+)\.)*([\w\d]+)$", re.IGNORECASE)
+            match = pattern.match(item['type'])
+            if not match:
+                warn("Failed to load item {} from JSON, failed to parse type '{}'".format(index, item['type']))
+                continue
+
+            try:
+                module = import_module(".{}".format(match.group(2)), 'PyDMXControl.profiles')
+            except ModuleNotFoundError:
+                warn("Failed to load item {} from JSON, profile module '{}' not found".format(index, match.group(2)))
+                continue
+
+            try:
+                module = getattr(module, match.group(3))
+            except AttributeError:
+                warn("Failed to load item {} from JSON, profile type '{}' not found in '{}'".format(
+                    index, match.group(3), match.group(2)))
+                continue
+
+            del item['type']
+            args = []
+            if 'args' in item:
+                args = item['args']
+                del item['args']
+            fixtures.append(self.add_fixture(module, *args, **dict(item)))
+
+        return fixtures
+
+    def save_json_config(self, filename: Union[str, None] = None, pretty_print: bool = True) -> str:
+        data = []
+        for fixture in self.__fixtures.values():
+            data.append(fixture.json_data)
+        if pretty_print:
+            data = dumps(data, indent=4)
+        else:
+            data = dumps(data)
+
+        if filename:
+            with open(filename, "w+") as f:
+                f.write(data)
+
+        return data
 
     def del_fixture(self, fixture_id: int) -> bool:
         # Check if the id exists

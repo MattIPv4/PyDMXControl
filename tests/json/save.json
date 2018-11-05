@@ -1,0 +1,8 @@
+[
+    {
+        "type": "Stairville.LED_Par_10mm",
+        "args": [],
+        "start_channel": 1,
+        "name": "test"
+    }
+]
