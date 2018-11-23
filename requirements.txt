@@ -1,3 +1,4 @@
 pyusb
 udmx-pyusb
 flask
+pygame
