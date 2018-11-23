@@ -5,7 +5,7 @@
 """
 
 from threading import Thread
-from time import sleep
+from time import sleep, time
 
 import pygame
 
@@ -30,9 +30,29 @@ class Player:
         self.__volume = 0
         self.set_volume(0.8)
 
-    def set_volume(self, volume: float):
-        self.__volume = max(min(volume, 1), 0)  # clamp
-        pygame.mixer.music.set_volume(volume)
+    def __set_volume(self, vol):
+        vol = max(min(vol, 1), 0)  # clamp
+        self.__volume = vol
+        pygame.mixer.music.set_volume(vol)
+
+    def __fade_volume(self, current, target, millis):
+        start = time() * 1000.0
+        gap = target - current
+
+        if millis > 0:
+            while (time() * 1000.0) - start <= millis:
+                diff = gap * (((time() * 1000.0) - start) / millis)
+                self.__set_volume(current + diff)
+                sleep(0.000001)
+        self.__set_volume(target)
+
+    def set_volume(self, volume: float, milliseconds: int = 0):
+        volume = max(min(volume, 1), 0)  # clamp
+
+        # Create the thread and run loop
+        thread = Thread(target=self.__fade_volume, args=(self.__volume, volume, milliseconds))
+        thread.daemon = True
+        thread.start()
 
     def __play(self, file: str):
         clock = pygame.time.Clock()
