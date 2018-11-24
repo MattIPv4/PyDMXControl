@@ -4,11 +4,11 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
-from time import sleep
-from typing import Type, List, Union, Dict, Tuple, Callable
-from json import load, dumps, JSONDecodeError
 import re
 from importlib import import_module
+from json import load, dumps, JSONDecodeError
+from time import sleep
+from typing import Type, List, Union, Dict, Tuple, Callable
 from warnings import warn
 
 from .utils.debug import Debugger
@@ -293,6 +293,6 @@ class Controller:
         print("CLOSE: all effects cleared")
 
         # Stop web
-        if hasattr(self, "web"):
+        if hasattr(self, "web") and self.web:
             self.web.stop()
             print("CLOSE: web controller stopped")
