@@ -45,3 +45,9 @@ class AudioException(PyDMXControlException):
 
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class EventAlreadyExistsException(PyDMXControlException):
+
+    def __init__(self, timestamp: int):
+        super().__init__("An event already exists at {}".format(timestamp))

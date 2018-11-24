@@ -5,6 +5,7 @@
 """
 
 from pyudmx import pyudmx
+from usb.core import USBError
 
 from ._transmittingController import transmittingController
 
@@ -40,4 +41,9 @@ class uDMXController(transmittingController):
             except Exception as e:
                 retry_count += 1
                 if retry_count > 5:
-                    raise e
+                    if isinstance(e, USBError):
+                        self.udmx.close()
+                        self.udmx = pyudmx.uDMXDevice()
+                        self.udmx.open()
+                    else:
+                        raise e

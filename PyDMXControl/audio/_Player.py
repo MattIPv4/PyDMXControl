@@ -9,8 +9,8 @@ from time import sleep, time
 
 import pygame
 
-from ..utils.timing import DMXMINWAIT
 from ..utils.exceptions import AudioException
+from ..utils.timing import DMXMINWAIT
 
 
 class Player:
@@ -67,14 +67,13 @@ class Player:
         # Get the file
         try:
             pygame.mixer.music.load(file)
-            print("Music file {} loaded!".format(file))
         except pygame.error:
             self.__done = True
             raise AudioException("Error occurred loading '{}': {}".format(file, pygame.get_error()))
 
         # Play the file and tick until play completed
         pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():
+        while pygame.mixer.music.get_busy() and pygame.mixer.music.get_pos() == -1:
             sleep(DMXMINWAIT)
 
         # Let everyone know play is done
