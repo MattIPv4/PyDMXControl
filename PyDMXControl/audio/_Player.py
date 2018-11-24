@@ -56,7 +56,7 @@ class Player:
         thread.daemon = True
         thread.start()
 
-    def __play(self, file: str):
+    def __play(self, file, start_millis):
         # Stop anything previous
         self.stop()
 
@@ -72,16 +72,16 @@ class Player:
             raise AudioException("Error occurred loading '{}': {}".format(file, pygame.get_error()))
 
         # Play the file and tick until play completed
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy() and pygame.mixer.music.get_pos() == -1:
+        pygame.mixer.music.play(start=start_millis / 1000)
+        while pygame.mixer.music.get_busy():
             sleep(DMXMINWAIT)
 
         # Let everyone know play is done
         self.__done = True
 
-    def play(self, file: str):
+    def play(self, file: str, start_millis: int = 0):
         # Play in the background so this isn't blocking
-        thread = Thread(target=self.__play, args=[file])
+        thread = Thread(target=self.__play, args=[file, start_millis])
         thread.daemon = True
         thread.start()
 
@@ -98,6 +98,18 @@ class Player:
         # Hold until the play method sets done
         while not self.__done:
             sleep(DMXMINWAIT)
+
+    def sleep_till_interrupt(self):
+        # This is very useful for playing song, stopping at a specific point and getting the timestamp
+        # Probably not very useful in production but useful in development
+
+        # Hold
+        try:
+            while True:
+                sleep(DMXMINWAIT)
+        except KeyboardInterrupt:
+            print(pygame.mixer.music.get_pos())
+            self.stop()
 
 
 # Player can only have one instance due to how pygame works

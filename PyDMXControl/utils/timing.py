@@ -106,14 +106,20 @@ class TimedEvents:
         self.__running = False
         self.__messages = debug_messages
 
-    def __run(self):
+    def __run(self, start_millis):
         # Don't allow to run more that once simultaneously
         if self.__running:
             return
 
-        start = time() * 1000.0
+        # Set starting params
+        start = (time() * 1000.0) - start_millis
         events_left = self.__events.copy()
         self.__running = True
+
+        # Skip events in the past
+        for timestamp, event in events_left.copy().items():
+            if timestamp < start_millis:
+                del events_left[timestamp]
 
         # Keep looping until last event timestamp
         while start + max(self.__events.keys()) + 1000 > time() * 1000.0 and self.__running:
@@ -127,9 +133,9 @@ class TimedEvents:
                     del events_left[timestamp]
             sleep(0.000001)
 
-    def run(self):
+    def run(self, start_millis: int = 0):
         # Create the thread and run loop
-        thread = Thread(target=self.__run)
+        thread = Thread(target=self.__run, args=[start_millis])
         thread.daemon = True
         thread.start()
 
