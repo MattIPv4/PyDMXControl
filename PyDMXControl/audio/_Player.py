@@ -10,6 +10,7 @@ from time import sleep, time
 import pygame
 
 from ..utils.timing import DMXMINWAIT
+from ..utils.exceptions import AudioException
 
 
 class Player:
@@ -20,6 +21,7 @@ class Player:
         self.__done = True
 
         # set up mixer
+        # https://www.daniweb.com/programming/software-development/threads/491663/how-to-open-and-play-mp3-file-in-python
         self.__freq = 44100  # audio CD quality
         self.__bitsize = -16  # unsigned 16 bit
         self.__channels = 2  # 1 is mono, 2 is stereo
@@ -55,24 +57,25 @@ class Player:
         thread.start()
 
     def __play(self, file: str):
-        clock = pygame.time.Clock()
+        # Stop anything previous
+        self.stop()
+
+        # Set states
+        self.__paused = False
+        self.__done = False
 
         # Get the file
         try:
             pygame.mixer.music.load(file)
             print("Music file {} loaded!".format(file))
         except pygame.error:
-            print("File {} not found! ({})".format(file, pygame.get_error()))
-            return
+            self.__done = True
+            raise AudioException("Error occurred loading '{}': {}".format(file, pygame.get_error()))
 
-        # Play the file
-        self.__paused = False
-        self.__done = False
+        # Play the file and tick until play completed
         pygame.mixer.music.play()
-
-        # Tick until play completed
         while pygame.mixer.music.get_busy():
-            clock.tick(30)
+            sleep(DMXMINWAIT)
 
         # Let everyone know play is done
         self.__done = True

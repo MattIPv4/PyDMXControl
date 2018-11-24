@@ -39,3 +39,9 @@ class JSONConfigSaveException(JSONConfigException):
 
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class AudioException(PyDMXControlException):
+
+    def __init__(self, message: str):
+        super().__init__(message)
