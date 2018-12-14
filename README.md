@@ -26,9 +26,17 @@
 
 # Installation
 
-Install via pip (recommended)
+Install via pip **(recommended)**
 
-    pip install PyDMXControl
+    pip install -U PyDMXControl
+    
+Install via pip **with audio support**
+
+    pip install -U PyDMXControl[audio]
+    
+Install via GitHub **(development version, with audio)**
+
+    pip install -U git+https://github.com/MattIPv4/PyDMXControl#egg=PyDMXControl[audio]
 
 # Features
 
@@ -67,6 +75,12 @@ Install via pip (recommended)
   * Load fixture configurations from JSON files into the controller
   * Save your current set of fixtures out to JSON files for later use
   * [Demo: tests/json_config.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/json_config.py)
+  
+
+* Optional AUDIO playback supported
+  * Play audio tracks whilst PyDMXControl continues to run lighting control
+  * Uses pygame for best cross-platform and audio format support
+  * [Demo: tests/audio.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/audio.py)
 
 # Example Usage
 

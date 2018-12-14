@@ -16,12 +16,20 @@
  *   <https://github.com/MattIPv4/PyDMXControl/blob/master/LICENSE> or <http://www.gnu.org/licenses/>.
 """
 
+from typing import List
+
 from setuptools import setup
 
-from PyDMXControl import __title__, __author__, __email__, __version__, name
+from PyDMXControl import __title__, __author__, __email__, __license__, __version__, name
 
-with open("requirements.txt", "r") as f:
-    requirements = f.readlines()
+
+def fetch_reqs(base: str = "") -> List[str]:
+    if base:
+        base = "PyDMXControl/{}/".format(base)
+    with open(base + "requirements.txt", "r") as file:
+        requirements = file.read().splitlines()
+    return requirements
+
 
 with open("README.md", "r") as f:
     readme = f.read()
@@ -32,10 +40,14 @@ setup(
     author_email=__email__,
     url="https://github.com/MattIPv4/PyDMXControl/",
     version=__version__,
+    license=__license__,
     packages=[name],
-    python_requires=">= 3.5",
+    python_requires=">= 3.6",
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=fetch_reqs(),
+    extras_require={
+        "audio": fetch_reqs("audio")
+    },
     description="A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -48,7 +60,6 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
 
