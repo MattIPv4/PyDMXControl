@@ -13,7 +13,7 @@ from warnings import warn
 
 from ... import Colors
 from ...effects.defaults import Effect
-from ...utils.exceptions import JSONConfigSaveException
+from ...utils.exceptions import FixtureCreationException, JSONConfigSaveException
 
 
 class Channel:
@@ -73,14 +73,12 @@ class Fixture:
 
     def _register_channel(self, name: str, *, parked: Union[bool, int] = False) -> int:
         if self.__start_channel + len(self.__channels) > 512:
-            warn('Not enough space in universe for channel `{}`.'.format(name))
-            return -1
+            raise FixtureCreationException(self, 'Not enough space in universe for channel `{}`.'.format(name))
 
         used_names = [f.name for f in self.__channels]
         used_names.extend([f for f in self.__channel_aliases])
         if name.lower().strip() in used_names:
-            warn('Name `{}` already in use for channel (or alias).'.format(name))
-            return -1
+            raise FixtureCreationException(self, 'Name `{}` already in use for channel (or alias).'.format(name))
 
         self.__channels.append(Channel(name.lower().strip(), parked))
         return len(self.__channels) - 1
