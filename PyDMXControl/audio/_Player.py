@@ -4,10 +4,12 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+import contextlib
 from threading import Thread
 from time import sleep, time
 
-import pygame
+with contextlib.redirect_stdout(None):  # PyGame please shut up
+    import pygame
 
 from ..utils.exceptions import AudioException
 from ..utils.timing import DMXMINWAIT
