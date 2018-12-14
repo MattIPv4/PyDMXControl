@@ -60,6 +60,7 @@ class Fixture:
         self.__channels = []
         self.__effects = []
         self.__id = None
+        self.__controller = None
         self.__name = kwargs["name"]
         self.__channel_aliases = {}
         self.__kwargs = kwargs
@@ -107,6 +108,11 @@ class Fixture:
         if self.__id is None:
             self.__id = fixture_id
 
+    def set_controller(self, controller: 'Controller') -> None:
+        # Only ever set once
+        if self.__controller is None:
+            self.__controller = controller
+
     def _set_name(self, name: str) -> None:
         self.__name = name
 
@@ -114,8 +120,9 @@ class Fixture:
 
     def _valid_channel_value(self, value: int, channel: Union[str, int]) -> bool:
         if value < 0 or value > 255:
-            warn('{} DMX value must be between 0 and 255. Received value {} for channel {}'.format(
-                self.title, value, channel))
+            if self.__controller.dmx_value_warnings:
+                warn('{} DMX value must be between 0 and 255. Received value {} for channel {}'.format(
+                    self.title, value, channel))
             return False
         return True
 

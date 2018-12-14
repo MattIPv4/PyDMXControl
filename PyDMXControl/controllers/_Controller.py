@@ -21,7 +21,7 @@ from ..web import WebController
 
 class Controller:
 
-    def __init__(self, *, ltp=True, dynamic_frame=False):
+    def __init__(self, *, ltp: bool = True, dynamic_frame: bool = False, suppress_dmx_value_warnings: bool = False):
         # Store all registered fixtures
         self.__fixtures = {}
 
@@ -39,6 +39,9 @@ class Controller:
         # Web control attr
         self.web = None
 
+        # Warning data
+        self.dmx_value_warnings = not suppress_dmx_value_warnings
+
     def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
         if isinstance(fixture, type):
@@ -51,6 +54,9 @@ class Controller:
 
         # Tell the fixture its id
         fixture.set_id(fixture_id)
+
+        # Give the fixture this controller
+        fixture.set_controller(self)
 
         # Store the fixture
         self.__fixtures[fixture_id] = fixture
