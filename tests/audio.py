@@ -7,8 +7,8 @@ from PyDMXControl.profiles.Stairville import LED_Par_36, LED_Par_10mm
 from PyDMXControl.utils.timing import TimedEvents
 
 # Create controller and events
-dmx = Controller()
-events = TimedEvents()
+dmx = Controller(suppress_dmx_value_warnings=True)
+events = TimedEvents(True)
 
 # Load some fixtures from JSON
 dmx.load_json_config('tests/json/home.json')

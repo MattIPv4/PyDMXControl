@@ -127,11 +127,16 @@ class TimedEvents:
             for timestamp, event in events_left.copy().items():
                 # Look into the past so we don't ever miss any
                 if timestamp <= (time() * 1000.0) - start:
-                    event[0](*event[1], **event[2])
-                    if self.__messages:
-                        print("Event {} run at {}".format(timestamp, (time() * 1000.0) - start))
-                    del events_left[timestamp]
+                    event[0](*event[1], **event[2])  # Run
+                    if self.__messages:  # Debug if needed
+                        print("Event {} fired at timestamp {}ms: {}".format(
+                            timestamp, (time() * 1000.0) - start, event[0]))
+                    del events_left[timestamp]  # Remove - we're done with it
             sleep(0.000001)
+
+        # Let debug know we're done
+        if self.__messages:
+            print("Timed events playback completed")
 
     def run(self, start_millis: int = 0):
         # Create the thread and run loop
