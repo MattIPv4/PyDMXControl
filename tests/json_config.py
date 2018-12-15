@@ -4,13 +4,13 @@ from PyDMXControl.controllers import uDMXController as Controller
 dmx = Controller()
 
 # Load fixture in from json
-dmx.load_json_config('tests/json/load.json')
+dmx.json.load_config('tests/json/load.json')
 
 # Check fixture was loaded
 dmx.all_locate()
 
 # Save fixture back to json
-print(dmx.save_json_config('tests/json/save.json'))
+print(dmx.json.save_config('tests/json/save.json'))
 
 # Start console debug for testing
 dmx.debug_control()

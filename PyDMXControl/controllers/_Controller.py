@@ -12,14 +12,41 @@ from typing import Type, List, Union, Dict, Tuple, Callable
 from warnings import warn
 
 from .utils.debug import Debugger
-from .. import Colors
+from .. import Colors, name
 from ..profiles.defaults import Fixture_Channel, Fixture
 from ..utils.exceptions import JSONConfigLoadException, LTPCollisionException
 from ..utils.timing import DMXMINWAIT, Ticker
 from ..web import WebController
 
 
-class Controller:
+class ControllerHelpers:
+
+    def all_on(self, milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.dim(255, milliseconds)
+
+    def all_off(self, milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.dim(0, milliseconds)
+
+    def all_locate(self):
+        for fixture in self.get_all_fixtures():
+            fixture.locate()
+
+    def all_dim(self, value: int, milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.dim(value, milliseconds)
+
+    def all_color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
+        for fixture in self.get_all_fixtures():
+            fixture.color(color, milliseconds)
+
+    def clear_all_effects(self):
+        for fixture in self.get_all_fixtures():
+            fixture.clear_effects()
+
+
+class Controller(ControllerHelpers):
 
     def __init__(self, *, ltp: bool = True, dynamic_frame: bool = False, suppress_dmx_value_warnings: bool = False):
         # Store all registered fixtures
@@ -38,6 +65,9 @@ class Controller:
 
         # Web control attr
         self.web = None
+
+        # JSON load/save
+        self.json = JSONLoadSave(self)
 
         # Warning data
         self.dmx_value_warnings = not suppress_dmx_value_warnings
@@ -63,72 +93,6 @@ class Controller:
 
         # Return the updated fixture
         return self.__fixtures[fixture_id]
-
-    def load_json_config(self, filename: str) -> List[Fixture]:
-        fixtures = []
-
-        try:
-            with open(filename) as f:
-                data = load(f)
-        except (FileNotFoundError, OSError):
-            raise JSONConfigLoadException(filename)
-        except JSONDecodeError:
-            raise JSONConfigLoadException(filename, "unable to parse contents")
-
-        if not isinstance(data, list):
-            raise JSONConfigLoadException(filename, "expected list of dicts, got {}".format(type(data)))
-
-        for index, item in enumerate(data):
-            if not isinstance(item, dict):
-                warn("Failed to load item {} from JSON, expected dict, got {}".format(index, type(item)))
-                continue
-
-            if 'type' not in item:
-                warn("Failed to load item {} from JSON, expected a type property".format(index))
-                continue
-
-            pattern = re.compile(r"^(([\w\d.]+)\.)*([\w\d]+)$", re.IGNORECASE)
-            match = pattern.match(item['type'])
-            if not match:
-                warn("Failed to load item {} from JSON, failed to parse type '{}'".format(index, item['type']))
-                continue
-
-            try:
-                module = import_module(".{}".format(match.group(2)), 'PyDMXControl.profiles')
-            except ModuleNotFoundError:
-                warn("Failed to load item {} from JSON, profile module '{}' not found".format(index, match.group(2)))
-                continue
-
-            try:
-                module = getattr(module, match.group(3))
-            except AttributeError:
-                warn("Failed to load item {} from JSON, profile type '{}' not found in '{}'".format(
-                    index, match.group(3), match.group(2)))
-                continue
-
-            del item['type']
-            args = []
-            if 'args' in item:
-                args = item['args']
-                del item['args']
-            fixtures.append(self.add_fixture(module, *args, **dict(item)))
-
-        return fixtures
-
-    def save_json_config(self, filename: Union[str, None] = None, pretty_print: bool = True) -> str:
-        data = []
-        for fixture in self.__fixtures.values():
-            data.append(fixture.json_data)
-        if pretty_print:
-            data = dumps(data, indent=4)
-        else:
-            data = dumps(data)
-
-        if filename:
-            with open(filename, "w+") as f:
-                f.write(data)
-
-        return data
 
     def del_fixture(self, fixture_id: int) -> bool:
         # Check if the id exists
@@ -163,13 +127,13 @@ class Controller:
         # Return any matches
         return matches
 
-    def get_fixtures_by_name(self, name: str) -> List[Fixture]:
+    def get_fixtures_by_name(self, fixture_name: str) -> List[Fixture]:
         matches = []
 
         # Iterate over each fixture id
         for fixture_id in self.__fixtures:
             # If it matches the given name
-            if self.__fixtures[fixture_id].name.lower() == name.lower():
+            if self.__fixtures[fixture_id].name.lower() == fixture_name.lower():
                 # Store
                 matches.append(self.__fixtures[fixture_id])
 
@@ -250,30 +214,6 @@ class Controller:
         # Return next channel
         return max(channels or [0]) + 1
 
-    def all_on(self, milliseconds: int = 0):
-        for fixture in self.get_all_fixtures():
-            fixture.dim(255, milliseconds)
-
-    def all_off(self, milliseconds: int = 0):
-        for fixture in self.get_all_fixtures():
-            fixture.dim(0, milliseconds)
-
-    def all_locate(self):
-        for fixture in self.get_all_fixtures():
-            fixture.locate()
-
-    def all_dim(self, value: int, milliseconds: int = 0):
-        for fixture in self.get_all_fixtures():
-            fixture.dim(value, milliseconds)
-
-    def all_color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
-        for fixture in self.get_all_fixtures():
-            fixture.color(color, milliseconds)
-
-    def clear_all_effects(self):
-        for fixture in self.get_all_fixtures():
-            fixture.clear_effects()
-
     def debug_control(self, callbacks: Dict[str, Callable] = None):
         if callbacks is None:
             callbacks = {}
@@ -302,3 +242,91 @@ class Controller:
         if hasattr(self, "web") and self.web:
             self.web.stop()
             print("CLOSE: web controller stopped")
+
+
+class JSONLoadSave:
+
+    def __init__(self, controller: Controller):
+        self.controller = controller
+
+    @staticmethod
+    def validate_item(index: int, item) -> Tuple[bool, Union[None, Fixture]]:
+        if not isinstance(item, dict):
+            warn("Failed to load item {} from JSON, expected dict, got {}".format(index, type(item)))
+            return False, None
+
+        if 'type' not in item:
+            warn("Failed to load item {} from JSON, expected a type property".format(index))
+            return False, None
+
+        pattern = re.compile(r"^(([\w\d.]+)\.)*([\w\d]+)$", re.IGNORECASE)
+        match = pattern.match(item['type'])
+        if not match:
+            warn("Failed to load item {} from JSON, failed to parse type '{}'".format(index, item['type']))
+            return False, None
+
+        try:
+            module = import_module(".{}".format(match.group(2)), name + '.profiles')
+        except ModuleNotFoundError:
+            warn("Failed to load item {} from JSON, profile module '{}' not found".format(index, match.group(2)))
+            return False, None
+
+        try:
+            module = getattr(module, match.group(3))
+        except AttributeError:
+            warn("Failed to load item {} from JSON, profile type '{}' not found in '{}'".format(
+                index, match.group(3), match.group(2)))
+            return False, None
+
+        return True, module
+
+    def load_config(self, filename: str) -> List[Fixture]:
+        # Get data
+        try:
+            with open(filename) as f:
+                data = load(f)
+        except (FileNotFoundError, OSError):
+            raise JSONConfigLoadException(filename)
+        except JSONDecodeError:
+            raise JSONConfigLoadException(filename, "unable to parse contents")
+
+        if not isinstance(data, list):
+            raise JSONConfigLoadException(filename, "expected list of dicts, got {}".format(type(data)))
+
+        # Parse data
+        fixtures = []
+        for index, item in enumerate(data):
+            # Validate entry
+            success, module = self.validate_item(index, item)
+            if not success or not module:
+                continue
+
+            # Parse args
+            del item['type']
+            args = []
+            if 'args' in item:
+                args = item['args']
+                del item['args']
+
+            # Create
+            fixtures.append(self.controller.add_fixture(module, *args, **dict(item)))
+
+        return fixtures
+
+    def save_config(self, filename: Union[str, None] = None, pretty_print: bool = True) -> str:
+        # Generate data
+        data = []
+        for fixture in self.controller.get_all_fixtures():
+            data.append(fixture.json_data)
+
+        # JSON-ify
+        if pretty_print:
+            data = dumps(data, indent=4)
+        else:
+            data = dumps(data)
+
+        # Save
+        if filename:
+            with open(filename, "w+") as f:
+                f.write(data)
+        return data

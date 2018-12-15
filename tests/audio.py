@@ -11,7 +11,7 @@ dmx = Controller(suppress_dmx_value_warnings=True)
 events = TimedEvents(True)
 
 # Load some fixtures from JSON
-dmx.load_json_config('tests/json/home.json')
+dmx.json.load_config('tests/json/home.json')
 
 # Pause/play testing
 """
