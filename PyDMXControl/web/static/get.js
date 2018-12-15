@@ -6,21 +6,21 @@
 function get(url) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function () {
-        if (http.readyState == 4) {
+        if (http.readyState === 4) {
             var data = JSON.parse(http.responseText);
             var elm, tm;
 
-            if ('elements' in data) {
-                for (var id in data['elements']) {
-                    if (!data['elements'].hasOwnProperty(id)) {
+            if ("elements" in data) {
+                for (var id in data["elements"]) {
+                    if (!data["elements"].hasOwnProperty(id)) {
                         continue;
                     }
-                    var text = data['elements'][id];
+                    var text = data["elements"][id];
                     elm = document.getElementById(id);
                     if (!elm) {
                         continue;
                     }
-                    if (elm.tagName.toLowerCase() == "input") {
+                    if (elm.tagName.toLowerCase() === "input") {
                         elm.value = text;
                     } else {
                         elm.innerText = text;
@@ -37,15 +37,15 @@ function get(url) {
 
             elm = document.getElementById("message-success");
             if (elm) {
-                clearTimeout(parseInt(elm.getAttribute("data-tm")));
+                clearTimeout(parseInt(elm.getAttribute("data-tm"), 10));
                 elm.remove();
             }
-            if ('message' in data) {
+            if ("message" in data) {
                 elm = document.createElement("h3");
                 elm.id = "message-success";
                 elm.className = "alert";
                 elm.style.color = "#37BC9B";
-                elm.innerText = data['message'];
+                elm.innerText = data["message"];
                 tm = setTimeout(function () {
                     document.getElementById("message-success").remove();
                 }, 15 * 1000);
@@ -55,15 +55,15 @@ function get(url) {
 
             elm = document.getElementById("message-error");
             if (elm) {
-                clearTimeout(parseInt(elm.getAttribute("data-tm")));
+                clearTimeout(parseInt(elm.getAttribute("data-tm"), 10));
                 elm.remove();
             }
-            if ('error' in data) {
+            if ("error" in data) {
                 elm = document.createElement("h3");
                 elm.id = "message-error";
                 elm.className = "alert";
                 elm.style.color = "#DA4453";
-                elm.innerText = data['error'];
+                elm.innerText = data["error"];
                 tm = setTimeout(function () {
                     document.getElementById("message-error").remove();
                 }, 15 * 1000);
@@ -86,7 +86,7 @@ function get(url) {
             } else {
                 window.location = elm.getAttribute("href");
             }
-            return false
+            return false;
         }, true);
     });
-})();
+}());

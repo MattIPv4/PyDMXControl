@@ -13,18 +13,25 @@
         <img src="https://img.shields.io/pypi/pyversions/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Python Versions">
     </a>
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl">
-        <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size"></a>
+        <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size">
+    </a>
+    <a href="https://scrutinizer-ci.com/g/MattIPv4/PyDMXControl/">
+        <img src="https://img.shields.io/scrutinizer/g/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Quality">
+    </a>
+    <a href="https://scrutinizer-ci.com/g/MattIPv4/PyDMXControl/">
+        <img src="https://img.shields.io/scrutinizer/build/g/MattIPv4/PyDMXControl.svg?style=flat-square" alt="Build Status">
+    </a>
 </p>
 
 <img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon" align="right" width="150"/>
 
 ----
 
-**A Python 3 module to control DMX in Python using uDMX.**
+# A Python 3 module to control DMX in Python using uDMX.
 
 **Featuring fixture profiles, built-in effects and a web control panel.**
 
-# Installation
+## Installation
 
 Install via pip **(recommended)**
 
@@ -38,51 +45,51 @@ Install via GitHub **(development version, with audio)**
 
     pip install -U git+https://github.com/MattIPv4/PyDMXControl#egg=PyDMXControl[audio]
 
-# Features
+## Features
 
 * FIXTURE profiles per manufacturer ([see all included profiles](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/profiles))
-  * Generic dimmer fixture included, single channel
-  * RGB (3-channel) fixture with virtual dimmer built-in
+    * Generic dimmer fixture included, single channel
+    * RGB (3-channel) fixture with virtual dimmer built-in
 
 
 * EFFECT module/library support ([see all packaged effects](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/effects))
-  * Intensity dim chase provided, configurable speed and offset provided
-  * Included is a fixture color chase effect, unlimited number of colors supported
-  * Effects can be applied to individual fixtures or multiple as a group
-  * [Demo: tests/effects.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/effects.py)
+    * Intensity dim chase provided, configurable speed and offset provided
+    * Included is a fixture color chase effect, unlimited number of colors supported
+    * Effects can be applied to individual fixtures or multiple as a group
+    * [Demo: tests/effects.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/effects.py)
   
   
 * uDMX works out of the box
-  * Package developed on and tested extensively with a uDMX system
+    * Package developed on and tested extensively with a uDMX system
   
   
 * CUSTOM callbacks supported with an internal ticker
-  * Have actions take place on their own at certain times using the callback ticker
+    * Have actions take place on their own at certain times using the callback ticker
   
   
 * THREADED to allow continuous runtime
-  * Run your own blocking scripts whilst PyDMXControl continues to output data
+    * Run your own blocking scripts whilst PyDMXControl continues to output data
   
   
 * WEBSITE control panel built in
-  * Global and individual fixture intensity control via sliders
-  * Quick access to callback functions globally and for each fixture
-  * Color picker for individual fixtures as well as specific channel control
-  * [Demo: tests/web.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/web.py)
+    * Global and individual fixture intensity control via sliders
+    * Quick access to callback functions globally and for each fixture
+    * Color picker for individual fixtures as well as specific channel control
+    * [Demo: tests/web.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/web.py)
   
  
 * JSON fixture configurations
-  * Load fixture configurations from JSON files into the controller
-  * Save your current set of fixtures out to JSON files for later use
-  * [Demo: tests/json_config.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/json_config.py)
+    * Load fixture configurations from JSON files into the controller
+    * Save your current set of fixtures out to JSON files for later use
+    * [Demo: tests/json_config.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/json_config.py)
   
 
 * Optional AUDIO playback supported
-  * Play audio tracks whilst PyDMXControl continues to run lighting control
-  * Uses pygame for best cross-platform and audio format support
-  * [Demo: tests/audio.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/audio.py)
+    * Play audio tracks whilst PyDMXControl continues to run lighting control
+    * Uses pygame for best cross-platform and audio format support
+    * [Demo: tests/audio.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/audio.py)
 
-# Example Usage
+## Example Usage
 
 An example of how to get a single dimmer working with PyDMXControl, 
 providing the web control panel and the console debug system once started.
@@ -138,7 +145,7 @@ dmx.close()
 
 Browse the tests from the [tests folder](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/) to see examples of other features within the library being tested out.
 
-# What is the point of this?
+## What is the point of this?
 
 Just messing around with using Python to control/send DMX.\
 Supports fixture profiling; Has defaults for a standard fixture and fixtures that need virtual dimmers.\
@@ -157,9 +164,10 @@ If someone wants to buy me an Enttec USB DMX Pro then I'll try make it work with
 Thank you to Dave Hocker, author of [pyudmx](https://github.com/dhocker/udmx-pyusb/), for his work on pyudmx and his
  advice via email in solving some of the issues making this library behave with uDMX.
 
-# Discussion, Support and Issues
+## Discussion, Support and Issues
 
-For general support and discussion of this project, please join the Discord lounge server: https://discord.gg/qyXqA7y \
+For general support and discussion of this project, please join the Discord lounge server:
+ [discord.gg/qyXqA7y](https://discord.gg/qyXqA7y) \
 [![Discord Server](https://discordapp.com/api/guilds/204663881799303168/widget.png?style=banner2)](https://discord.gg/qyXqA7y)
 
 To check known bugs and see planned changes and features for this project, please see the GitHub issues.\
