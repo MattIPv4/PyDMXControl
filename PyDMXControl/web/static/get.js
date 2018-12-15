@@ -3,12 +3,32 @@
  *  <https://github.com/MattIPv4/PyDMXControl/>
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  */
+function getMessageHandle(idBase, dataBase, data) {
+    var elm = document.getElementById("message-" + idBase);
+    if (elm) {
+        clearTimeout(parseInt(elm.getAttribute("data-tm"), 10));
+        elm.remove();
+    }
+    if (dataBase in data) {
+        elm = document.createElement("h3");
+        elm.id = "message-" + idBase;
+        elm.className = "alert";
+        elm.style.color = (idBase === "error" ? "#DA4453" : "#37BC9B");
+        elm.innerText = data[dataBase];
+        var tm = setTimeout(function () {
+            document.getElementById("message-" + idBase).remove();
+        }, 15 * 1000);
+        elm.setAttribute("data-tm", tm.toString(10));
+        document.body.insertBefore(elm, document.body.children[1]);
+    }
+}
+
 function get(url) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function () {
         if (http.readyState === 4) {
             var data = JSON.parse(http.responseText);
-            var elm, tm;
+            var elm;
 
             if ("elements" in data) {
                 for (var id in data["elements"]) {
@@ -35,41 +55,8 @@ function get(url) {
                 }
             }
 
-            elm = document.getElementById("message-success");
-            if (elm) {
-                clearTimeout(parseInt(elm.getAttribute("data-tm"), 10));
-                elm.remove();
-            }
-            if ("message" in data) {
-                elm = document.createElement("h3");
-                elm.id = "message-success";
-                elm.className = "alert";
-                elm.style.color = "#37BC9B";
-                elm.innerText = data["message"];
-                tm = setTimeout(function () {
-                    document.getElementById("message-success").remove();
-                }, 15 * 1000);
-                elm.setAttribute("data-tm", tm);
-                document.body.insertBefore(elm, document.body.children[1]);
-            }
-
-            elm = document.getElementById("message-error");
-            if (elm) {
-                clearTimeout(parseInt(elm.getAttribute("data-tm"), 10));
-                elm.remove();
-            }
-            if ("error" in data) {
-                elm = document.createElement("h3");
-                elm.id = "message-error";
-                elm.className = "alert";
-                elm.style.color = "#DA4453";
-                elm.innerText = data["error"];
-                tm = setTimeout(function () {
-                    document.getElementById("message-error").remove();
-                }, 15 * 1000);
-                elm.setAttribute("data-tm", tm);
-                document.body.insertBefore(elm, document.body.children[1]);
-            }
+            getMessageHandle("success", "message", data);
+            getMessageHandle("error", "error", data);
         }
     };
     http.open("GET", url);

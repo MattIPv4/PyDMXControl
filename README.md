@@ -15,11 +15,17 @@
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl">
         <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size">
     </a>
+</p>
+
+<p align="center">
     <a href="https://scrutinizer-ci.com/g/MattIPv4/PyDMXControl/">
-        <img src="https://img.shields.io/scrutinizer/g/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Quality">
+        <img src="https://img.shields.io/scrutinizer/g/MattIPv4/PyDMXControl.svg?style=flat-square&label=scrutinizer quality" alt="Scrutinizer Code Quality">
     </a>
     <a href="https://scrutinizer-ci.com/g/MattIPv4/PyDMXControl/">
         <img src="https://img.shields.io/scrutinizer/build/g/MattIPv4/PyDMXControl.svg?style=flat-square" alt="Build Status">
+    </a>
+    <a href="https://www.codacy.com/app/MattIPv4/PyDMXControl">
+        <img src="https://img.shields.io/codacy/grade/18b92886857641e685584aaab9b492e2.svg?style=flat-square&label=codacy quality" alt="Codacy Code Quality">
     </a>
 </p>
 
@@ -47,44 +53,44 @@ Install via GitHub **(development version, with audio)**
 
 ## Features
 
-* FIXTURE profiles per manufacturer ([see all included profiles](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/profiles))
+  * FIXTURE profiles per manufacturer ([see all included profiles](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/profiles))
     * Generic dimmer fixture included, single channel
     * RGB (3-channel) fixture with virtual dimmer built-in
 
 
-* EFFECT module/library support ([see all packaged effects](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/effects))
+  * EFFECT module/library support ([see all packaged effects](https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl/effects))
     * Intensity dim chase provided, configurable speed and offset provided
     * Included is a fixture color chase effect, unlimited number of colors supported
     * Effects can be applied to individual fixtures or multiple as a group
     * [Demo: tests/effects.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/effects.py)
   
   
-* uDMX works out of the box
+  * uDMX works out of the box
     * Package developed on and tested extensively with a uDMX system
   
   
-* CUSTOM callbacks supported with an internal ticker
+  * CUSTOM callbacks supported with an internal ticker
     * Have actions take place on their own at certain times using the callback ticker
   
   
-* THREADED to allow continuous runtime
+  * THREADED to allow continuous runtime
     * Run your own blocking scripts whilst PyDMXControl continues to output data
   
   
-* WEBSITE control panel built in
+  * WEBSITE control panel built in
     * Global and individual fixture intensity control via sliders
     * Quick access to callback functions globally and for each fixture
     * Color picker for individual fixtures as well as specific channel control
     * [Demo: tests/web.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/web.py)
   
  
-* JSON fixture configurations
+  * JSON fixture configurations
     * Load fixture configurations from JSON files into the controller
     * Save your current set of fixtures out to JSON files for later use
     * [Demo: tests/json_config.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/json_config.py)
   
 
-* Optional AUDIO playback supported
+  * Optional AUDIO playback supported
     * Play audio tracks whilst PyDMXControl continues to run lighting control
     * Uses pygame for best cross-platform and audio format support
     * [Demo: tests/audio.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/audio.py)
