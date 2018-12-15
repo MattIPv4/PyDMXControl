@@ -13,7 +13,7 @@ from warnings import warn
 
 from ... import Colors
 from ...effects.defaults import Effect
-from ...utils.exceptions import JSONConfigSaveException
+from ...utils.exceptions import FixtureCreationException, JSONConfigSaveException
 
 
 class Channel:
@@ -60,6 +60,7 @@ class Fixture:
         self.__channels = []
         self.__effects = []
         self.__id = None
+        self.__controller = None
         self.__name = kwargs["name"]
         self.__channel_aliases = {}
         self.__kwargs = kwargs
@@ -72,14 +73,12 @@ class Fixture:
 
     def _register_channel(self, name: str, *, parked: Union[bool, int] = False) -> int:
         if self.__start_channel + len(self.__channels) > 512:
-            warn('Not enough space in universe for channel `{}`.'.format(name))
-            return -1
+            raise FixtureCreationException(self, 'Not enough space in universe for channel `{}`.'.format(name))
 
         used_names = [f.name for f in self.__channels]
         used_names.extend([f for f in self.__channel_aliases])
         if name.lower().strip() in used_names:
-            warn('Name `{}` already in use for channel (or alias).'.format(name))
-            return -1
+            raise FixtureCreationException(self, 'Name `{}` already in use for channel (or alias).'.format(name))
 
         self.__channels.append(Channel(name.lower().strip(), parked))
         return len(self.__channels) - 1
@@ -107,6 +106,11 @@ class Fixture:
         if self.__id is None:
             self.__id = fixture_id
 
+    def set_controller(self, controller: 'Controller') -> None:
+        # Only ever set once
+        if self.__controller is None:
+            self.__controller = controller
+
     def _set_name(self, name: str) -> None:
         self.__name = name
 
@@ -114,8 +118,9 @@ class Fixture:
 
     def _valid_channel_value(self, value: int, channel: Union[str, int]) -> bool:
         if value < 0 or value > 255:
-            warn('{} DMX value must be between 0 and 255. Received value {} for channel {}'.format(
-                self.title, value, channel))
+            if self.__controller.dmx_value_warnings:
+                warn('{} DMX value must be between 0 and 255. Received value {} for channel {}'.format(
+                    self.title, value, channel))
             return False
         return True
 

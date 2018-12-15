@@ -5,8 +5,6 @@
 """
 
 import builtins  # Builtins for Jinja context
-import contextlib  # Silent flask
-import io  # Silent flask
 import logging  # Logging
 from os import path  # OS Path
 from threading import Thread  # Threading
@@ -96,10 +94,9 @@ class WebController:
 
     def run(self):
         if not self.__running:
-            with contextlib.redirect_stdout(io.StringIO()):
-                self.__thread = Thread(target=self.__run)
-                self.__thread.daemon = True
-                self.__thread.start()
+            self.__thread = Thread(target=self.__run)
+            self.__thread.daemon = True
+            self.__thread.start()
             print("Started web controller: http://{}:{}".format(self.__host, self.__port))
 
     def stop(self):

@@ -15,6 +15,12 @@ class LTPCollisionException(PyDMXControlException):
         super().__init__("Channel {} has two different values assigned at the same timestamp.".format(channel_id))
 
 
+class FixtureCreationException(PyDMXControlException):
+
+    def __init__(self, fixture_class, message: str):
+        super().__init__("Unable to create fixture '{}': {}.".format(fixture_class, message))
+
+
 class MissingArgumentException(PyDMXControlException, ValueError):
 
     def __init__(self, argument: str, kwarg: bool = False):
@@ -39,3 +45,15 @@ class JSONConfigSaveException(JSONConfigException):
 
     def __init__(self, message: str):
         super().__init__(message)
+
+
+class AudioException(PyDMXControlException):
+
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class EventAlreadyExistsException(PyDMXControlException):
+
+    def __init__(self, timestamp: int):
+        super().__init__("An event already exists at {}".format(timestamp))
