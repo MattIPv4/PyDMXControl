@@ -19,13 +19,13 @@
 
 <p align="center">
     <a href="https://scrutinizer-ci.com/g/MattIPv4/PyDMXControl/">
-        <img src="https://img.shields.io/scrutinizer/g/MattIPv4/PyDMXControl.svg?style=flat-square&label=scrutinizer quality" alt="Scrutinizer Code Quality">
+        <img src="https://img.shields.io/scrutinizer/g/MattIPv4/PyDMXControl.svg?style=flat-square&label=scrutinizer%20quality" alt="Scrutinizer Code Quality">
     </a>
     <a href="https://scrutinizer-ci.com/g/MattIPv4/PyDMXControl/">
         <img src="https://img.shields.io/scrutinizer/build/g/MattIPv4/PyDMXControl.svg?style=flat-square" alt="Build Status">
     </a>
     <a href="https://www.codacy.com/app/MattIPv4/PyDMXControl">
-        <img src="https://img.shields.io/codacy/grade/18b92886857641e685584aaab9b492e2.svg?style=flat-square&label=codacy quality" alt="Codacy Code Quality">
+        <img src="https://img.shields.io/codacy/grade/18b92886857641e685584aaab9b492e2.svg?style=flat-square&label=codacy%20quality" alt="Codacy Code Quality">
     </a>
 </p>
 
