@@ -101,17 +101,17 @@ class Fixture:
             self.__channel_aliases[alias] = channel
         return True
 
-    def set_id(self, fixture_id: int) -> None:
+    def set_id(self, fixture_id: int):
         # Only ever set once
         if self.__id is None:
             self.__id = fixture_id
 
-    def set_controller(self, controller: 'Controller') -> None:
+    def set_controller(self, controller: 'Controller'):
         # Only ever set once
         if self.__controller is None:
             self.__controller = controller
 
-    def _set_name(self, name: str) -> None:
+    def _set_name(self, name: str):
         self.__name = name
 
     # Properties

@@ -181,12 +181,12 @@ class Controller:
         return list(self.__fixtures.values())
 
     @staticmethod
-    def sleep_till_enter() -> None:
+    def sleep_till_enter():
         # Hold
         input("Press Enter to end sleep...")
 
     @staticmethod
-    def sleep_till_interrupt() -> None:
+    def sleep_till_interrupt():
         # Hold
         try:
             while True:
