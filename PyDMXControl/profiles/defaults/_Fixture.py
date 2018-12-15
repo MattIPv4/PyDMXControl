@@ -44,7 +44,77 @@ class Channel:
         self.__updated()
 
 
-class Fixture:
+class FixtureHelpers:
+
+    def __dim(self, current, target, millis, channel):
+        start = time() * 1000.0
+        gap = target - current
+
+        if millis > 0:
+            while (time() * 1000.0) - start <= millis:
+                diff = gap * (((time() * 1000.0) - start) / millis)
+                self.set_channel(channel, int(current + diff))
+                sleep(0.000001)
+        self.set_channel(channel, int(target))
+
+    def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
+
+        # Calculate what we need
+        current = self.get_channel_value(self.get_channel_id(channel))[0]
+
+        # Create the thread and run loop
+        thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))
+        thread.daemon = True
+        thread.start()
+
+        return self
+
+    def anim(self, milliseconds: int, *channels_values: Tuple[Union[str, int], int]):
+        for channel_value in channels_values:
+            self.dim(channel_value[1], milliseconds, channel_value[0])
+
+    def color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
+        # Handle string color names
+        if isinstance(color, str):
+            if color in Colors:
+                color = Colors[color]
+            else:
+                raise ValueError("Color '" + color + "' not defined in Colors enum."
+                                                     " Supply valid Colors enum or List/Tuple of integers.")
+
+        # Get a tuple
+        color = Colors.to_tuples(color)
+
+        # Apply
+        self.anim(milliseconds, *color)
+
+    def get_color(self) -> Union[None, List[int]]:
+        red = self.get_channel_value(self.get_channel_id("r"))
+        green = self.get_channel_value(self.get_channel_id("g"))
+        blue = self.get_channel_value(self.get_channel_id("b"))
+        white = self.get_channel_value(self.get_channel_id("w"))
+        amber = self.get_channel_value(self.get_channel_id("a"))
+        if red[0] == -1 or green[0] == -1 or blue[0] == -1:
+            return None
+        color = [red[0], green[0], blue[0]]
+        if white[0] != -1:
+            color.append(white[0])
+            if amber[0] != -1:
+                color.append(amber[0])
+        return color
+
+    def on(self):
+        self.dim(255)
+
+    def off(self):
+        self.dim(0)
+
+    def locate(self):
+        self.color([255, 255, 255, 255, 255])
+        self.dim(255)
+
+
+class Fixture(FixtureHelpers):
 
     def __init__(self, *args, **kwargs):
         if "start_channel" not in kwargs:
@@ -277,72 +347,3 @@ class Fixture:
         self.__effects = []
 
         return self
-
-    # Helpers
-
-    def __dim(self, current, target, millis, channel):
-        start = time() * 1000.0
-        gap = target - current
-
-        if millis > 0:
-            while (time() * 1000.0) - start <= millis:
-                diff = gap * (((time() * 1000.0) - start) / millis)
-                self.set_channel(channel, int(current + diff))
-                sleep(0.000001)
-        self.set_channel(channel, int(target))
-
-    def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
-
-        # Calculate what we need
-        current = self.get_channel_value(self.get_channel_id(channel))[0]
-
-        # Create the thread and run loop
-        thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))
-        thread.daemon = True
-        thread.start()
-
-        return self
-
-    def anim(self, milliseconds: int, *channels_values: Tuple[Union[str, int], int]):
-        for channel_value in channels_values:
-            self.dim(channel_value[1], milliseconds, channel_value[0])
-
-    def color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
-        # Handle string color names
-        if isinstance(color, str):
-            if color in Colors:
-                color = Colors[color]
-            else:
-                raise ValueError("Color '" + color + "' not defined in Colors enum."
-                                                     " Supply valid Colors enum or List/Tuple of integers.")
-
-        # Get a tuple
-        color = Colors.to_tuples(color)
-
-        # Apply
-        self.anim(milliseconds, *color)
-
-    def get_color(self) -> Union[None, List[int]]:
-        red = self.get_channel_value(self.get_channel_id("r"))
-        green = self.get_channel_value(self.get_channel_id("g"))
-        blue = self.get_channel_value(self.get_channel_id("b"))
-        white = self.get_channel_value(self.get_channel_id("w"))
-        amber = self.get_channel_value(self.get_channel_id("a"))
-        if red[0] == -1 or green[0] == -1 or blue[0] == -1:
-            return None
-        color = [red[0], green[0], blue[0]]
-        if white[0] != -1:
-            color.append(white[0])
-            if amber[0] != -1:
-                color.append(amber[0])
-        return color
-
-    def on(self):
-        self.dim(255)
-
-    def off(self):
-        self.dim(0)
-
-    def locate(self):
-        self.color([255, 255, 255, 255, 255])
-        self.dim(255)
