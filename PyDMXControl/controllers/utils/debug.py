@@ -136,6 +136,57 @@ class Debugger:
             return fixture.get_channel_value(channel, False)[0]
         return fixture.get_channel_value(channel)[0]
 
+    @staticmethod
+    def run_fixture_color(fixture: Fixture):
+        # Select
+        select = input("\n[Fixture Debug] Color Name: ").strip().lower()
+
+        # Try finding enum
+        color = [c for c in Colors if c.name.lower() == select]
+
+        # If not enum, try regex, else fetch enum
+        if not color:
+            pattern = re_compile(
+                r"^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
+            match = pattern.match(select)
+            if not match:
+                return
+            color = {"name": "User Input", "value": [int(f) for f in match.groups() if f]}
+            color = namedtuple("Color", color.keys())(*color.values())
+        else:
+            color = color[0]
+
+        # Apply
+        fixture.color(color.value)
+        print("[Fixture Debug] Color set to " + color.name + " (" + Colors.to_print(color.value) + ")")
+
+    def run_fixture_channel(self, fixture: Fixture):
+        # Select
+        channel = input("\n[Channel Debug] Channel Number/Name: ").strip()
+
+        # Find
+        channel = fixture.get_channel_id(channel)
+
+        # Abort if not found
+        if channel == -1:
+            return
+
+        # Value
+        value = str(self.__fixture_channel_value(fixture, channel))
+        value = input("[Channel Debug] Channel Value (Currently " + value + ", leave blank to abort): ").strip()
+
+        # Abort if bad value
+        if value == "":
+            return
+        if not value.isdigit():
+            return
+
+        # Apply
+        value = int(value)
+        fixture.set_channel(channel, value)
+        print("[Channel Debug] Channel '" + str(channel) + "' set to " + str(
+            self.__fixture_channel_value(fixture, channel)))
+
     def run_fixture(self):
         fixture = input("\n[Fixture Debug] Fixture ID/Name: ").strip()
 
@@ -163,31 +214,7 @@ class Debugger:
 
             # Channel number/name
             if select == '1':
-                # Select
-                channel = input("\n[Channel Debug] Channel Number/Name: ").strip()
-
-                # Find
-                channel = fixture.get_channel_id(channel)
-
-                # Abort if not found
-                if channel == -1:
-                    continue
-
-                # Value
-                value = str(self.__fixture_channel_value(fixture, channel))
-                value = input("[Channel Debug] Channel Value (Currently " + value + ", leave blank to abort): ").strip()
-
-                # Abort if bad value
-                if value == "":
-                    continue
-                if not value.isdigit():
-                    continue
-
-                # Apply
-                value = int(value)
-                fixture.set_channel(channel, value)
-                print("[Channel Debug] Channel '" + str(channel) + "' set to " + str(
-                    self.__fixture_channel_value(fixture, channel)))
+                self.run_fixture_channel(fixture)
                 continue
 
             # Channel list
@@ -197,27 +224,7 @@ class Debugger:
 
             # Color select
             if select == '3':
-                # Select
-                select = input("\n[Fixture Debug] Color Name: ").strip().lower()
-
-                # Try finding enum
-                color = [c for c in Colors if c.name.lower() == select]
-
-                # If not enum, try regex, else fetch enum
-                if not color:
-                    pattern = re_compile(
-                        r"^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*(?:[, ]\s*(\d{1,3})\s*)*$")
-                    match = pattern.match(select)
-                    if not match:
-                        continue
-                    color = {"name": "User Input", "value": [int(f) for f in match.groups() if f]}
-                    color = namedtuple("Color", color.keys())(*color.values())
-                else:
-                    color = color[0]
-
-                # Apply
-                fixture.color(color.value)
-                print("[Fixture Debug] Color set to " + color.name + " (" + Colors.to_print(color.value) + ")")
+                self.run_fixture_color(fixture)
                 continue
 
             # Color list
