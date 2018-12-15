@@ -12,22 +12,25 @@ function get(url) {
 
             if ('elements' in data) {
                 for (var id in data['elements']) {
-                    if (!data['elements'].hasOwnProperty(id)) continue;
+                    if (!data['elements'].hasOwnProperty(id)) {
+                        continue;
+                    }
                     var text = data['elements'][id];
                     elm = document.getElementById(id);
-                    if (elm) {
-                        if (elm.tagName.toLowerCase() == "input") {
-                            elm.value = text;
-                        } else {
-                            elm.innerText = text;
-                        }
-                        if ("createEvent" in document) {
-                            var evt = document.createEvent("HTMLEvents");
-                            evt.initEvent("change", false, true);
-                            elm.dispatchEvent(evt);
-                        } else {
-                            elm.fireEvent("onchange");
-                        }
+                    if (!elm) {
+                        continue;
+                    }
+                    if (elm.tagName.toLowerCase() == "input") {
+                        elm.value = text;
+                    } else {
+                        elm.innerText = text;
+                    }
+                    if ("createEvent" in document) {
+                        var evt = document.createEvent("HTMLEvents");
+                        evt.initEvent("change", false, true);
+                        elm.dispatchEvent(evt);
+                    } else {
+                        elm.fireEvent("onchange");
                     }
                 }
             }
@@ -78,9 +81,11 @@ function get(url) {
     elms.forEach(function (elm) {
         elm.addEventListener("click", function (e) {
             e.preventDefault();
-            console.log(elm.getAttribute("data-no-reload"));
-            if (elm.getAttribute("data-no-reload") !== null) get(elm.getAttribute("href"));
-            else window.location = elm.getAttribute("href");
+            if (elm.getAttribute("data-no-reload") !== null) {
+                get(elm.getAttribute("href"));
+            } else {
+                window.location = elm.getAttribute("href");
+            }
             return false
         }, true);
     });
