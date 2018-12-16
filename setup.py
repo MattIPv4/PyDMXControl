@@ -18,9 +18,9 @@
 
 from typing import List
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
-from PyDMXControl import __title__, __author__, __email__, __license__, __version__, name
+from PyDMXControl import __title__, __author__, __email__, __license__, __version__
 
 
 def fetch_reqs(base: str = "") -> List[str]:
@@ -41,7 +41,7 @@ setup(
     url="https://github.com/MattIPv4/PyDMXControl/",
     version=__version__,
     license=__license__,
-    packages=[name],
+    packages=find_packages(),
     python_requires=">= 3.6",
     include_package_data=True,
     install_requires=fetch_reqs(),

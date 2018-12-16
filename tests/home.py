@@ -12,7 +12,7 @@ from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 dmx = Controller()
 
 # Load some fixtures from JSON
-dmx.load_json_config('tests/json/home.json')
+dmx.json.load_config('tests/json/home.json')
 
 """
 dmx.add_fixture(LED_Par_10mm, name="Flood")
