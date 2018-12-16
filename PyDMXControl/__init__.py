@@ -26,11 +26,11 @@ __maintainer__ = 'Matt Cowley (MattIPv4)'
 __email__ = 'me@mattcowley.co.uk'
 __license__ = 'GPLv3'
 __copyright__ = 'Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)'
-__version__ = '1.5.0'
+__version__ = '1.6.0'
 __status__ = 'Production'
 
 name = "PyDMXControl"
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=1, minor=5, micro=0, releaselevel='final', serial=0)
+version_info = VersionInfo(major=1, minor=6, micro=0, releaselevel='final', serial=0)
