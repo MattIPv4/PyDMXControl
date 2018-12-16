@@ -1,3 +1,5 @@
 include README.md
 include LICENSE
 include requirements.txt
+include PyDMXControl/*/requirements.txt
+include PyDMXControl/web/*
