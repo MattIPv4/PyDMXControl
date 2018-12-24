@@ -12,8 +12,8 @@ from ._transmittingController import transmittingController
 class uDMXController(transmittingController):
 
     def __init__(self, *args, **kwargs):
-        self.udmx = pyudmx.uDMXDevice()
-        self.udmx.open()
+        self.udmx = None
+        self.__connect()
 
         super().__init__(*args, **kwargs)
 
@@ -24,6 +24,17 @@ class uDMXController(transmittingController):
 
         # Parent
         super().close()
+
+    def __connect(self):
+        # Try to close if exists
+        if self.udmx is not None:
+            try:
+                self.udmx.close()
+            except Exception:
+                pass
+        # Get new device
+        self.udmx = pyudmx.uDMXDevice()
+        self.udmx.open()
 
     def _send_data(self):
         # Get the data
@@ -40,4 +51,16 @@ class uDMXController(transmittingController):
             except Exception as e:
                 retry_count += 1
                 if retry_count > 5:
-                    raise e
+
+                    # Attempt to reconnect and then send data max 2 times
+                    success_reconn = False
+                    retry_count_reconn = 0
+                    while not success_reconn:
+                        try:
+                            self.__connect()
+                            self.udmx.send_multi_value(1, data)
+                            success_reconn = True
+                        except Exception:
+                            retry_count_reconn += 1
+                            if retry_count_reconn > 2:
+                                raise e
