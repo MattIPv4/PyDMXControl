@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from timed_events_data import get_timed_events
+
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.profiles.Eyourlife import Small_Flat_Par
@@ -113,7 +115,9 @@ callbacks = {
     "normal": normal,
     "dimmer": dimmer
 }
-dmx.web_control(callbacks=callbacks)
+dmx.web_control(callbacks=callbacks, timed_events={
+        "you-will-be-found": get_timed_events(dmx)
+})
 # dmx.debug_control(callbacks)
 
 # Close the controller once we're done
