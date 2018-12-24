@@ -6,7 +6,8 @@
 
 from threading import Thread
 from time import sleep, time
-from typing import Callable
+from typing import Callable, Dict
+from collections import OrderedDict
 
 from .exceptions import EventAlreadyExistsException
 
@@ -99,6 +100,56 @@ class Ticker:
             self.thread.start()
 
 
+class TimedEvent:
+
+    def __init__(self, run_time: int, callback: callable, args: tuple = (), name: str = ""):
+        self.__time = run_time
+        self.__cb = callback
+        self.__args = args
+        self.__name = name
+        self.__fired = None
+
+    @property
+    def time(self) -> str:
+        return "{}ms".format("{:.4f}".format(self.__time).rstrip("0").rstrip("."))
+
+    @property
+    def name(self) -> str:
+        return "{}".format(self.__name)
+
+    @property
+    def func(self) -> str:
+        return "<func {}>".format(self.__cb.__name__)
+
+    @property
+    def args(self) -> str:
+        return "[{}]".format(", ".join(["{}".format(f) for f in self.__args]))
+
+    @property
+    def fired(self) -> str:
+        if self.__fired is None:
+            return ""
+        return "{:.4f}ms ({:.4f}ms late)".format(self.__fired, self.__fired - self.__time)
+
+    @property
+    def data(self) -> Dict[str, str]:
+        return {
+            "time": self.time,
+            "name": self.name,
+            "func": self.func,
+            "args": self.args,
+            "fired": self.fired
+        }
+
+    def __str__(self) -> str:
+        return "Event {} (\"{}\") {}".format(self.__time, self.name, self.func)
+
+    def run(self, start_time) -> str:
+        self.__cb(*self.__args)
+        self.__fired = (time() * 1000.0) - start_time
+        return "{} fired at {}".format(str(self), self.fired)
+
+
 class TimedEvents:
 
     def __init__(self, debug_messages: bool = False):
@@ -114,7 +165,7 @@ class TimedEvents:
 
         # Set starting params
         start = (time() * 1000.0) - start_millis
-        events_left = self.__events.copy()
+        events_left = OrderedDict(sorted(self.__events.items()))
         self.__running = True
 
         # Skip events in the past
@@ -123,16 +174,19 @@ class TimedEvents:
                 del events_left[timestamp]
 
         # Keep looping until last event timestamp
-        while start + max(self.__events.keys()) + 1000 > time() * 1000.0 and self.__running:
+        end = start + max(self.__events.keys()) + 1000
+        while end > time() * 1000.0 and self.__running:
             # Find all events to run
             for timestamp, event in events_left.copy().items():
                 # Look into the past so we don't ever miss any
                 if timestamp <= (time() * 1000.0) - start:
-                    event[0](*event[1])  # Run
+                    msg = event.run(start)  # Run
                     if self.__messages:  # Debug if needed
-                        print("Event {} (\"{}\") fired at timestamp {}ms: {}".format(
-                            timestamp, event[2], (time() * 1000.0) - start, event[0]))
+                        print(msg)
                     del events_left[timestamp]  # Remove - we're done with it
+                else:
+                    # We're into the future
+                    break
             sleep(0.000001)
 
         # Let debug know we're done
@@ -161,7 +215,7 @@ class TimedEvents:
         milliseconds_in = int(milliseconds_in)
         if milliseconds_in in self.__events:
             raise EventAlreadyExistsException(milliseconds_in)
-        self.__events[milliseconds_in] = [callback, args, name]
+        self.__events[milliseconds_in] = TimedEvent(milliseconds_in, callback, args, name)
 
     def remove_event(self, milliseconds_in: int):
         milliseconds_in = int(milliseconds_in)
@@ -173,6 +227,10 @@ class TimedEvents:
 
     def clear_run_callbacks(self):
         self.__run_cbs = []
+
+    @property
+    def data(self) -> Dict[int, Dict[str, str]]:
+        return {k: v.data for k, v in self.__events.items()}
 
     def sleep_till_done(self):
         # Hold until all events completed

@@ -1,6 +1,7 @@
+from time import sleep
+
 from timed_events import get_timed_events
 
-from PyDMXControl.audio import player
 from PyDMXControl.controllers import uDMXController as Controller
 
 # Create controller and events
@@ -34,6 +35,8 @@ events = get_timed_events(dmx)
 
 # Play a light show using events to dear evan hansen - you will be found
 events.run()
+sleep(15)
+print(events.data)
 
 dmx.sleep_till_enter()
 
