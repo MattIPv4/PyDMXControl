@@ -40,27 +40,17 @@ class uDMXController(transmittingController):
         # Get the data
         data = self.get_frame()
 
-        # Attempt to send data max 5 times
+        # Attempt to send data max 5 times, then 2 more with reconnect to device
         # Thanks to Dave Hocker (pyudmx author) for giving me this solution to the random usb errors
         success = False
         retry_count = 0
         while not success:
             try:
+                if retry_count > 5:
+                    self.__connect()
                 self.udmx.send_multi_value(1, data)
                 success = True
             except Exception as e:
                 retry_count += 1
-                if retry_count > 5:
-
-                    # Attempt to reconnect and then send data max 2 times
-                    success_reconn = False
-                    retry_count_reconn = 0
-                    while not success_reconn:
-                        try:
-                            self.__connect()
-                            self.udmx.send_multi_value(1, data)
-                            success_reconn = True
-                        except Exception:
-                            retry_count_reconn += 1
-                            if retry_count_reconn > 2:
-                                raise e
+                if retry_count > 7:
+                    raise e

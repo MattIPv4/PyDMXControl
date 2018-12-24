@@ -11,7 +11,7 @@
     <section>
 
         <article>
-            <h2>Fixture List</h2>
+            <h2>Fixtures</h2>
             <table>
                 <thead>
                 <tr>
@@ -45,7 +45,7 @@
         </article>
 
         <article>
-            <h2>Callback List</h2>
+            <h2>Callbacks</h2>
             <table>
                 <thead>
                 <tr>
@@ -67,11 +67,11 @@
         </article>
 
         <article>
-            <h2>Timed Events List</h2>
+            <h2>Timed Events</h2>
             <table>
                 <thead>
                 <tr>
-                    <th>Timed Event Name</th>
+                    <th>Timed Events Name</th>
                     <th>View</th>
                     <th>Run</th>
                     <th>Stop</th>
@@ -80,7 +80,7 @@
                 <tbody>
                 {% for name in timed_events.keys() %}
                     <tr>
-                        <td data-th="Timed Event Name">
+                        <td data-th="Timed Events Name">
                             {{ name }}</td>
                         <td data-th="View">
                             <a href="{{ url_for('.timed_event', te=name) }}" class="button">View</a>

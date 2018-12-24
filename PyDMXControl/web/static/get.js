@@ -3,6 +3,18 @@
  *  <https://github.com/MattIPv4/PyDMXControl/>
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  */
+function getRaw(url, callback) {
+    var http = new XMLHttpRequest();
+    http.onreadystatechange = function () {
+        if (http.readyState === 4) {
+            var data = JSON.parse(http.responseText);
+            callback(data);
+        }
+    };
+    http.open("GET", url);
+    http.send();
+}
+
 function getMessageHandle(idBase, dataBase, data) {
     var elm = document.getElementById("message-" + idBase);
     if (elm) {
@@ -23,52 +35,43 @@ function getMessageHandle(idBase, dataBase, data) {
     }
 }
 
-function get_raw(url, callback) {
-    var http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        if (http.readyState === 4) {
-            var data = JSON.parse(http.responseText);
-            callback(data);
+function getElementsHandle(data) {
+    var elm;
+    for (var id in data) {
+        if (!data.hasOwnProperty(id)) {
+            continue;
         }
-    };
-    http.open("GET", url);
-    http.send();
+        var text = data[id];
+        elm = document.getElementById(id);
+        if (!elm) {
+            continue;
+        }
+        if (elm.tagName.toLowerCase() === "input") {
+            elm.value = text;
+        } else {
+            elm.innerText = text;
+        }
+        if ("createEvent" in document) {
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+            elm.dispatchEvent(evt);
+        } else {
+            elm.fireEvent("onchange");
+        }
+    }
+}
+
+function getCallback(data) {
+    if ("elements" in data) {
+        getElementsHandle(data["elements"]);
+    }
+
+    getMessageHandle("success", "message", data);
+    getMessageHandle("error", "error", data);
 }
 
 function get(url) {
-    function get_callback(data) {
-        var elm;
-
-        if ("elements" in data) {
-            for (var id in data["elements"]) {
-                if (!data["elements"].hasOwnProperty(id)) {
-                    continue;
-                }
-                var text = data["elements"][id];
-                elm = document.getElementById(id);
-                if (!elm) {
-                    continue;
-                }
-                if (elm.tagName.toLowerCase() === "input") {
-                    elm.value = text;
-                } else {
-                    elm.innerText = text;
-                }
-                if ("createEvent" in document) {
-                    var evt = document.createEvent("HTMLEvents");
-                    evt.initEvent("change", false, true);
-                    elm.dispatchEvent(evt);
-                } else {
-                    elm.fireEvent("onchange");
-                }
-            }
-        }
-
-        getMessageHandle("success", "message", data);
-        getMessageHandle("error", "error", data);
-    }
-
-    get_raw(url, get_callback);
+    getRaw(url, getCallback);
 }
 
 (function () {

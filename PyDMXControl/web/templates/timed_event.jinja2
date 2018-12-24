@@ -27,7 +27,7 @@
         </article>
 
         <article>
-            <h2>Timed Events List</h2>
+            <h2>Timed Events</h2>
             <table>
                 <thead>
                 <tr>
@@ -48,12 +48,12 @@
 
 {% block script %}
     <script>
-    function numberWithCommas(x) {
-        x = parseFloat(x.toFixed(4));
-        var parts = x.toString().split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return parts.join(".");
-    }
+        function numberWithCommas(x) {
+            x = parseFloat(x.toFixed(4));
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
 
         function create_elms(data) {
             setTimeout(do_update, 100);
@@ -117,7 +117,7 @@
         }
 
         function do_update() {
-            get_raw("{{ url_for('.timed_event_data', te=te) }}", create_elms);
+            getRaw("{{ url_for('.timed_event_data', te=te) }}", create_elms);
         }
 
         do_update();
