@@ -38,18 +38,14 @@ function getMessageHandle(idBase, dataBase, data) {
 function getElementsHandle(data) {
     var elm;
     for (var id in data) {
-        if (!data.hasOwnProperty(id)) {
+        if (!data.hasOwnProperty(id) || !document.getElementById(id)) {
             continue;
         }
-        var text = data[id];
         elm = document.getElementById(id);
-        if (!elm) {
-            continue;
-        }
         if (elm.tagName.toLowerCase() === "input") {
-            elm.value = text;
+            elm.value = data[id];
         } else {
-            elm.innerText = text;
+            elm.innerText = data[id];
         }
         if ("createEvent" in document) {
             var evt = document.createEvent("HTMLEvents");
