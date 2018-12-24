@@ -9,7 +9,7 @@ import logging  # Logging
 from os import path  # OS Path
 from threading import Thread  # Threading
 from time import sleep  # Sleep
-from typing import Dict, Callable, List  # Typing
+from typing import Dict, Callable  # Typing
 
 from flask import Flask  # Flask
 
@@ -25,9 +25,11 @@ log.setLevel(logging.ERROR)
 # WebController
 class WebController:
 
-    def __init__(self, controller: 'Controller', *, callbacks: Dict[str, Callable] = None,
-                 timed_events: List[TimedEvents] = None,
+    def __init__(self, controller: 'Controller', *,
+                 callbacks: Dict[str, Callable] = None,
+                 timed_events: Dict[str, TimedEvents] = None,
                  host: str = "0.0.0.0", port: int = 8080):
+
         # Setup flask
         self.__thread = None
         self.__host = host
@@ -48,12 +50,12 @@ class WebController:
         self.__check_callbacks()
 
         # Setup timed events
-        self.timed_events = [] if timed_events is None else timed_events
+        self.timed_events = {} if timed_events is None else timed_events
 
         # Setup template context
         @self.__app.context_processor
         def variables() -> dict:  # pylint: disable=unused-variable
-            return dict({"controller": self.controller, "callbacks": self.callbacks,
+            return dict({"controller": self.controller, "callbacks": self.callbacks, "timed_events": self.timed_events,
                          "web_resource": WebController.web_resource},
                         **dict(globals(), **builtins.__dict__))  # Dictionary stacking to concat
 

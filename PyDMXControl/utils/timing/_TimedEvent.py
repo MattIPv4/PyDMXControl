@@ -19,7 +19,7 @@ class TimedEvent:
 
     @property
     def time(self) -> str:
-        return "{}ms".format("{:.4f}".format(self.__time).rstrip("0").rstrip("."))
+        return "{}ms".format("{:,.4f}".format(self.__time).rstrip("0").rstrip("."))
 
     @property
     def name(self) -> str:
@@ -37,12 +37,13 @@ class TimedEvent:
     def fired(self) -> str:
         if self.__fired is None:
             return ""
-        return "{:.4f}ms ({:.4f}ms late)".format(self.__fired, self.__fired - self.__time)
+        return "{:,.4f}ms ({:,.4f}ms late)".format(self.__fired, self.__fired - self.__time)
 
     @property
     def data(self) -> Dict[str, str]:
         return {
             "time": self.time,
+            "time_raw": self.__time,
             "name": self.name,
             "func": self.func,
             "args": self.args,
@@ -56,3 +57,6 @@ class TimedEvent:
         self.__cb(*self.__args)
         self.__fired = (time() * 1000.0) - start_time
         return "{} fired at {}".format(str(self), self.fired)
+
+    def reset_fired(self):
+        self.__fired = None

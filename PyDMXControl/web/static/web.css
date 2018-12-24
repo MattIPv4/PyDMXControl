@@ -23,24 +23,41 @@ html, body, section, article, table, form, div {
 
 /* Table */
 
-table, form {
+table, form, .section {
     margin: 1em 0;
     background: #34495E;
     border-radius: .4em;
     overflow: auto;
+    border-spacing: 0;
 }
 
-table th, form label, table td:before {
+table th, form label, table td:before, .section > p {
     color: #dd5;
     font-weight: bold;
 }
 
-table tr {
-    border-top: 1px solid #46637f;
-    border-bottom: 1px solid #46637f;
+table tr td {
+    position: relative;
 }
 
-table th, table td, form label, form input {
+table tr.darker {
+    background: #2d3f4f;
+}
+
+table tr.highlight td::after {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid #57f;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    content: "";
+}
+
+table th, table td, form label, form input, .section > p {
     text-align: left;
     padding: .5em 1em;
 }
@@ -82,10 +99,12 @@ a:hover, a:focus {
 
 .button {
     background: #dd5;
+    color: #57f;
     border-radius: .4em;
     padding: .25em .5em;
     margin: .25em;
     line-height: 1.5em;
+    font-weight: normal;
 }
 
 .button-group {
@@ -199,6 +218,18 @@ a:hover, a:focus {
         border-bottom: 1px solid #dd5;
     }
 
+    table tr.highlight td::after {
+        border-width: 4px;
+    }
+
+    table tr.highlight td:not(:first-child)::after {
+        border-top: none;
+    }
+
+    table tr.highlight td:not(:last-child)::after {
+        border-bottom: none;
+    }
+
     table td:before {
         content: attr(data-th) ": ";
     }
@@ -246,5 +277,15 @@ a:hover, a:focus {
     .slider input[type="range"]::-moz-range-thumb {
         width: 2em;
         height: 3.5em;
+    }
+}
+
+@media (min-width: 480px) {
+    table tr.highlight td:not(:first-child)::after {
+        border-left: none;
+    }
+
+    table tr.highlight td:not(:last-child)::after {
+        border-right: none;
     }
 }

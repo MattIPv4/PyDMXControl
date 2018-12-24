@@ -1,6 +1,6 @@
 from time import sleep
 
-from timed_events import get_timed_events
+from timed_events_data import get_timed_events
 
 from PyDMXControl.controllers import uDMXController as Controller
 

@@ -23,44 +23,52 @@ function getMessageHandle(idBase, dataBase, data) {
     }
 }
 
-function get(url) {
+function get_raw(url, callback) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function () {
         if (http.readyState === 4) {
             var data = JSON.parse(http.responseText);
-            var elm;
-
-            if ("elements" in data) {
-                for (var id in data["elements"]) {
-                    if (!data["elements"].hasOwnProperty(id)) {
-                        continue;
-                    }
-                    var text = data["elements"][id];
-                    elm = document.getElementById(id);
-                    if (!elm) {
-                        continue;
-                    }
-                    if (elm.tagName.toLowerCase() === "input") {
-                        elm.value = text;
-                    } else {
-                        elm.innerText = text;
-                    }
-                    if ("createEvent" in document) {
-                        var evt = document.createEvent("HTMLEvents");
-                        evt.initEvent("change", false, true);
-                        elm.dispatchEvent(evt);
-                    } else {
-                        elm.fireEvent("onchange");
-                    }
-                }
-            }
-
-            getMessageHandle("success", "message", data);
-            getMessageHandle("error", "error", data);
+            callback(data);
         }
     };
     http.open("GET", url);
     http.send();
+}
+
+function get(url) {
+    function get_callback(data) {
+        var elm;
+
+        if ("elements" in data) {
+            for (var id in data["elements"]) {
+                if (!data["elements"].hasOwnProperty(id)) {
+                    continue;
+                }
+                var text = data["elements"][id];
+                elm = document.getElementById(id);
+                if (!elm) {
+                    continue;
+                }
+                if (elm.tagName.toLowerCase() === "input") {
+                    elm.value = text;
+                } else {
+                    elm.innerText = text;
+                }
+                if ("createEvent" in document) {
+                    var evt = document.createEvent("HTMLEvents");
+                    evt.initEvent("change", false, true);
+                    elm.dispatchEvent(evt);
+                } else {
+                    elm.fireEvent("onchange");
+                }
+            }
+        }
+
+        getMessageHandle("success", "message", data);
+        getMessageHandle("error", "error", data);
+    }
+
+    get_raw(url, get_callback);
 }
 
 (function () {

@@ -16,7 +16,11 @@ def get_timed_events(controller: Controller) -> TimedEvents:
         player.play("you-will-be-found.mp3")
         player.sleep_till_done()
 
+    def stop_audio():
+        player.stop()
+
     events.add_run_callback(run_audio)
+    events.add_stop_callback(stop_audio)
 
     # Define some events
     bpm = 87

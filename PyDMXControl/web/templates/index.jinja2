@@ -67,6 +67,37 @@
         </article>
 
         <article>
+            <h2>Timed Events List</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Timed Event Name</th>
+                    <th>View</th>
+                    <th>Run</th>
+                    <th>Stop</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for name in timed_events.keys() %}
+                    <tr>
+                        <td data-th="Timed Event Name">
+                            {{ name }}</td>
+                        <td data-th="View">
+                            <a href="{{ url_for('.timed_event', te=name) }}" class="button">View</a>
+                        </td>
+                        <td data-th="Run">
+                            <a href="{{ url_for('.run_timed_event', te=name) }}" data-no-reload class="button">Run</a>
+                        </td>
+                        <td data-th="Stop">
+                            <a href="{{ url_for('.stop_timed_event', te=name) }}" data-no-reload class="button">Stop</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </article>
+
+        <article>
             <h2>Global Intensity</h2>
             <i>Will update all fixture dimmers on change.</i>
             <form id="intensity">
