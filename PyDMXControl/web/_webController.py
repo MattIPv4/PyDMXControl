@@ -9,12 +9,13 @@ import logging  # Logging
 from os import path  # OS Path
 from threading import Thread  # Threading
 from time import sleep  # Sleep
-from typing import Dict, Callable  # Typing
+from typing import Dict, Callable, List  # Typing
 
 from flask import Flask  # Flask
 
 from ._routes import routes  # Web Routes
-from ..utils.timing import DMXMINWAIT
+from .. import DMXMINWAIT  # General Timing
+from ..utils.timing import TimedEvents  # Timed Events
 
 # Set error only logging
 log = logging.getLogger('werkzeug')
@@ -24,8 +25,9 @@ log.setLevel(logging.ERROR)
 # WebController
 class WebController:
 
-    def __init__(self, controller: 'Controller', *, callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
-                 port: int = 8080):
+    def __init__(self, controller: 'Controller', *, callbacks: Dict[str, Callable] = None,
+                 timed_events: List[TimedEvents] = None,
+                 host: str = "0.0.0.0", port: int = 8080):
         # Setup flask
         self.__thread = None
         self.__host = host
@@ -44,6 +46,9 @@ class WebController:
         self.callbacks = {} if callbacks is None else callbacks
         self.__default_callbacks()
         self.__check_callbacks()
+
+        # Setup timed events
+        self.timed_events = [] if timed_events is None else timed_events
 
         # Setup template context
         @self.__app.context_processor

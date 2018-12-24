@@ -12,7 +12,7 @@ with contextlib.redirect_stdout(None):  # PyGame please shut up
     import pygame
 
 from ..utils.exceptions import AudioException
-from ..utils.timing import DMXMINWAIT
+from .. import DMXMINWAIT
 
 
 class Player:

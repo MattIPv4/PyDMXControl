@@ -15,25 +15,5 @@
  *   along with this program. If not, please see
  *   <https://github.com/MattIPv4/PyDMXControl/blob/master/LICENSE> or <http://www.gnu.org/licenses/>.
 """
-
-from collections import namedtuple
-
-from ._Colors import Colors
-
-# DMXMINWAIT = 0.000001 * 92
-DMXMINWAIT = 0.01  # Provides far smoother animation
-
-__title__ = 'PyDMXControl'
-__author__ = 'Matt Cowley (MattIPv4)'
-__maintainer__ = 'Matt Cowley (MattIPv4)'
-__email__ = 'me@mattcowley.co.uk'
-__license__ = 'GPLv3'
-__copyright__ = 'Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)'
-__version__ = '1.6.0'
-__status__ = 'Production'
-
-name = "PyDMXControl"
-
-VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
-
-version_info = VersionInfo(major=1, minor=6, micro=0, releaselevel='final', serial=0)
+from ._Ticker import Ticker
+from ._TimedEvents import TimedEvents
