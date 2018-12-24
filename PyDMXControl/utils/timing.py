@@ -105,6 +105,7 @@ class TimedEvents:
         self.__events = {}
         self.__running = False
         self.__messages = debug_messages
+        self.__run_cbs = []
 
     def __run(self, start_millis):
         # Don't allow to run more that once simultaneously
@@ -127,10 +128,10 @@ class TimedEvents:
             for timestamp, event in events_left.copy().items():
                 # Look into the past so we don't ever miss any
                 if timestamp <= (time() * 1000.0) - start:
-                    event[0](*event[1], **event[2])  # Run
+                    event[0](*event[1])  # Run
                     if self.__messages:  # Debug if needed
-                        print("Event {} fired at timestamp {}ms: {}".format(
-                            timestamp, (time() * 1000.0) - start, event[0]))
+                        print("Event {} (\"{}\") fired at timestamp {}ms: {}".format(
+                            timestamp, event[2], (time() * 1000.0) - start, event[0]))
                     del events_left[timestamp]  # Remove - we're done with it
             sleep(0.000001)
 
@@ -144,6 +145,11 @@ class TimedEvents:
         thread.daemon = True
         thread.start()
 
+        for cb in self.__run_cbs:
+            thread = Thread(target=cb)
+            thread.daemon = True
+            thread.start()
+
     def stop(self):
         self.__running = False
 
@@ -151,16 +157,22 @@ class TimedEvents:
         self.__messages = not self.__messages
         return self.__messages
 
-    def add_event(self, milliseconds_in: int, callback: callable, *args, **kwargs):
+    def add_event(self, milliseconds_in: int, callback: callable, *args, name: str = ""):
         milliseconds_in = int(milliseconds_in)
         if milliseconds_in in self.__events:
             raise EventAlreadyExistsException(milliseconds_in)
-        self.__events[milliseconds_in] = [callback, args, kwargs]
+        self.__events[milliseconds_in] = [callback, args, name]
 
     def remove_event(self, milliseconds_in: int):
         milliseconds_in = int(milliseconds_in)
         if milliseconds_in in self.__events:
             del self.__events[milliseconds_in]
+
+    def add_run_callback(self, callback: callable):
+        self.__run_cbs.append(callback)
+
+    def clear_run_callbacks(self):
+        self.__run_cbs = []
 
     def sleep_till_done(self):
         # Hold until all events completed
