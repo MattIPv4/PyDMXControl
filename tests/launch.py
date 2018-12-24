@@ -19,9 +19,7 @@ class ExtendedEnvBuilder(venv.EnvBuilder):
             pip = "./venv/Scripts/pip.exe"
         else:
             pip = "./venv/bin/pip"
-        with open("requirements.txt", "r") as f:
-            requirements = f.readlines()
-        proc = Popen([pip, "install"] + requirements)
+        proc = Popen([pip, "install", "-Ue", "../[audio]"])
         proc.communicate()
 
 
@@ -33,8 +31,8 @@ def run():
     else:
         path = "./venv/bin/python3"
 
-    print("\n\nSpawning: {} tests/{}\n\n".format(os.path.abspath(path), sys.argv[1]))
-    proc = Popen([os.path.abspath(path), "tests/{}".format(sys.argv[1])],
+    print("\n\nSpawning: {} {}\n\n".format(os.path.abspath(path), sys.argv[1]))
+    proc = Popen([os.path.abspath(path), "{}".format(sys.argv[1])],
                  cwd=os.getcwd(), env=env)
 
     proc.communicate()
