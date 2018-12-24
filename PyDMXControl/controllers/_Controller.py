@@ -12,10 +12,10 @@ from typing import Type, List, Union, Dict, Tuple, Callable
 from warnings import warn
 
 from .utils.debug import Debugger
-from .. import Colors, name
+from .. import Colors, name, DMXMINWAIT
 from ..profiles.defaults import Fixture_Channel, Fixture
 from ..utils.exceptions import JSONConfigLoadException, LTPCollisionException
-from ..utils.timing import DMXMINWAIT, Ticker
+from ..utils.timing import Ticker
 from ..web import WebController
 
 

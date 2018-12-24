@@ -14,7 +14,8 @@ from typing import Dict, Callable  # Typing
 from flask import Flask  # Flask
 
 from ._routes import routes  # Web Routes
-from ..utils.timing import DMXMINWAIT
+from .. import DMXMINWAIT  # General Timing
+from ..utils.timing import TimedEvents  # Timed Events
 
 # Set error only logging
 log = logging.getLogger('werkzeug')
@@ -24,8 +25,11 @@ log.setLevel(logging.ERROR)
 # WebController
 class WebController:
 
-    def __init__(self, controller: 'Controller', *, callbacks: Dict[str, Callable] = None, host: str = "0.0.0.0",
-                 port: int = 8080):
+    def __init__(self, controller: 'Controller', *,
+                 callbacks: Dict[str, Callable] = None,
+                 timed_events: Dict[str, TimedEvents] = None,
+                 host: str = "0.0.0.0", port: int = 8080):
+
         # Setup flask
         self.__thread = None
         self.__host = host
@@ -45,10 +49,13 @@ class WebController:
         self.__default_callbacks()
         self.__check_callbacks()
 
+        # Setup timed events
+        self.timed_events = {} if timed_events is None else timed_events
+
         # Setup template context
         @self.__app.context_processor
         def variables() -> dict:  # pylint: disable=unused-variable
-            return dict({"controller": self.controller, "callbacks": self.callbacks,
+            return dict({"controller": self.controller, "callbacks": self.callbacks, "timed_events": self.timed_events,
                          "web_resource": WebController.web_resource},
                         **dict(globals(), **builtins.__dict__))  # Dictionary stacking to concat
 

@@ -170,3 +170,43 @@ def callback(cb: str):
     except Exception:
         return jsonify({"error": "Callback {} failed to execute".format(cb)}), 500
     return jsonify({"message": "Callback {} executed".format(cb)}), 200
+
+
+# Timed Events
+@routes.route('timed_event/<string:te>', methods=['GET'])
+def timed_event(te: str):
+    if te not in current_app.parent.timed_events.keys():
+        return redirect(url_for('.home'))
+    return render_template("timed_event.jinja2", te=te)
+
+
+# Timed Events Data
+@routes.route('timed_event/<string:te>/data', methods=['GET'])
+def timed_event_data(te: str):
+    if te not in current_app.parent.timed_events.keys():
+        return jsonify({"error": "Timed Event {} not found".format(te)}), 404
+    return jsonify({"data": current_app.parent.timed_events[te].data}), 200
+
+
+# Timed Events Run
+@routes.route('timed_event/<string:te>/run', methods=['GET'])
+def run_timed_event(te: str):
+    if te not in current_app.parent.timed_events.keys():
+        return jsonify({"error": "Timed Event {} not found".format(te)}), 404
+    try:
+        current_app.parent.timed_events[te].run()
+    except Exception:
+        return jsonify({"error": "Timed Event {} failed to fire".format(te)}), 500
+    return jsonify({"message": "Timed Event {} fired".format(te)}), 200
+
+
+# Timed Events Stop
+@routes.route('timed_event/<string:te>/stop', methods=['GET'])
+def stop_timed_event(te: str):
+    if te not in current_app.parent.timed_events.keys():
+        return jsonify({"error": "Timed Event {} not found".format(te)}), 404
+    try:
+        current_app.parent.timed_events[te].stop()
+    except Exception:
+        return jsonify({"error": "Timed Event {} failed to stop".format(te)}), 500
+    return jsonify({"message": "Timed Event {} stopped".format(te)}), 200
