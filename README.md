@@ -33,7 +33,7 @@
 
 ----
 
-# A Python 3 module to control DMX in Python using uDMX.
+# A Python 3 module to control DMX using uDMX.
 
 **Featuring fixture profiles, built-in effects and a web control panel.**
 

@@ -1,5 +1,6 @@
 """
- *  PyDMXControl: A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.
+ *  PyDMXControl: A Python 3 module to control DMX using uDMX.
+ *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  *
@@ -48,7 +49,8 @@ setup(
     extras_require={
         "audio": fetch_reqs("audio")
     },
-    description="A Python 3 module to control DMX via Python. Featuring fixture profiles and working with uDMX.",
+    description="A Python 3 module to control DMX using uDMX."
+                " Featuring fixture profiles, built-in effects and a web control panel.",
     long_description=readme,
     long_description_content_type="text/markdown",
     keywords="lighting light lights "
