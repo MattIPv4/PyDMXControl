@@ -41,8 +41,17 @@ class Screen:
     def __events(self):
         for e in pygame.event.get():
             if e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_g:
-                    self.__grid = not self.__grid
+                # if e.key == pygame.K_g:
+                #    self.__grid = not self.__grid
+                if e.key == pygame.K_q:
+                    self.__running = False
+                if e.key == pygame.K_s:
+                    if self.parts_render:
+                        file = "{}/PYDMXControl_Design_{}.png".format(
+                            os.path.expanduser("~/Desktop"),
+                            datetime.now().strftime("%Y%m%d_%H%M%S")
+                        )
+                        pygame.image.save(self.parts_render, file)
 
     def __draw_parts(self):
         # Get render of each
