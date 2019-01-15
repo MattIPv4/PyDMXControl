@@ -1,5 +1,6 @@
 .idea/
 tests/venv/
+tests/sandbox.py
 PyDMXControl.egg-info/
 build/
 dist/

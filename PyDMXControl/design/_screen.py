@@ -59,8 +59,8 @@ class Screen:
         for part in self.__parts:
             try:
                 parts.append(part.design_render(self))
-            except:
-                pass
+            except Exception as e:
+                print(e)
 
         # Generate size
         maxx = max([f[0] + f[2].get_width() for f in parts])
