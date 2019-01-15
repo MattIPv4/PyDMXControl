@@ -18,10 +18,10 @@ from .._screen import Screen
 
 class Fixture(Part):
 
-    def __init__(self, x: int, y: int, name: str = "", rotation: int = 0, *,
+    def __init__(self, x: Union[int, float], y: Union[int, float], name: str = "", rotation: Union[int, float] = 0, *,
                  outline_color: Union[List[int], Tuple[int]] = (0, 0, 0),
                  fill_color: Union[List[int], Tuple[int]] = (255, 255, 255),
-                 label: str = "", scale: float = 1):
+                 label: str = "", scale: float = 1, align_left: bool = False):
         super().__init__()
         self.__rotation = rotation
         self.__name = name
@@ -31,6 +31,7 @@ class Fixture(Part):
         self.__label = Text(0, 0, label, scale=scale) if label else None
         self.__scale = scale
         self.__size = 0.08 * self.__scale
+        self.__left = align_left
         self.set_pos(x, y)
 
     def design_render(self, screen: Screen) -> Tuple[int, int, pygame.Surface]:
@@ -79,12 +80,14 @@ class Fixture(Part):
         int(x * self.__size * screen.block_size), int(y * self.__size * screen.block_size)))
 
         # Rotate
-        surface = pygame.transform.rotate(surface, self.__rotation)
+        surface = pygame.transform.rotate(surface, int(self.__rotation))
 
         # Calc pos
         x, y = surface.get_size()
         x = int((self._x * screen.block_size) - floor(x / 2))
         y = int((self._y * screen.block_size) - floor(y / 2))
+        if self.__left:
+            x = int(self._x * screen.block_size)
 
         # Text label
         if self.__label is not None:

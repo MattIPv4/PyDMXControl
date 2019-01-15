@@ -15,14 +15,16 @@ from ._Part import Part
 
 class Text(Part):
 
-    def __init__(self, x: int, y: int, text: str, *,
-                 scale: float = 1, color: Union[List[int], Tuple[int]] = (0, 0, 0),
-                 background_color: Union[List[int], Tuple[int], None] = (255, 255, 255, 190)):
+    def __init__(self, x: Union[int, float], y: Union[int, float], text: str, *,
+                 scale: Union[int, float] = 1, color: Union[List[int], Tuple[int]] = (0, 0, 0),
+                 background_color: Union[List[int], Tuple[int], None] = (255, 255, 255, 190),
+                 align_left: bool = False):
         super().__init__()
         self.__text = text
         self.__scale = scale
         self.__color = color
         self.__bg_color = background_color
+        self.__left = align_left
         self.__font = pygame.font.SysFont("monospace", int(26 * self.__scale), bold=True)
         self.set_pos(x, y)
 
@@ -52,4 +54,6 @@ class Text(Part):
         x, y = surface.get_size()
         x = int((self._x * screen.block_size) - floor(x / 2))
         y = int((self._y * screen.block_size) - floor(y / 2))
+        if self.__left:
+            x = int(self._x * screen.block_size)
         return x, y, surface
