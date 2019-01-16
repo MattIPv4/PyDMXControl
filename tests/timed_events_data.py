@@ -2,7 +2,7 @@ from PyDMXControl import Colors
 from PyDMXControl.audio import player
 from PyDMXControl.controllers import Controller
 from PyDMXControl.effects.Color import Chase
-from PyDMXControl.profiles.Eyourlife import Small_Flat_Par
+from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
 from PyDMXControl.profiles.Stairville import LED_Par_36, LED_Par_10mm
 from PyDMXControl.utils.timing import TimedEvents
 
@@ -49,7 +49,7 @@ def get_timed_events(controller: Controller) -> TimedEvents:
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color(Colors.White, 5000)
 
-        for fixture in controller.get_fixtures_by_profile(Small_Flat_Par):
+        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
             fixture.color([0, 128, 255], 5000)
 
     def a93000():
@@ -59,7 +59,7 @@ def get_timed_events(controller: Controller) -> TimedEvents:
         for fixture in controller.get_fixtures_by_profile(LED_Par_36):
             fixture.color(Colors.White, 5000)
 
-        for fixture in controller.get_fixtures_by_profile(Small_Flat_Par):
+        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
             fixture.color(Colors.White, 5000)
 
     def a125000():
@@ -69,7 +69,7 @@ def get_timed_events(controller: Controller) -> TimedEvents:
         for fixture in controller.get_fixtures_by_profile(LED_Par_36):
             fixture.color(Colors.Black, 5000)
 
-        for fixture in controller.get_fixtures_by_profile(Small_Flat_Par):
+        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
             fixture.color(Colors.Black, 5000)
 
     def a138000():
@@ -89,7 +89,7 @@ def get_timed_events(controller: Controller) -> TimedEvents:
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color(Colors.Blue, 8000)
 
-        for fixture in controller.get_fixtures_by_profile(Small_Flat_Par):
+        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
             fixture.color(Colors.Blue, 8000)
 
     def a216000():

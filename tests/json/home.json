@@ -30,15 +30,17 @@
         "start_channel": 23
     },
     {
-        "type": "Eyourlife.Small_Flat_Par",
+        "type": "funGeneration.LED_Pot_12_RGBW",
         "args": [],
         "name": "F1 Desk Right",
+        "mode": 8,
         "start_channel": 28
     },
     {
-        "type": "Eyourlife.Small_Flat_Par",
+        "type": "funGeneration.LED_Pot_12_RGBW",
         "args": [],
         "name": "F2 Desk Left",
-        "start_channel": 34
+        "mode": 8,
+        "start_channel": 36
     }
 ]
