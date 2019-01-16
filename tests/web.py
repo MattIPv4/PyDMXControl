@@ -1,6 +1,6 @@
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.effects.Intensity import Dim
-from PyDMXControl.profiles.Eyourlife import Small_Flat_Par
+from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
 from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
 dmx = Controller()
@@ -11,8 +11,8 @@ dmx.add_fixture(LED_Par_36)
 dmx.add_fixture(LED_Par_36)
 dmx.add_fixture(LED_Par_36)
 dmx.add_fixture(LED_Par_36)
-dmx.add_fixture(Small_Flat_Par)
-dmx.add_fixture(Small_Flat_Par)
+dmx.add_fixture(LED_Pot_12_RGBW)
+dmx.add_fixture(LED_Pot_12_RGBW)
 
 
 def strobe():

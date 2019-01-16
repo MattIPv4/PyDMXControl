@@ -4,7 +4,7 @@ from timed_events_data import get_timed_events
 
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
-from PyDMXControl.profiles.Eyourlife import Small_Flat_Par
+from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
 from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
 # This is my home setup, which also acts as a great demo of some of what this library is capable of doing.
@@ -24,37 +24,38 @@ dmx.add_fixture(LED_Par_36, name="S2 Board")
 dmx.add_fixture(LED_Par_36, name="S3 Art Right")
 dmx.add_fixture(LED_Par_36, name="S4 Books")
 
-dmx.add_fixture(Small_Flat_Par, name="F1 Desk Right")
-dmx.add_fixture(Small_Flat_Par, name="F2 Desk Left")
+dmx.add_fixture(LED_Pot_12_RGBW, name="F1 Desk Right")
+dmx.add_fixture(LED_Pot_12_RGBW, name="F2 Desk Left")
 """
 
 # Define all the methods the callback will use
-custom_blue = [0, 16, 255]
-custom_white = [255, 140, 70]
+custom_blue = [0, 16, 255, 0]
+custom_white = [140, 120, 120, 255]
+fade_time = 5000
 
 
 def normal():
     for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Warm, 10000)
+        f.color(Colors.Warm, fade_time)
 
     # Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 15 * 1000, colors=[Colors.Blue, Colors.Cyan])
     for f in dmx.get_fixtures_by_profile(LED_Par_36):
-        f.color(custom_blue, 10000)
+        f.color(custom_blue, fade_time)
 
-    for f in dmx.get_fixtures_by_profile(Small_Flat_Par):
-        f.color(custom_white, 10000)
+    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        f.color(custom_white, fade_time)
 
 
 def dimmer():
     for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Black, 10000)
+        f.color(Colors.Black, fade_time)
 
     # dmx.clear_all_effects()
     for f in dmx.get_fixtures_by_profile(LED_Par_36):
-        f.color(custom_blue, 10000)
+        f.color([int(f*0.5) for f in custom_blue], fade_time)
 
-    for f in dmx.get_fixtures_by_profile(Small_Flat_Par):
-        f.color(Colors.Warm, 10000)
+    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        f.color([int(f*0.75) for f in Colors.Warm], fade_time)
 
 
 # Timed lights
