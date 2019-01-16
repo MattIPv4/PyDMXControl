@@ -20,7 +20,7 @@ class Screen:
         self.__grid = False
         self.__parts = []
         self.__bg = (245, 245, 245)
-        self.block_size = 19
+        self.block_size = 21
 
         # Init pygame
         pygame.init()

@@ -25,7 +25,7 @@ class Text(Part):
         self.__color = color
         self.__bg_color = background_color
         self.__left = align_left
-        self.__font = pygame.font.SysFont("monospace", int(26 * self.__scale), bold=True)
+        self.__font = pygame.font.SysFont("monospace", int(24 * self.__scale), bold=True)
         self.set_pos(x, y)
 
     def design_render(self, screen: 'Screen') -> Tuple[int, int, pygame.Surface]:

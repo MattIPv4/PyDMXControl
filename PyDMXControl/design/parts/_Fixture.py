@@ -30,7 +30,7 @@ class Fixture(Part):
         self.__fill = fill_color
         self.__label = Text(0, 0, label, scale=scale) if label else None
         self.__scale = scale
-        self.__size = 0.08 * self.__scale
+        self.__size = 0.06 * self.__scale
         self.__left = align_left
         self.set_pos(x, y)
 
