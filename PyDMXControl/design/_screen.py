@@ -20,6 +20,7 @@ class Screen:
         self.__grid = False
         self.__parts = []
         self.__bg = (245, 245, 245)
+        self.__title = "PyDMXControl Design"
         self.block_size = 21
 
         # Init pygame
@@ -30,10 +31,11 @@ class Screen:
 
         # Create pygame screen
         display_info = pygame.display.Info()
-        self.parts_render = None
+        self.last_parts = None
         self.last_render = None
+        self.last_out = None
         self.screen = pygame.display.set_mode((display_info.current_w - 20, display_info.current_h - 70))
-        pygame.display.set_caption("PyDMXControl Design")
+        pygame.display.set_caption(self.__title)
 
     def add_part(self, part: 'Part'):
         self.__parts.append(part)
@@ -46,12 +48,19 @@ class Screen:
                 if e.key == pygame.K_q:
                     self.__running = False
                 if e.key == pygame.K_s:
-                    if self.parts_render:
+                    if self.last_parts:
+                        surface = self.last_parts
+                        if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                            temp_surface = pygame.Surface(surface.get_size(), pygame.SRCALPHA, 32)
+                            temp_surface.convert_alpha()
+                            temp_surface.fill(self.__bg)
+                            temp_surface.blit(surface, (0, 0))
+                            surface = temp_surface
                         file = "{}/PYDMXControl_Design_{}.png".format(
                             os.path.expanduser("~/Desktop"),
                             datetime.now().strftime("%Y%m%d_%H%M%S")
                         )
-                        pygame.image.save(self.parts_render, file)
+                        pygame.image.save(surface, file)
 
     def __draw_parts(self):
         # Get render of each
@@ -73,11 +82,11 @@ class Screen:
             surface.blit(part[2], (part[0], part[1]))
 
         # Save full res
-        self.parts_render = surface
+        self.last_parts = surface
 
     def __draw_bg(self):
         # New surface
-        sx, sy = self.parts_render.get_size()
+        sx, sy = self.last_parts.get_size()
         surface = pygame.Surface((sx, sy), pygame.SRCALPHA, 32)
         surface.convert_alpha()
         surface.fill(self.__bg)
@@ -95,7 +104,7 @@ class Screen:
                     pygame.draw.rect(surface, color, rect)
 
         # Add parts
-        surface.blit(self.parts_render, (0, 0))
+        surface.blit(self.last_parts, (0, 0))
 
         # Save full res
         self.last_render = surface
@@ -128,46 +137,52 @@ class Screen:
         # Render
         self.screen.blit(surface, (mx, my - y))
 
-    def __draw(self):
-        # Draw parts
-        self.__draw_parts()
+    def __draw(self, redraw: int) -> int:
+        # Only regenerate content every 100 cycles
+        if redraw % 100 == 0:
+            # Draw parts
+            self.__draw_parts()
 
-        # Draw base
-        self.__draw_bg()
+            # Draw base
+            self.__draw_bg()
 
-        # Draw mouse
-        # self.__draw_mouse()
+            # Draw mouse
+            # self.__draw_mouse()
 
-        # Resize if bigger than screen
-        mx, my = self.last_render.get_size()
-        sx, sy = self.screen.get_size()
-        if mx > sx:
-            my = my * (sx / mx)
-            mx = sx
-        if my > sy:
-            mx = mx * (sy / my)
-            my = sy
-        surface = pygame.transform.scale(self.last_render, (floor(mx), floor(my)))
+            # Resize if bigger than screen
+            mx, my = self.last_render.get_size()
+            sx, sy = self.screen.get_size()
+            if mx > sx:
+                my = my * (sx / mx)
+                mx = sx
+            if my > sy:
+                mx = mx * (sy / my)
+                my = sy
+            self.last_out = pygame.transform.scale(self.last_render, (floor(mx), floor(my)))
+
+            # Reset redraw
+            redraw = -1
 
         # Render
         self.screen.fill(self.__bg)
-        self.screen.blit(surface, (0, 0))
+        self.screen.blit(self.last_out, (0, 0))
+
+        return redraw
 
     def __start(self):
         self.clock = pygame.time.Clock()
 
         # Draw to screen
-        self.__draw()
-        redraw = 0
+        redraw = self.__draw(0) + 1
 
         while self.__running:
             # Handle events
             self.__events()
 
             # Draw to screen (every 10 cycles)
-            if redraw == 10:
-                redraw = 0
-                self.__draw()
+            if redraw % 10 == 0:
+                pygame.display.set_caption(self.__title)
+                redraw = self.__draw(redraw)
             redraw += 1
 
             # Update display
