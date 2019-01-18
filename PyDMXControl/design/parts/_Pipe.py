@@ -16,7 +16,7 @@ from ._Part import Part
 class Pipe(Part):
 
     def __init__(self, size: Union[int, float], x: Union[int, float], y: Union[int, float],
-                 rotation: Union[int, float] = 0, *, color: Union[List[int], Tuple[int]] = (90, 90, 90)):
+                 rotation: Union[int, float] = 0, *, color: Union[List[int], Tuple[int]] = (80, 80, 80)):
         super().__init__()
         self.__rotation = rotation
         self.__length = size
