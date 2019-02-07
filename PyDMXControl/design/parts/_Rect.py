@@ -16,8 +16,8 @@ from ._Part import Part
 class Rect(Part):
 
     def __init__(self, width: Union[int, float], height: Union[int, float], x: Union[int, float], y: Union[int, float],
-                 *, outline_color: Union[List[int], Tuple[int]] = (255, 0, 0),
-                 fill_color: Union[List[int], Tuple[int]] = (255, 0, 0, int(255 * 0.1)), ):
+                 *, outline_color: Union[List[int], Tuple[int, int, int]] = (255, 0, 0),
+                 fill_color: Union[List[int], Tuple[int, int, int]] = (255, 0, 0, int(255 * 0.1)), ):
         super().__init__()
         self.__width = width
         self.__height = height

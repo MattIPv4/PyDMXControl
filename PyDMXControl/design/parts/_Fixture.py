@@ -19,8 +19,8 @@ from .._screen import Screen
 class Fixture(Part):
 
     def __init__(self, x: Union[int, float], y: Union[int, float], name: str = "", rotation: Union[int, float] = 0, *,
-                 outline_color: Union[List[int], Tuple[int]] = (0, 0, 0),
-                 fill_color: Union[List[int], Tuple[int]] = (255, 255, 255),
+                 outline_color: Union[List[int], Tuple[int, int, int]] = (0, 0, 0),
+                 fill_color: Union[List[int], Tuple[int, int, int]] = (255, 255, 255),
                  label: str = "", scale: float = 1, align_left: bool = False):
         super().__init__()
         self.__rotation = rotation
@@ -77,7 +77,7 @@ class Fixture(Part):
         surface = pygame.transform.scale(surface, (x * screen.block_size, y * screen.block_size))"""
         x, y = surface.get_size()
         surface = pygame.transform.scale(surface, (
-        int(x * self.__size * screen.block_size), int(y * self.__size * screen.block_size)))
+            int(x * self.__size * screen.block_size), int(y * self.__size * screen.block_size)))
 
         # Rotate
         surface = pygame.transform.rotate(surface, int(self.__rotation))
@@ -97,10 +97,10 @@ class Fixture(Part):
             # Add to full
             tx, ty = text.get_size()
             fx, fy = surface.get_size()
-            new_surface = pygame.Surface((tx + fx + 3, max(ty, fy + ty / 2)), pygame.SRCALPHA, 32)
+            new_surface = pygame.Surface((max(fx, tx + fx * (3 / 4)), max(ty, fy + ty)), pygame.SRCALPHA, 32)
             new_surface = new_surface.convert_alpha()
             new_surface.blit(surface, (0, new_surface.get_height() - fy))
-            new_surface.blit(text, (fx + 3, 0))
+            new_surface.blit(text, (fx * (3 / 4), 0))
 
             # Update pos
             y -= (new_surface.get_height() - fy)

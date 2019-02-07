@@ -16,8 +16,8 @@ from ._Part import Part
 class Text(Part):
 
     def __init__(self, x: Union[int, float], y: Union[int, float], text: str, *,
-                 scale: Union[int, float] = 1, color: Union[List[int], Tuple[int]] = (0, 0, 0),
-                 background_color: Union[List[int], Tuple[int], None] = (255, 255, 255, int(255 * 0.95)),
+                 scale: Union[int, float] = 1, color: Union[List[int], Tuple[int, int, int]] = (0, 0, 0),
+                 background_color: Union[List[int], Tuple[int, int, int], None] = (255, 255, 255, int(255 * 0.95)),
                  align_left: bool = False):
         super().__init__()
         self.__text = text
