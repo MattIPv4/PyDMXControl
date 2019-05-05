@@ -1,7 +1,14 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl-500x60.png" alt="PyDMXControl" width="500"/>
-</p>
+<!-- Source: https://github.com/MattIPv4/template/blob/master/README.md -->
 
+<!-- Title -->
+<h1 align="center" id="PyDMXControl">
+    <img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl-500x60.png" alt="PyDMXControl" width="500"/>
+</h1>
+
+<!-- Tag line -->
+<h3 align="center">A Python 3 module to control DMX using uDMX - Featuring fixture profiles, built-in effects and a web control panel.</h3>
+
+<!-- Badges -->
 <p align="center">
     <a href="https://pypi.org/project/PyDMXControl/">
         <img src="https://img.shields.io/pypi/v/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="PyPi Version">
@@ -14,6 +21,9 @@
     </a>
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl">
         <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size">
+    </a>
+    <a href="http://slack.mattcowley.co.uk/" target="_blank">
+        <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?style=flat-square&colorB=4a89dc" alt="Slack">
     </a>
 </p>
 
@@ -29,14 +39,12 @@
     </a>
 </p>
 
+<!-- Custom Extra Logo -->
 <img src="https://raw.githubusercontent.com/MattIPv4/PyDMXControl/master/brand/PyDMXControl_icon-500x500.png" alt="PyDMXControl Icon" align="right" width="150"/>
 
 ----
 
-# A Python 3 module to control DMX using uDMX.
-
-**Featuring fixture profiles, built-in effects and a web control panel.**
-
+<!-- Content -->
 ## Installation
 
 Install via pip **(recommended)**
@@ -170,11 +178,28 @@ If someone wants to buy me an Enttec USB DMX Pro then I'll try make it work with
 Thank you to Dave Hocker, author of [pyudmx](https://github.com/dhocker/udmx-pyusb/), for his work on pyudmx and his
  advice via email in solving some of the issues making this library behave with uDMX.
 
+<!-- Contributing -->
+## Contributing
+
+Contributions are always welcome to this project!\
+Take a look at any existing issues on this repository for starting places to help contribute towards, or simply create your own new contribution to the project.
+
+Please make sure to follow the existing standards within the project such as code styles, naming conventions and commenting/documentation.
+
+When you are ready, simply create a pull request for your contribution and I will review it whenever I can!
+
+Need to chat about the project and how you can get involved?\
+Join the Slack workspace to find the appropriate channel, talk to other contributors and myself: [slack.mattcowley.co.uk](http://slack.mattcowley.co.uk)
+
+<!-- Discussion & Support -->
 ## Discussion, Support and Issues
 
-For general support and discussion of this project, please join the Discord lounge server:
- [discord.gg/qyXqA7y](https://discord.gg/qyXqA7y) \
-[![Discord Server](https://discordapp.com/api/guilds/204663881799303168/widget.png?style=banner2)](https://discord.gg/qyXqA7y)
+Need support with this project or have found an issue?
+> Please check the project's issues page first!
 
-To check known bugs and see planned changes and features for this project, please see the GitHub issues.\
-Found a bug we don't already have an issue for? Please report it in a new GitHub issue with as much detail as you can!
+Not found what you need?
+* Create a GitHub issue here to report the situation, as much detail as you can!
+* _or,_ You can join our Slack workspace to discuss the issue or to get support for the project:
+<a href="http://slack.mattcowley.co.uk/" target="_blank">
+    <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?logo=slack&logoWidth=30&logoColor=blue&style=popout-square" alt="Slack" height="60">
+</a>
