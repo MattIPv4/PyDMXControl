@@ -53,7 +53,7 @@ def dimmer():
     for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
         f.color(Colors.Black, fade_time)
 
-    # dmx.clear_all_effects()
+    dmx.clear_all_effects()
     for f in dmx.get_fixtures_by_profile(LED_Par_36):
         f.color([int(f * 0.5) for f in custom_blue], fade_time)
 
