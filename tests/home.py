@@ -4,8 +4,9 @@ from timed_events_data import get_timed_events
 
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
-from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
+from PyDMXControl.effects.Color import Color_Chase
 from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
+from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
 
 # This is my home setup, which also acts as a great demo of some of what this library is capable of doing.
 # See the tests directory for other recent/new features that I've possibly been working on.
@@ -30,6 +31,7 @@ dmx.add_fixture(LED_Pot_12_RGBW, name="F2 Desk Left")
 
 # Define all the methods the callback will use
 custom_blue = [0, 16, 255, 0]
+custom_cyan = [0, 128, 255, 0]
 custom_white = [140, 120, 120, 255]
 fade_time = 5000
 
@@ -38,9 +40,10 @@ def normal():
     for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
         f.color(Colors.Warm, fade_time)
 
-    # Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 15 * 1000, colors=[Colors.Blue, Colors.Cyan])
-    for f in dmx.get_fixtures_by_profile(LED_Par_36):
-        f.color(custom_blue, fade_time)
+    Color_Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 60 * 1000,
+                            colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
+    # for f in dmx.get_fixtures_by_profile(LED_Par_36):
+    # f.color(custom_blue, fade_time)
 
     for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
         f.color(custom_white, fade_time)
@@ -52,21 +55,21 @@ def dimmer():
 
     # dmx.clear_all_effects()
     for f in dmx.get_fixtures_by_profile(LED_Par_36):
-        f.color([int(f*0.5) for f in custom_blue], fade_time)
+        f.color([int(f * 0.5) for f in custom_blue], fade_time)
 
     for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
-        f.color([int(f*0.75) for f in Colors.Warm], fade_time)
+        f.color([int(f * 0.75) for f in Colors.Warm], fade_time)
 
 
 # Timed lights
 last_state = None
 last_state_type = None
 times = [
-    [(700, 740), (1600, 2200)],  # Monday
-    [(700, 740), (1600, 2200)],  # Tuesday
-    [(700, 740), (1330, 2200)],  # Wednesday
-    [(700, 740), (1600, 2200)],  # Thursday
-    [(700, 740), (1330, 2200)],  # Friday
+    [(800, 2200)],  # Monday
+    [(800, 2200)],  # Tuesday
+    [(800, 2200)],  # Wednesday
+    [(800, 2200)],  # Thursday
+    [(800, 2200)],  # Friday
     [(800, 2200)],  # Saturday
     [(800, 2200)],  # Sunday
 ]
@@ -83,7 +86,7 @@ def callback():
     # Check if current time is within limits
     in_range = False
     for time_range in time_limit:
-        if time_range[0] <= time <= time_range[1]:
+        if time_range[0] <= time < time_range[1]:
             in_range = True
 
     # On if within limits else off
@@ -97,7 +100,7 @@ def callback():
             last_state = 0
 
     # Dim the lights before/after certain times
-    if time >= 2100 or time <= 715:
+    if time >= 2100 or time <= 830:
         if last_state_type != 1:
             dimmer()
             last_state_type = 1
@@ -117,7 +120,7 @@ callbacks = {
     "dimmer": dimmer
 }
 dmx.web_control(callbacks=callbacks, timed_events={
-        "you-will-be-found": get_timed_events(dmx)
+    "you-will-be-found": get_timed_events(dmx)
 })
 # dmx.debug_control(callbacks)
 
