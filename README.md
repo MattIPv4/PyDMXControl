@@ -22,8 +22,11 @@
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl">
         <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size">
     </a>
+    <a href="http://patreon.mattcowley.co.uk/" target="_blank">
+        <img src="https://img.shields.io/badge/patreon-IPv4-blue.svg?style=flat-square&colorB=4a89dc" alt="Patreon"/>
+    </a>
     <a href="http://slack.mattcowley.co.uk/" target="_blank">
-        <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?style=flat-square&colorB=4a89dc" alt="Slack">
+        <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?style=flat-square&colorB=4a89dc" alt="Slack"/>
     </a>
 </p>
 
@@ -188,18 +191,27 @@ Please make sure to follow the existing standards within the project such as cod
 
 When you are ready, simply create a pull request for your contribution and I will review it whenever I can!
 
-Need to chat about the project and how you can get involved?\
-Join the Slack workspace to find the appropriate channel, talk to other contributors and myself: [slack.mattcowley.co.uk](http://slack.mattcowley.co.uk)
+### Donating
+
+You can also help me and the project out by contributing through a donation on PayPal or by supporting me monthly on my Patreon page.
+<p>
+    <a href="http://patreon.mattcowley.co.uk/" target="_blank">
+        <img src="https://img.shields.io/badge/patreon-IPv4-blue.svg?logo=patreon&logoWidth=30&logoColor=F96854&style=popout-square" alt="Patreon"/>
+    </a>
+    <a href="http://paypal.mattcowley.co.uk/" target="_blank">
+        <img src="https://img.shields.io/badge/paypal-Matt%20(IPv4)%20Cowley-blue.svg?logo=paypal&logoWidth=30&logoColor=00457C&style=popout-square" alt="PayPal"/>
+    </a>
+</p>
 
 <!-- Discussion & Support -->
 ## Discussion, Support and Issues
 
-Need support with this project or have found an issue?
-> Please check the project's issues page first!
+Need support with this project, have found an issue or want to chat with others about contributing to the project?
+> Please check the project's issues page first for support & bugs!
 
-Not found what you need?
-* Create a GitHub issue here to report the situation, as much detail as you can!
-* _or,_ You can join our Slack workspace to discuss the issue or to get support for the project:
+Not found what you need here?
+* If you have an issue, please create a GitHub issue here to report the situation, include as much detail as you can!
+* _or,_ You can join our Slack workspace to discuss any issue, to get support for the project or to chat with contributors and myself:
 <a href="http://slack.mattcowley.co.uk/" target="_blank">
     <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?logo=slack&logoWidth=30&logoColor=blue&style=popout-square" alt="Slack" height="60">
 </a>
