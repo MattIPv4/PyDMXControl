@@ -49,6 +49,27 @@
             </table>
         </article>
 
+        <article>
+            <h2>Function Inspector</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Arguments</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="function"></td>
+                    <td id="arguments"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="source"></td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
     </section>
 {% endblock body %}
 
@@ -79,6 +100,17 @@
         }
 
         toggleTimeDetail();
+
+        function inspect(data) {
+            document.getElementById("function").innerText = data["func"];
+            document.getElementById("arguments").innerText = data["args"];
+            var pre = document.createElement("pre");
+            var code = document.createElement("code");
+            code.innerText = data["source"];
+            pre.appendChild(code);
+            document.getElementById("source").innerHTML = "";
+            document.getElementById("source").appendChild(pre);
+        }
 
         function create_elms(data) {
             setTimeout(do_update, 100);
@@ -130,6 +162,9 @@
                 var func = document.createElement("td");
                 func.setAttribute("data-th", "Function");
                 func.innerText = data["events"][event]["func"];
+                func.style.cursor = "pointer";
+                func.style.userSelect = "none";
+                func.addEventListener("click", inspect.bind(null, data["events"][event]));
                 tr.appendChild(func);
 
                 var args = document.createElement("td");

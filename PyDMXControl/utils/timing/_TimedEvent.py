@@ -5,6 +5,7 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+from inspect import getsource
 from time import time
 from typing import Dict, Union
 
@@ -35,6 +36,10 @@ class TimedEvent:
         return "[{}]".format(", ".join(["{}".format(f) for f in self.__args]))
 
     @property
+    def source(self) -> str:
+        return getsource(self.__cb)
+
+    @property
     def fired(self) -> str:
         if self.__fired is None:
             return ""
@@ -48,6 +53,7 @@ class TimedEvent:
             "name": self.name,
             "func": self.func,
             "args": self.args,
+            "source": self.source,
             "fired": self.fired,
             "fired_raw": None if self.__fired is None else self.__fired,
             "fired_late_raw": None if self.__fired is None else self.__fired - self.__time
