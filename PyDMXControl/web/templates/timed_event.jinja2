@@ -24,6 +24,11 @@
                 <div class="button-group">
                     <span id="progress" class="button"></span>
                 </div>
+                <p>Timing Detail</p>
+                <div class="button-group">
+                    <a href="javascript:toggleTimeDetail()" class="button">Toggle Time Detail</a>
+                    <span class="button">Precision: <span id="time-detail"></span>dp</span>
+                </div>
             </div>
         </article>
 
@@ -49,18 +54,37 @@
 
 {% block script %}
     <script>
+        var decimals = null;
+
         function numberWithCommas(x) {
-            x = parseFloat(x.toFixed(4));
+            x = parseFloat(x.toFixed(decimals));
             var parts = x.toString().split(".");
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             return parts.join(".");
         }
 
+        function formatNumber(x) {
+            return numberWithCommas(x / 1000) + "s";
+        }
+
+        function toggleTimeDetail() {
+            var detailed = 6;
+            var normal = 1;
+            if (decimals === normal) {
+                decimals = detailed;
+            } else {
+                decimals = normal;
+            }
+            document.getElementById("time-detail").innerText = decimals.toString();
+        }
+
+        toggleTimeDetail();
+
         function create_elms(data) {
             setTimeout(do_update, 100);
             if (!"data" in data) return;
             data = data["data"];
-            document.getElementById("progress").innerText = data["progress"];
+            document.getElementById("progress").innerText = formatNumber(data["progress_raw"]);
             document.getElementById("table").innerHTML = "";
             var lastFired = true;
             var previousTime = 0;
@@ -72,7 +96,7 @@
 
                 var time = document.createElement("td");
                 time.setAttribute("data-th", "Target Time");
-                time.innerText = data["events"][event]["time"];
+                time.innerText = formatNumber(data["events"][event]["time_raw"]);
                 tr.appendChild(time);
 
                 var name = document.createElement("td");
@@ -82,7 +106,7 @@
 
                 var fired = document.createElement("td");
                 fired.setAttribute("data-th", "Fired");
-                fired.innerText = data["events"][event]["fired"];
+                fired.innerText = data["events"][event]["fired_raw"] == null ? "" : formatNumber(data["events"][event]["fired_raw"]) + " (" + formatNumber(data["events"][event]["fired_late_raw"]) + " late)";
                 if (data["events"][event]["fired"]) {
                     tr.classList.add("darker");
                     previousTime = data["events"][event]["time_raw"];
@@ -91,7 +115,7 @@
                     tr.classList.add("highlight");
                     if (data["events"][event]["time_raw"]) {
                         var time_until = data["events"][event]["time_raw"] - data["progress_raw"];
-                        fired.innerText = "-" + numberWithCommas(time_until) + "ms";
+                        fired.innerText = formatNumber(-time_until);
                         fired.style.borderLeft = "2px solid #57f";
                         fired.style.borderRight = "2px solid #57f";
                         fired.style.backgroundPosition = "left center";
