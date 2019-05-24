@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  */
 function getRaw(url, callback) {
     var http = new XMLHttpRequest();
@@ -36,25 +36,28 @@ function getMessageHandle(idBase, dataBase, data) {
     }
 }
 
+function getElementHandle(id, val) {
+    var elm = document.getElementById(id);
+    if (elm.tagName.toLowerCase() === "input") {
+        elm.value = val;
+    } else {
+        elm.innerText = val;
+    }
+    if ("createEvent" in document) {
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("change", false, true);
+        elm.dispatchEvent(evt);
+    } else {
+        elm.fireEvent("onchange");
+    }
+}
+
 function getElementsHandle(data) {
-    var elm;
     for (var id in data) {
         if (!data.hasOwnProperty(id) || !document.getElementById(id)) {
             continue;
         }
-        elm = document.getElementById(id);
-        if (elm.tagName.toLowerCase() === "input") {
-            elm.value = data[id];
-        } else {
-            elm.innerText = data[id];
-        }
-        if ("createEvent" in document) {
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("change", false, true);
-            elm.dispatchEvent(evt);
-        } else {
-            elm.fireEvent("onchange");
-        }
+        getElementHandle(id, data[id]);
     }
 }
 
