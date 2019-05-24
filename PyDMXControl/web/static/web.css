@@ -4,13 +4,14 @@
  *  <https://github.com/MattIPv4/PyDMXControl/>
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  */
+@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap');
+
 html, body {
     padding: 0;
     margin: 0;
     background: #222;
     color: #eee;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -111,6 +112,11 @@ a:hover, a:focus {
 .button-group {
     display: block;
     margin: .5em;
+}
+
+code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 80%;
 }
 
 /* Alerts */
