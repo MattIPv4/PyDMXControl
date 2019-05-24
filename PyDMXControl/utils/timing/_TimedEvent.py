@@ -6,7 +6,7 @@
 """
 
 from time import time
-from typing import Dict
+from typing import Dict, Union
 
 
 class TimedEvent:
@@ -41,14 +41,16 @@ class TimedEvent:
         return "{:,.4f}ms ({:,.4f}ms late)".format(self.__fired, self.__fired - self.__time)
 
     @property
-    def data(self) -> Dict[str, str]:
+    def data(self) -> Dict[str, Union[None, str, float, int]]:
         return {
             "time": self.time,
             "time_raw": self.__time,
             "name": self.name,
             "func": self.func,
             "args": self.args,
-            "fired": self.fired
+            "fired": self.fired,
+            "fired_raw": None if self.__fired is None else self.__fired,
+            "fired_late_raw": None if self.__fired is None else self.__fired - self.__time
         }
 
     def __str__(self) -> str:
