@@ -198,7 +198,7 @@ def run_timed_event(te: str):
         current_app.parent.timed_events[te].run()
     except Exception:
         return jsonify({"error": "Timed Event {} failed to fire".format(te)}), 500
-    return jsonify({"message": "Timed Event {} fired".format(te)}), 200
+    return jsonify({"message": "Timed Event {} fired".format(te), "elements": {te + "-state": "Running"}}), 200
 
 
 # Timed Events Stop
@@ -210,4 +210,4 @@ def stop_timed_event(te: str):
         current_app.parent.timed_events[te].stop()
     except Exception:
         return jsonify({"error": "Timed Event {} failed to stop".format(te)}), 500
-    return jsonify({"message": "Timed Event {} stopped".format(te)}), 200
+    return jsonify({"message": "Timed Event {} stopped".format(te), "elements": {te + "-state": "Stopped"}}), 200

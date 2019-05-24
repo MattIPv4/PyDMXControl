@@ -122,6 +122,10 @@ class TimedEvents:
             "progress_raw": self.progress
         }
 
+    @property
+    def running(self) -> bool:
+        return self.__started is not None
+
     def sleep_till_done(self):
         # Hold until all events completed
         while self.__running:
