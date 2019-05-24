@@ -41,7 +41,6 @@
                     <th>Name</th>
                     <th>Fired</th>
                     <th>Function</th>
-                    <th>Arguments</th>
                 </tr>
                 </thead>
                 <tbody id="table">
@@ -166,11 +165,6 @@
                 func.style.userSelect = "none";
                 func.addEventListener("click", inspect.bind(null, data["events"][event]));
                 tr.appendChild(func);
-
-                var args = document.createElement("td");
-                args.setAttribute("data-th", "Arguments");
-                args.innerText = data["events"][event]["args"];
-                tr.appendChild(args);
 
                 document.getElementById("table").appendChild(tr);
             }
