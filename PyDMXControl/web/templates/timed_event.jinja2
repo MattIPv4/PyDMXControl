@@ -145,7 +145,7 @@
                 fired.setAttribute("data-th", "Fired");
                 if (data["events"][event]["fired_raw"] !== null) {
                     fired.innerHTML = "at " + formatNumber(data["events"][event]["fired_raw"]);
-                    if (data["events"][event]["fired_late_raw"] / 1000 >= 1 / (Math.pow(10, decimals))) {
+                    if (parseFloat((data["events"][event]["fired_late_raw"] / 1000).toFixed(decimals)) >= 1 / (Math.pow(10, decimals))) {
                         fired.innerHTML += " (" + formatNumber(data["events"][event]["fired_late_raw"]) + " late)";
                     }
                     tr.classList.add("darker");
