@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  #}
 {% extends "base.jinja2" %}
 
@@ -74,23 +74,26 @@
                 <tr>
                     <th>Timed Events Name</th>
                     <th>View</th>
-                    <th>Run</th>
-                    <th>Stop</th>
+                    <th>Actions</th>
+                    <th>State</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for name in timed_events.keys() %}
+                {% for name, event in timed_events.items() %}
                     <tr>
                         <td data-th="Timed Events Name">
                             {{ name }}</td>
                         <td data-th="View">
                             <a href="{{ url_for('.timed_event', te=name) }}" class="button">View</a>
                         </td>
-                        <td data-th="Run">
+                        <td data-th="Actions">
                             <a href="{{ url_for('.run_timed_event', te=name) }}" data-no-reload class="button">Run</a>
-                        </td>
-                        <td data-th="Stop">
                             <a href="{{ url_for('.stop_timed_event', te=name) }}" data-no-reload class="button">Stop</a>
+                        </td>
+                        <td data-th="State">
+                            <span id="{{ name }}-state" class="button">
+                                {{ "Running" if event.running else "Stopped" }}
+                            </span>
                         </td>
                     </tr>
                 {% endfor %}

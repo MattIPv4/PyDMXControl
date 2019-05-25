@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  #}
 {% extends "base.jinja2" %}
 
@@ -24,6 +24,11 @@
                 <div class="button-group">
                     <span id="progress" class="button"></span>
                 </div>
+                <p>Timing Detail</p>
+                <div class="button-group">
+                    <a href="javascript:toggleTimeDetail()" class="button">Toggle Time Detail</a>
+                    <span class="button">Precision: <span id="time-detail"></span>dp</span>
+                </div>
             </div>
         </article>
 
@@ -36,10 +41,30 @@
                     <th>Name</th>
                     <th>Fired</th>
                     <th>Function</th>
-                    <th>Arguments</th>
                 </tr>
                 </thead>
                 <tbody id="table">
+                </tbody>
+            </table>
+        </article>
+
+        <article>
+            <h2>Function Inspector</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Arguments</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="function"></td>
+                    <td id="arguments"></td>
+                </tr>
+                <tr class="darker">
+                    <td colspan="2" id="source"></td>
+                </tr>
                 </tbody>
             </table>
         </article>
@@ -49,18 +74,54 @@
 
 {% block script %}
     <script>
-        function numberWithCommas(x) {
-            x = parseFloat(x.toFixed(4));
-            var parts = x.toString().split(".");
+        var decimals = null;
+
+        function numberWithCommas(number, trimZeros) {
+            var str = parseFloat(number).toFixed(decimals);
+            if (trimZeros) {
+                str = parseFloat(str).toString();
+            }
+            var parts = str.split(".");
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             return parts.join(".");
+        }
+
+        function formatNumber(number, trimZeros) {
+            if (typeof trimZeros == "undefined") {
+                trimZeros = true;
+            }
+            return "<code>" + numberWithCommas(number / 1000, trimZeros) + "s</code>";
+        }
+
+        function toggleTimeDetail() {
+            var detailed = 6;
+            var normal = 1;
+            if (decimals === normal) {
+                decimals = detailed;
+            } else {
+                decimals = normal;
+            }
+            document.getElementById("time-detail").innerText = decimals.toString();
+        }
+
+        toggleTimeDetail();
+
+        function inspect(data) {
+            document.getElementById("function").innerText = data["func"];
+            document.getElementById("arguments").innerText = data["args"];
+            var pre = document.createElement("pre");
+            var code = document.createElement("code");
+            code.innerText = data["source"];
+            pre.appendChild(code);
+            document.getElementById("source").innerHTML = "";
+            document.getElementById("source").appendChild(pre);
         }
 
         function create_elms(data) {
             setTimeout(do_update, 100);
             if (!"data" in data) return;
             data = data["data"];
-            document.getElementById("progress").innerText = data["progress"];
+            document.getElementById("progress").innerHTML = formatNumber(data["progress_raw"], false);
             document.getElementById("table").innerHTML = "";
             var lastFired = true;
             var previousTime = 0;
@@ -72,7 +133,7 @@
 
                 var time = document.createElement("td");
                 time.setAttribute("data-th", "Target Time");
-                time.innerText = data["events"][event]["time"];
+                time.innerHTML = formatNumber(data["events"][event]["time_raw"]);
                 tr.appendChild(time);
 
                 var name = document.createElement("td");
@@ -82,23 +143,29 @@
 
                 var fired = document.createElement("td");
                 fired.setAttribute("data-th", "Fired");
-                fired.innerText = data["events"][event]["fired"];
-                if (data["events"][event]["fired"]) {
+                if (data["events"][event]["fired_raw"] !== null) {
+                    fired.innerHTML = "at " + formatNumber(data["events"][event]["fired_raw"]);
+                    if (parseFloat((data["events"][event]["fired_late_raw"] / 1000).toFixed(decimals)) >= 1 / (Math.pow(10, decimals))) {
+                        fired.innerHTML += " (" + formatNumber(data["events"][event]["fired_late_raw"]) + " late)";
+                    }
                     tr.classList.add("darker");
                     previousTime = data["events"][event]["time_raw"];
-                } else if (lastFired) {
-                    lastFired = false;
-                    tr.classList.add("highlight");
-                    if (data["events"][event]["time_raw"]) {
-                        var time_until = data["events"][event]["time_raw"] - data["progress_raw"];
-                        fired.innerText = "-" + numberWithCommas(time_until) + "ms";
-                        fired.style.borderLeft = "2px solid #57f";
-                        fired.style.borderRight = "2px solid #57f";
-                        fired.style.backgroundPosition = "left center";
-                        fired.style.backgroundSize = ((time_until / (data["events"][event]["time_raw"] - previousTime)) * 100).toString() + "% 100%";
-                        fired.style.backgroundRepeat = "no-repeat";
-                        // http://png-pixel.com/
-                        fired.style.backgroundImage = "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMMLf//HwAFwALM9Fc/LgAAAABJRU5ErkJggg==)";
+                } else {
+                    fired.innerHTML = "";
+                    if (lastFired) {
+                        lastFired = false;
+                        tr.classList.add("highlight");
+                        if (data["events"][event]["time_raw"]) {
+                            var time_until = data["events"][event]["time_raw"] - data["progress_raw"];
+                            fired.innerHTML = formatNumber(-time_until, false);
+                            fired.style.borderLeft = "2px solid #57f";
+                            fired.style.borderRight = "2px solid #57f";
+                            fired.style.backgroundPosition = "left center";
+                            fired.style.backgroundSize = ((time_until / (data["events"][event]["time_raw"] - previousTime)) * 100).toString() + "% 100%";
+                            fired.style.backgroundRepeat = "no-repeat";
+                            // http://png-pixel.com/
+                            fired.style.backgroundImage = "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMMLf//HwAFwALM9Fc/LgAAAABJRU5ErkJggg==)";
+                        }
                     }
                 }
                 tr.appendChild(fired);
@@ -106,12 +173,10 @@
                 var func = document.createElement("td");
                 func.setAttribute("data-th", "Function");
                 func.innerText = data["events"][event]["func"];
+                func.style.cursor = "pointer";
+                func.style.userSelect = "none";
+                func.addEventListener("click", inspect.bind(null, data["events"][event]));
                 tr.appendChild(func);
-
-                var args = document.createElement("td");
-                args.setAttribute("data-th", "Arguments");
-                args.innerText = data["events"][event]["args"];
-                tr.appendChild(args);
 
                 document.getElementById("table").appendChild(tr);
             }

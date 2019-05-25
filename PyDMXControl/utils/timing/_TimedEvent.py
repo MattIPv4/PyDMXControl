@@ -2,11 +2,12 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+from inspect import getsource
 from time import time
-from typing import Dict
+from typing import Dict, Union
 
 
 class TimedEvent:
@@ -35,20 +36,27 @@ class TimedEvent:
         return "[{}]".format(", ".join(["{}".format(f) for f in self.__args]))
 
     @property
+    def source(self) -> str:
+        return getsource(self.__cb)
+
+    @property
     def fired(self) -> str:
         if self.__fired is None:
             return ""
         return "{:,.4f}ms ({:,.4f}ms late)".format(self.__fired, self.__fired - self.__time)
 
     @property
-    def data(self) -> Dict[str, str]:
+    def data(self) -> Dict[str, Union[None, str, float, int]]:
         return {
             "time": self.time,
             "time_raw": self.__time,
             "name": self.name,
             "func": self.func,
             "args": self.args,
-            "fired": self.fired
+            "source": self.source,
+            "fired": self.fired,
+            "fired_raw": None if self.__fired is None else self.__fired,
+            "fired_late_raw": None if self.__fired is None else self.__fired - self.__time
         }
 
     def __str__(self) -> str:

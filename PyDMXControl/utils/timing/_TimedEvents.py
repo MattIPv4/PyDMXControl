@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from collections import OrderedDict
@@ -121,6 +121,10 @@ class TimedEvents:
             "progress": "{}ms".format("{:,.4f}".format(self.progress).rstrip("0").rstrip(".")),
             "progress_raw": self.progress
         }
+
+    @property
+    def running(self) -> bool:
+        return self.__started is not None
 
     def sleep_till_done(self):
         # Hold until all events completed

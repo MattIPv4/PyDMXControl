@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from re import compile as re_compile  # Regex
@@ -198,7 +198,7 @@ def run_timed_event(te: str):
         current_app.parent.timed_events[te].run()
     except Exception:
         return jsonify({"error": "Timed Event {} failed to fire".format(te)}), 500
-    return jsonify({"message": "Timed Event {} fired".format(te)}), 200
+    return jsonify({"message": "Timed Event {} fired".format(te), "elements": {te + "-state": "Running"}}), 200
 
 
 # Timed Events Stop
@@ -210,4 +210,4 @@ def stop_timed_event(te: str):
         current_app.parent.timed_events[te].stop()
     except Exception:
         return jsonify({"error": "Timed Event {} failed to stop".format(te)}), 500
-    return jsonify({"message": "Timed Event {} stopped".format(te)}), 200
+    return jsonify({"message": "Timed Event {} stopped".format(te), "elements": {te + "-state": "Stopped"}}), 200
