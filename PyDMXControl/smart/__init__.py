@@ -80,12 +80,10 @@ class HomeKitLight(Accessory):
 
 
 def run(controller):
-    start_port = 51826
-    driver = AccessoryDriver(port=start_port)
+    driver = AccessoryDriver()
     bridge = Bridge(driver, 'PyDMXControl')
 
-    for i, fixture in enumerate(controller.get_all_fixtures()):
-        print(fixture.name)
+    for fixture in controller.get_all_fixtures():
         bridge.add_accessory(HomeKitLight(fixture, driver, fixture.name))
 
     signal.signal(signal.SIGTERM, driver.signal_handler)
