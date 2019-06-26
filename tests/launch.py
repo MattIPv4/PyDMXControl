@@ -19,7 +19,7 @@ class ExtendedEnvBuilder(venv.EnvBuilder):
             pip = "./venv/Scripts/pip.exe"
         else:
             pip = "./venv/bin/pip"
-        proc = Popen([pip, "install", "-Ue", "../[audio]"])
+        proc = Popen([pip, "install", "-Ue", "../[audio,smart]"])
         proc.communicate()
 
 

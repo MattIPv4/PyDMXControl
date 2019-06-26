@@ -47,7 +47,8 @@ setup(
     include_package_data=True,
     install_requires=fetch_reqs(),
     extras_require={
-        "audio": fetch_reqs("audio")
+        "audio": fetch_reqs("audio"),
+        "smart": fetch_reqs("smart")
     },
     description="A Python 3 module to control DMX using uDMX."
                 " Featuring fixture profiles, built-in effects and a web control panel.",
