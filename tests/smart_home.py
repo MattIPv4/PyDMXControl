@@ -1,4 +1,4 @@
-from PyDMXControl import smart
+from PyDMXControl import smart, Colors
 from PyDMXControl.controllers import uDMXController as Controller
 
 # Create our controller
@@ -8,7 +8,8 @@ dmx = Controller()
 dmx.json.load_config('json/home.json')
 
 # Check fixture was loaded
-dmx.all_locate()
+dmx.all_color(Colors.Blue)
+dmx.all_on()
 
 # Smart
 smart.run(dmx)
