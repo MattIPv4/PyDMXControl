@@ -14,6 +14,9 @@ dmx.all_on()
 # Smart
 smart.run(dmx)
 
+# Debug
+dmx.web_control()
+
 # Close the controller once we're done
 dmx.sleep_till_enter()
 dmx.close()
