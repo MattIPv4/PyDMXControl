@@ -48,5 +48,6 @@ if __name__ == "__main__":
         builder = ExtendedEnvBuilder(with_pip=True)
         builder.create("./venv")
 
-    while True:
+    run()
+    while "once" not in sys.argv:
         run()
