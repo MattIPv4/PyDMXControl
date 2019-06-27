@@ -252,6 +252,14 @@ class Fixture(FixtureHelpers):
                 base[kwarg] = val
         return base
 
+    @property
+    def manufacturer(self) -> str:
+        return self.__class__.__module__.split(".")[-2]
+
+    @property
+    def model(self) -> str:
+        return self.__class__.__name__.replace("_", " ")
+
     # Channels
 
     def get_channel_id(self, channel: Union[str, int]) -> int:

@@ -7,9 +7,8 @@ from pyhap.const import CATEGORY_LIGHTBULB
 class RGBLight(Accessory):
     category = CATEGORY_LIGHTBULB
 
-    def __init__(self, fixture, *args, **kwargs):
-
-        super().__init__(*args, **kwargs)
+    def __init__(self, fixture, driver):
+        super().__init__(driver, fixture.name)
 
         serv_light = self.add_preload_service(
             'Lightbulb', chars=['On', 'Hue', 'Saturation', 'Brightness'])
@@ -30,6 +29,11 @@ class RGBLight(Accessory):
             'Saturation', setter_callback=self.set_saturation, getter_callback=self.get_saturation)
         self.char_brightness = serv_light.configure_char(
             'Brightness', setter_callback=self.set_brightness, getter_callback=self.get_brightness)
+
+        # Set model info
+        self.set_info_service(manufacturer=fixture.manufacturer,
+                              model=fixture.model,
+                              serial_number="Chans: {}".format(fixture.channel_usage))
 
     def set_state(self, value):
         self.accessory_state = value

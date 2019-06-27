@@ -7,8 +7,8 @@ from pyhap.const import CATEGORY_LIGHTBULB
 class MasterLight(Accessory):
     category = CATEGORY_LIGHTBULB
 
-    def __init__(self, controller, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, controller, driver):
+        super().__init__(driver, "> Master")
 
         serv_light = self.add_preload_service(
             'Lightbulb', chars=['On', 'Hue', 'Saturation', 'Brightness'])
@@ -28,6 +28,11 @@ class MasterLight(Accessory):
             'Saturation', setter_callback=self.set_saturation, getter_callback=self.get_saturation)
         self.char_brightness = serv_light.configure_char(
             'Brightness', setter_callback=self.set_brightness, getter_callback=self.get_brightness)
+
+        # Set model info
+        self.set_info_service(manufacturer="PyDMXControl",
+                              model="Global Master",
+                              serial_number="Chans: 1->{} (All)".format(controller.next_channel-1))
 
     @staticmethod
     def get_state():
