@@ -14,6 +14,10 @@ class uDMXController(transmittingController):
 
     def __init__(self, *args, **kwargs):
         self.udmx = None
+        self.udmx_vendor_id = kwargs.pop("u dmx_vendor_id", 0x16c0)
+        self.udmx_product_id = kwargs.pop("udmx_product_id", 0x5dc)
+        self.udmx_bus = kwargs.pop("udmx_bus", None)
+        self.udmx_address = kwargs.pop("udmx_address", None)
         self.__connect()
 
         super().__init__(*args, **kwargs)
@@ -35,7 +39,7 @@ class uDMXController(transmittingController):
                 pass
         # Get new device
         self.udmx = pyudmx.uDMXDevice()
-        self.udmx.open()
+        self.udmx.open(self.udmx_vendor_id, self.udmx_product_id, self.udmx_bus, self.udmx_address)
 
     def _send_data(self):
         # Get the data
