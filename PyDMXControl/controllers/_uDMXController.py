@@ -13,14 +13,18 @@ from ._transmittingController import transmittingController
 class uDMXController(transmittingController):
 
     def __init__(self, *args, **kwargs):
-        self.udmx = None
+        self.__udmx = None
+        self.__udmx_vendor_id = kwargs.pop("udmx_vendor_id", 0x16c0)
+        self.__udmx_product_id = kwargs.pop("udmx_product_id", 0x5dc)
+        self.__udmx_bus = kwargs.pop("udmx_bus", None)
+        self.__udmx_address = kwargs.pop("udmx_address", None)
         self.__connect()
 
         super().__init__(*args, **kwargs)
 
     def close(self):
         # uDMX
-        self.udmx.close()
+        self.__udmx.close()
         print("CLOSE: uDMX closed")
 
         # Parent
@@ -28,14 +32,14 @@ class uDMXController(transmittingController):
 
     def __connect(self):
         # Try to close if exists
-        if self.udmx is not None:
+        if self.__udmx is not None:
             try:
-                self.udmx.close()
+                self.__udmx.close()
             except Exception:
                 pass
         # Get new device
-        self.udmx = pyudmx.uDMXDevice()
-        self.udmx.open()
+        self.__udmx = pyudmx.uDMXDevice()
+        self.__udmx.open(self.__udmx_vendor_id, self.__udmx_product_id, self.__udmx_bus, self.__udmx_address)
 
     def _send_data(self):
         # Get the data
@@ -49,7 +53,7 @@ class uDMXController(transmittingController):
             try:
                 if retry_count > 5:
                     self.__connect()
-                self.udmx.send_multi_value(1, data)
+                self.__udmx.send_multi_value(1, data)
                 success = True
             except Exception as e:
                 retry_count += 1
