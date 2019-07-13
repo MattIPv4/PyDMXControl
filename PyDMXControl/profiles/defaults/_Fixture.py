@@ -77,7 +77,7 @@ class FixtureHelpers:
     def color(self, color: Union[Colors, List[int], Tuple[int], str], milliseconds: int = 0):
         # Handle string color names
         if isinstance(color, str):
-            if color in Colors:
+            if color in Colors.__members__:
                 color = Colors[color]
             else:
                 raise ValueError("Color '" + color + "' not defined in Colors enum."
