@@ -17,97 +17,114 @@ dmx = Controller()
 # Load some fixtures from JSON
 dmx.json.load_config('json/home.json')
 
-"""
-dmx.add_fixture(LED_Par_10mm, name="Flood")
-
-dmx.add_fixture(LED_Par_36, name="S1 Art Left")
-dmx.add_fixture(LED_Par_36, name="S2 Board")
-dmx.add_fixture(LED_Par_36, name="S3 Art Right")
-dmx.add_fixture(LED_Par_36, name="S4 Books")
-
-dmx.add_fixture(LED_Pot_12_RGBW, name="F1 Desk Right")
-dmx.add_fixture(LED_Pot_12_RGBW, name="F2 Desk Left")
-"""
-
-# Define all the methods the callback will use
+# Define some custom colors and a global fade time
 custom_blue = [0, 16, 255, 0]
 custom_cyan = [0, 128, 255, 0]
-custom_white = [140, 120, 120, 255]
+custom_white = [255, 255, int(255 * 0.8), 255]
+flood_white = [255, int(255 * 0.9), int(255 * 0.7)]
 fade_time = 5000
 
 
-def normal():
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Warm, fade_time)
+# Create all the custom state methods
+def night():
+    dmx.clear_all_effects()
 
-    Color_Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 60 * 1000,
-                            colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
-    # for f in dmx.get_fixtures_by_profile(LED_Par_36):
-    # f.color(custom_blue, fade_time)
+    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
+        f.color(Colors.Black, fade_time)
+        f.dim(0, fade_time)
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_36):
+        f.color(Colors.Black, fade_time)
+        f.dim(0, fade_time)
+
+    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        f.color(Colors.Black, fade_time)
+        f.dim(0, fade_time)
+
+
+def day():
+    dmx.clear_all_effects()
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
+        f.color(flood_white, fade_time)
+        f.dim(int(255 * 0.5), fade_time)
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_36):
+        f.color(Colors.Black, fade_time)
+        f.dim(0, fade_time)
 
     for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
         f.color(custom_white, fade_time)
+        f.dim(255, fade_time)
 
 
-def dimmer():
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Black, fade_time)
-
+def evening():
     dmx.clear_all_effects()
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
+        f.color(Colors.Warm, fade_time)
+        f.dim(255, fade_time)
+
     for f in dmx.get_fixtures_by_profile(LED_Par_36):
-        f.color([int(f * 0.5) for f in custom_blue], fade_time)
+        f.dim(255, fade_time)
+
+    Color_Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 60 * 1000,
+                            colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
     for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
-        f.color([int(f * 0.75) for f in Colors.Warm], fade_time)
+        f.color(custom_white, fade_time)
+        f.dim(255, fade_time)
 
 
-# Timed lights
+def late():
+    dmx.clear_all_effects()
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
+        f.color(Colors.Black, fade_time)
+        f.dim(0, fade_time)
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_36):
+        f.color(Colors.Warm, fade_time)
+        f.dim(int(255 * 0.5), fade_time)
+
+    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        f.color(Colors.Warm, fade_time)
+        f.dim(int(255 * 0.75), fade_time)
+
+
+# Create a time map of states for each day
 last_state = None
-last_state_type = None
 times = [
-    [(800, 2200)],  # Monday
-    [(800, 2200)],  # Tuesday
-    [(800, 2200)],  # Wednesday
-    [(800, 2200)],  # Thursday
-    [(800, 2200)],  # Friday
-    [(800, 2200)],  # Saturday
-    [(800, 2200)],  # Sunday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Monday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Tuesday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Wednesday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Thursday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Friday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Saturday
+    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Sunday
 ]
 
 
 # Create the callback to turn lights on/off and change colors at certain times
 def callback():
-    global last_state, last_state_type, times
+    global last_state, times
 
-    # Get limits for today an current time
-    time_limit = times[datetime.today().weekday()]
+    # Get map for today and current time
+    time_map = times[datetime.today().weekday()]
     time = int(datetime.today().strftime('%H%M'))
 
-    # Check if current time is within limits
-    in_range = False
-    for time_range in time_limit:
-        if time_range[0] <= time < time_range[1]:
-            in_range = True
+    # Find most recent passed time in the map
+    keys = sorted(time_map.keys())
+    index = -1
+    while index + 1 < len(keys) and keys[index + 1] <= time:
+        index += 1
+    state = keys[index]
 
-    # On if within limits else off
-    if in_range:
-        if last_state != 1:
-            dmx.all_on(10000)
-            last_state = 1
-    else:
-        if last_state != 0:
-            dmx.all_off(10000)
-            last_state = 0
-
-    # Dim the lights before/after certain times
-    if time >= 2100 or time <= 830:
-        if last_state_type != 1:
-            dimmer()
-            last_state_type = 1
-    else:
-        if last_state_type != 0:
-            normal()
-            last_state_type = 0
+    # Run the mapped state if not previously run
+    run = time_map[state]
+    if last_state != run:
+        run()
+        last_state = run
 
 
 # Enable the callback
@@ -116,8 +133,10 @@ dmx.ticker.set_callback(callback)
 
 # Debug
 callbacks = {
-    "normal": normal,
-    "dimmer": dimmer
+    "night": night,
+    "day": day,
+    "evening": evening,
+    "late": late,
 }
 dmx.web_control(callbacks=callbacks, timed_events={
     "you-will-be-found": get_timed_events(dmx)
