@@ -71,8 +71,8 @@ class Colors(list, Enum):
         Examples
         --------
 
-        >>> Colors.mix([0,128,0], [128,0,128], 0.5)  
-        [64, 64, 64]
+        >>> Colors.add([0,128,0], [128,0,128], 1, 0.75)
+        [96, 128, 96]
         """
         if percent1 < 0 or percent1 > 1:
             percent1 = 1
@@ -111,7 +111,7 @@ class Colors(list, Enum):
         Examples
         --------
 
-        >>> PyDMXControl.Colors.to_dict([1,2,3,4,5]) 
+        >>> Colors.to_dict([1,2,3,4,5]) 
         {'R': 1, 'G': 2, 'B': 3, 'W': 4, 'A': 5}
         """
         keys = list('RGBWA')
@@ -139,7 +139,7 @@ class Colors(list, Enum):
         Examples
         --------
 
-        >>> PyDMXControl.Colors.to_tuples([1,2,3,4,5]) 
+        >>> Colors.to_tuples([1,2,3,4,5]) 
         [('R', 1), ('G', 2), ('B', 3), ('W', 4), ('A', 5)]
         """
         return [(k, v) for k, v in Colors.to_dict(colors).items()]
@@ -160,7 +160,7 @@ class Colors(list, Enum):
         Examples
         --------
 
-        >>> PyDMXControl.Colors.to_hex([95, 93, 12, 18, 128])
+        >>> Colors.to_hex([95, 93, 12, 18, 128])
         '#5f5d0c1280'
         """
 
@@ -179,7 +179,7 @@ class Colors(list, Enum):
         Parameters
         ----------
         colors: Color to convert to printable form.
-        separator: Separator to use,
+        separator: Separator to use.
 
         Returns
         -------
@@ -189,8 +189,8 @@ class Colors(list, Enum):
         Examples
         --------
 
-        >>> PyDMXControl.Colors.to_hex([95, 93, 12, 18, 128])
-        '#5f5d0c1280'
+        >>> Colors.to_print([95, 93, 12, 18, 128]) 
+        '95, 93, 12, 18, 128'
         """
 
         return separator.join([str(f) for f in colors])
