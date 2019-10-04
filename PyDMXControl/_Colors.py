@@ -160,8 +160,8 @@ class Colors(list, Enum):
         Examples
         --------
 
-        >>> Colors.to_hex([95, 93, 12, 18, 128])
-        '#5f5d0c1280'
+        >>> Colors.to_hex([95, 93, 12])
+        '#5f5d0c'
         """
 
         def clamp(x):
@@ -184,7 +184,7 @@ class Colors(list, Enum):
         Returns
         -------
         str
-            Color as a hex string.
+            Color as a printable string.
 
         Examples
         --------
