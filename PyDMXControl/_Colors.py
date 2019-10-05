@@ -13,6 +13,27 @@ class Colors(list, Enum):
 
     @staticmethod
     def mix(color1: List[int], color2: List[int], percent: float = 0.5) -> List[int]:
+        """Mix two colors, with an optional percentage.
+
+        Mixes `percent` of color1 with 1-`percent` of color2.
+
+        Parameters
+        ----------
+        color1: The first color.
+        color2: The second color.
+        percent: Ratio in which two colors are to be mixed (0..1).
+
+        Returns
+        -------
+        List[int]
+            New color after mixing.
+        
+        Examples
+        --------
+
+        >>> Colors.mix([0,128,0], [128,0,128], 0.5)    
+        [64, 64, 64]
+        """
         if percent < 0 or percent > 1:
             percent = 0.5
 
@@ -31,6 +52,28 @@ class Colors(list, Enum):
 
     @staticmethod
     def add(color1: List[int], color2: List[int], percent1: float = 1, percent2: float = 1) -> List[int]:
+        """Add two colors.
+
+        Adds `percent1` of color1 with `percent2` of color2.
+
+        Parameters
+        ----------
+        color1: The first color.
+        color2: The second color.
+        percent1: Percentage of brightness of color 1 (0..1).
+        percent2: Percentage of brightness of color 2 (0..1).
+
+        Returns
+        -------
+        List[int]
+            New color after mixing.
+        
+        Examples
+        --------
+
+        >>> Colors.add([0,128,0], [128,0,128], 1, 0.75)
+        [96, 128, 96]
+        """
         if percent1 < 0 or percent1 > 1:
             percent1 = 1
 
@@ -52,7 +95,25 @@ class Colors(list, Enum):
 
     @staticmethod
     def to_dict(colors: List[int]) -> Dict[str, int]:
-        """ Assumes RGBWA """
+        """Convert a color from list form to a dict.
+        
+        Assumes RGBWA.
+        
+        Parameters
+        ----------
+        colors: Color to convert to a dictionary.
+
+        Returns
+        -------
+        Dict[str, int]
+            Color as a dictionary.
+
+        Examples
+        --------
+
+        >>> Colors.to_dict([1,2,3,4,5]) 
+        {'R': 1, 'G': 2, 'B': 3, 'W': 4, 'A': 5}
+        """
         keys = list('RGBWA')
         result = {}
         for i, color in enumerate(colors):
@@ -62,11 +123,47 @@ class Colors(list, Enum):
 
     @staticmethod
     def to_tuples(colors: List[int]) -> List[Tuple[str, int]]:
-        """ Assumes RGBWA """
+        """Convert a color from a list to a list of tuples.
+        
+        Assumes RGBWA.
+        
+        Parameters
+        ----------
+        colors: Color to convert to tuples.
+
+        Returns
+        -------
+        List[Tuple[str, int]]
+            Color as a list of tuples.
+
+        Examples
+        --------
+
+        >>> Colors.to_tuples([1,2,3,4,5]) 
+        [('R', 1), ('G', 2), ('B', 3), ('W', 4), ('A', 5)]
+        """
         return [(k, v) for k, v in Colors.to_dict(colors).items()]
 
     @staticmethod
     def to_hex(colors: List[int]) -> str:
+        """Convert a color from list to hex form.
+
+        Parameters
+        ----------
+        colors: Color to convert to tuples.
+
+        Returns
+        -------
+        str
+            Color as a hex string.
+
+        Examples
+        --------
+
+        >>> Colors.to_hex([95, 93, 12])
+        '#5f5d0c'
+        """
+
         def clamp(x):
             return max(0, min(x, 255))
 
@@ -77,6 +174,25 @@ class Colors(list, Enum):
 
     @staticmethod
     def to_print(colors: List[int], separator: str = ", ") -> str:
+        """Convert a color from list form to a printable string.
+
+        Parameters
+        ----------
+        colors: Color to convert to printable form.
+        separator: Separator to use.
+
+        Returns
+        -------
+        str
+            Color as a printable string.
+
+        Examples
+        --------
+
+        >>> Colors.to_print([95, 93, 12, 18, 128]) 
+        '95, 93, 12, 18, 128'
+        """
+
         return separator.join([str(f) for f in colors])
 
     Black = [000, 000, 000, 000]
