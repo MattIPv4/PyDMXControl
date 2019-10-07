@@ -13,19 +13,20 @@ import itertools
 class Colors(list, Enum):
 
     @staticmethod
-    def clamp(val: Union[int, float]) -> int:
+    def clamp(val: Union[int, float], lo: int = 0, hi: int = 255) -> Union[int, float]:
         """
-        Clamp a color to ensure it fits in range [0..255]
-        and convert it to an integer.
+        Clamp a value to ensure it fits in a range (default [0..255])
 
         Parameters
         ----------
         val: Value to clamp.
+        lo: Minimum value.
+        hi: Maximum value.
 
         Returns
         -------
         int
-            Clamped value. [0..255]
+            Clamped value. [lo..hi]
         
         Examples
         --------
@@ -33,7 +34,7 @@ class Colors(list, Enum):
         >>> Colors.clamp(2323.52)
         255
         """
-        return int(min(255, max(0, val)))
+        return min(hi, max(lo, val))
 
     @staticmethod
     def mix(color1: List[int], color2: List[int], percent: float = 0.5) -> List[int]:
@@ -58,15 +59,14 @@ class Colors(list, Enum):
         >>> Colors.mix([0,128,0], [128,0,128], 0.5)    
         [64, 64, 64]
         """
-        if percent < 0 or percent > 1:
-            percent = 0.5
+        percent = Colors.clamp(percent, 0, 1)
 
         result = []
         for val1, val2 in itertools.zip_longest(color1, color2, fillvalue=0):
             val1 *= percent
             val2 *= 1 - percent
             res = Colors.clamp(val1 + val2)
-            result.append(res)
+            result.append(int(res))
 
         return result
 
@@ -94,18 +94,16 @@ class Colors(list, Enum):
         >>> Colors.add([0,128,0], [128,0,128], 1, 0.75)
         [96, 128, 96]
         """
-        if percent1 < 0 or percent1 > 1:
-            percent1 = 1
 
-        if percent2 < 0 or percent2 > 1:
-            percent2 = 1
+        percent1 = Colors.clamp(percent1, 0, 1)
+        percent2 = Colors.clamp(percent2, 0, 1)
 
         result = []
         for val1, val2 in itertools.zip_longest(color1, color2, fillvalue=0):
             val1 *= percent1
             val2 *= percent2
             res = Colors.clamp(val1 + val2)
-            result.append(res)
+            result.append(int(res))
 
         return result
 
