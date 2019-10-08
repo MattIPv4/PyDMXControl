@@ -5,10 +5,10 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+import itertools
 from enum import Enum
 from typing import List, Dict, Tuple, Union
 
-import itertools
 
 class Colors(list, Enum):
 
@@ -25,7 +25,7 @@ class Colors(list, Enum):
 
         Returns
         -------
-        int
+        Union[int, float]
             Clamped value. [lo..hi]
         
         Examples
