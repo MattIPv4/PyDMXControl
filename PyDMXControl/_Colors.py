@@ -5,11 +5,36 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
+import itertools
 from enum import Enum
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union
 
 
 class Colors(list, Enum):
+
+    @staticmethod
+    def clamp(val: Union[int, float], lo: int = 0, hi: int = 255) -> Union[int, float]:
+        """
+        Clamp a value to ensure it fits in a range (default [0..255])
+
+        Parameters
+        ----------
+        val: Value to clamp.
+        lo: Minimum value.
+        hi: Maximum value.
+
+        Returns
+        -------
+        Union[int, float]
+            Clamped value. [lo..hi]
+        
+        Examples
+        --------
+
+        >>> Colors.clamp(2323.52)
+        255
+        """
+        return min(hi, max(lo, val))
 
     @staticmethod
     def mix(color1: List[int], color2: List[int], percent: float = 0.5) -> List[int]:
@@ -34,18 +59,13 @@ class Colors(list, Enum):
         >>> Colors.mix([0,128,0], [128,0,128], 0.5)    
         [64, 64, 64]
         """
-        if percent < 0 or percent > 1:
-            percent = 0.5
+        percent = Colors.clamp(percent, 0, 1)
 
         result = []
-        for i in range(max(len(color1), len(color2))):
-            val1 = color1[i] if i < len(color1) else 0
-            val2 = color2[i] if i < len(color2) else 0
+        for val1, val2 in itertools.zip_longest(color1, color2, fillvalue=0):
             val1 *= percent
             val2 *= 1 - percent
-            res = val1 + val2
-            res = min(res, 255)
-            res = max(res, 0)
+            res = Colors.clamp(val1 + val2)
             result.append(int(res))
 
         return result
@@ -74,21 +94,15 @@ class Colors(list, Enum):
         >>> Colors.add([0,128,0], [128,0,128], 1, 0.75)
         [96, 128, 96]
         """
-        if percent1 < 0 or percent1 > 1:
-            percent1 = 1
 
-        if percent2 < 0 or percent2 > 1:
-            percent2 = 1
+        percent1 = Colors.clamp(percent1, 0, 1)
+        percent2 = Colors.clamp(percent2, 0, 1)
 
         result = []
-        for i in range(max(len(color1), len(color2))):
-            val1 = color1[i] if i < len(color1) else 0
-            val2 = color2[i] if i < len(color2) else 0
+        for val1, val2 in itertools.zip_longest(color1, color2, fillvalue=0):
             val1 *= percent1
             val2 *= percent2
-            res = val1 + val2
-            res = min(res, 255)
-            res = max(res, 0)
+            res = Colors.clamp(val1 + val2)
             result.append(int(res))
 
         return result
@@ -114,12 +128,7 @@ class Colors(list, Enum):
         >>> Colors.to_dict([1,2,3,4,5]) 
         {'R': 1, 'G': 2, 'B': 3, 'W': 4, 'A': 5}
         """
-        keys = list('RGBWA')
-        result = {}
-        for i, color in enumerate(colors):
-            if i < len(keys):
-                result[keys[i]] = color
-        return result
+        return dict(zip('RGBWA', colors))
 
     @staticmethod
     def to_tuples(colors: List[int]) -> List[Tuple[str, int]]:
@@ -142,7 +151,7 @@ class Colors(list, Enum):
         >>> Colors.to_tuples([1,2,3,4,5]) 
         [('R', 1), ('G', 2), ('B', 3), ('W', 4), ('A', 5)]
         """
-        return [(k, v) for k, v in Colors.to_dict(colors).items()]
+        return list(zip('RGBWA', colors))
 
     @staticmethod
     def to_hex(colors: List[int]) -> str:
@@ -164,12 +173,9 @@ class Colors(list, Enum):
         '#5f5d0c'
         """
 
-        def clamp(x):
-            return max(0, min(x, 255))
-
         result = "#"
         for color in colors:
-            result += "{:02x}".format(clamp(color))
+            result += "{:02x}".format(Colors.clamp(color))
         return result
 
     @staticmethod
