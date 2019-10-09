@@ -1,0 +1,72 @@
+{#
+ *  PyDMXControl: A Python 3 module to control DMX using uDMX.
+ *                Featuring fixture profiles, built-in effects and a web control panel.
+ *  <https://github.com/MattIPv4/PyDMXControl/>
+ *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ #}
+{% extends "base.jinja2" %}
+
+{% block body %}
+    <h2>Home</h2>
+
+    <section>
+
+        <article>
+            <h2>Fixtures</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Fixture ID</th>
+                    <th>Fixture Name</th>
+                    <th>Fixture Channels</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for fixture in controller.get_all_fixtures() %}
+                    <tr>
+                        <td data-th="Fixture ID">
+                            #{{ fixture.id }}</td>
+                        <td data-th="Fixture Name">
+                            {{ fixture.name if fixture.name else "<i>None</i>" }}</td>
+                        <td data-th="Fixture Channels">
+                            {{ fixture.channel_usage }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </article>
+
+        <article>
+            <h2>Control</h2>
+            <p>Please select a fixture</p>
+            {% for fixture in controller.get_all_fixtures() %}
+                <main id="control_{{ fixture.id }}" class="section">
+                    {% for color in colors %}
+                        <a href="{{ url_for('.color', fid=fixture.id, val=colors.to_print(color.value, ',')) }}"
+                           data-no-reload class="button">{{ color.name }}</a>
+                    {% endfor %}
+                    <br/>
+                    <div class="slider sliders">
+                        {% for i, channel in enumerate(fixture_channels(fixture)) %}
+                            <div class="slider">
+                                <input title="{{ channel[0] }}" type="range" min="0" max="255" step="1"
+                                       value="{{ channel[1] }}" id="control_{{ fixture.id }}_{{ i }}"
+                                       orient="vertical"/>
+                                <label for="control_{{ fixture.id }}_{{ i }}">
+                                    {{ channel[0] }}<br/>
+                                    <b>{{ channel[1] }}</b>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </main>
+            {% endfor %}
+        </article>
+
+    </section>
+{% endblock body %}
+
+{% block script %}
+    <script>
+    </script>
+{% endblock script %}

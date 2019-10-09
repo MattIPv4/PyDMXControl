@@ -42,6 +42,12 @@ def home():
     return render_template("index.jinja2", helpers=helpers)
 
 
+# All Control
+@routes.route('all', methods=['GET'])
+def all_control():
+    return render_template("all.jinja2", colors=Colors, fixture_channels=fixture_channels)
+
+
 # Global Intensity
 @routes.route('intensity/<int:val>', methods=['GET'])
 def global_intensity(val: int):
