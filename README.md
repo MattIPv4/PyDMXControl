@@ -22,11 +22,17 @@
     <a href="https://github.com/MattIPv4/PyDMXControl/tree/master/PyDMXControl">
         <img src="https://img.shields.io/github/languages/code-size/MattIPv4/PyDMXControl.svg?style=flat-square&colorB=4a89dc" alt="Code Size">
     </a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/users/MattIPv4/sponsorship" target="_blank">
+        <img src="https://img.shields.io/badge/GitHub%20Sponsors-MattIPv4-blue.svg?style=flat-square" alt="GitHub Sponsors"/>
+    </a>
     <a href="http://patreon.mattcowley.co.uk/" target="_blank">
-        <img src="https://img.shields.io/badge/patreon-IPv4-blue.svg?style=flat-square&colorB=4a89dc" alt="Patreon"/>
+        <img src="https://img.shields.io/badge/Patreon-IPv4-blue.svg?style=flat-square" alt="Patreon"/>
     </a>
     <a href="http://slack.mattcowley.co.uk/" target="_blank">
-        <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?style=flat-square&colorB=4a89dc" alt="Slack"/>
+        <img src="https://img.shields.io/badge/Slack-MattIPv4-blue.svg?style=flat-square" alt="Slack"/>
     </a>
 </p>
 
@@ -193,13 +199,16 @@ When you are ready, simply create a pull request for your contribution and I wil
 
 ### Donating
 
-You can also help me and the project out by contributing through a donation on PayPal or by supporting me monthly on my Patreon page.
+You can also help me and the project out by sponsoring me through [GitHub Sponsors](https://github.com/users/MattIPv4/sponsorship) (preferred), contributing through a [donation on PayPal](http://paypal.mattcowley.co.uk/) or by supporting me monthly on my [Patreon page](http://patreon.mattcowley.co.uk/).
 <p>
+    <a href="https://github.com/users/MattIPv4/sponsorship" target="_blank">
+        <img src="https://img.shields.io/badge/GitHub%20Sponsors-MattIPv4-blue.svg?logo=github&logoColor=FFF&style=flat-square" alt="GitHub Sponsors"/>
+    </a>
     <a href="http://patreon.mattcowley.co.uk/" target="_blank">
-        <img src="https://img.shields.io/badge/patreon-IPv4-blue.svg?logo=patreon&logoWidth=30&logoColor=F96854&style=popout-square" alt="Patreon"/>
+        <img src="https://img.shields.io/badge/Patreon-IPv4-blue.svg?logo=patreon&logoColor=F96854&style=flat-square" alt="Patreon"/>
     </a>
     <a href="http://paypal.mattcowley.co.uk/" target="_blank">
-        <img src="https://img.shields.io/badge/paypal-Matt%20(IPv4)%20Cowley-blue.svg?logo=paypal&logoWidth=30&logoColor=00457C&style=popout-square" alt="PayPal"/>
+        <img src="https://img.shields.io/badge/PayPal-Matt%20(IPv4)%20Cowley-blue.svg?logo=paypal&logoColor=00457C&style=flat-square" alt="PayPal"/>
     </a>
 </p>
 
@@ -210,8 +219,10 @@ Need support with this project, have found an issue or want to chat with others 
 > Please check the project's issues page first for support & bugs!
 
 Not found what you need here?
+
 * If you have an issue, please create a GitHub issue here to report the situation, include as much detail as you can!
 * _or,_ You can join our Slack workspace to discuss any issue, to get support for the project or to chat with contributors and myself:
+
 <a href="http://slack.mattcowley.co.uk/" target="_blank">
-    <img src="https://img.shields.io/badge/slack-MattIPv4-blue.svg?logo=slack&logoWidth=30&logoColor=blue&style=popout-square" alt="Slack" height="60">
+    <img src="https://img.shields.io/badge/Slack-MattIPv4-blue.svg?logo=slack&logoColor=blue&style=flat-square" alt="Slack" height="30">
 </a>
