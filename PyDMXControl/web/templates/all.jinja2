@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                 {% for fixture in controller.get_all_fixtures() %}
-                    <tr>
+                    <tr data-id="control_{{ fixture.id }}">
                         <td data-th="Fixture ID">
                             #{{ fixture.id }}</td>
                         <td data-th="Fixture Name">
@@ -38,20 +38,25 @@
 
         <article>
             <h2>Control</h2>
-            <p>Please select a fixture</p>
+            <p id="select">Please select a fixture</p>
             {% for fixture in controller.get_all_fixtures() %}
-                <main id="control_{{ fixture.id }}" class="section">
-                    {% for color in colors %}
-                        <a href="{{ url_for('.color', fid=fixture.id, val=colors.to_print(color.value, ',')) }}"
-                           data-no-reload class="button">{{ color.name }}</a>
-                    {% endfor %}
-                    <br/>
+                <main id="control_{{ fixture.id }}" class="section" style="display: none">
+                    <p>
+                        #{{ fixture.id }} | {{ fixture.name if fixture.name else "<i>None</i>" }}
+                        | {{ fixture.channel_usage }}
+                    </p>
+                    <div class="button-group">
+                        {% for color in colors %}
+                            <a href="{{ url_for('.color', fid=fixture.id, val=colors.to_print(color.value, ',')) }}"
+                               data-no-reload class="button">{{ color.name }}</a>
+                        {% endfor %}
+                    </div>
                     <div class="slider sliders">
                         {% for i, channel in enumerate(fixture_channels(fixture)) %}
                             <div class="slider">
                                 <input title="{{ channel[0] }}" type="range" min="0" max="255" step="1"
                                        value="{{ channel[1] }}" id="control_{{ fixture.id }}_{{ i }}"
-                                       orient="vertical"
+                                       orient="vertical" autocomplete="off"
                                        data-url="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=0) }}"/>
                                 <label for="control_{{ fixture.id }}_{{ i }}">
                                     {{ channel[0] }}<br/>
@@ -75,6 +80,27 @@
             slider.addEventListener("input", function () {
                 document.querySelector("label[for='" + this.id + "'] b").textContent = this.value;
                 get(this.getAttribute('data-url') + encodeURIComponent(this.value));
+            });
+        }
+
+        var fixtures = document.querySelectorAll("tr[data-id]");
+        for (var j = 0; j < fixtures.length; j++) {
+            var fixture = fixtures[j];
+            fixture.addEventListener("click", function () {
+                var id = this.getAttribute('data-id');
+                var shown = false;
+                var sections = document.querySelectorAll("main.section");
+                for (var k = 0; k < sections.length; k++) {
+                    var section = sections[k];
+                    if (section.id === id) {
+                        section.style.display = "block";
+                        shown = true;
+                    } else {
+                        section.style.display = "none";
+                    }
+                }
+                if (shown) document.getElementById('select').style.display = "none";
+                else document.getElementById('select').style.display = "block";
             });
         }
     </script>
