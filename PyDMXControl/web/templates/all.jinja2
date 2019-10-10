@@ -51,7 +51,8 @@
                             <div class="slider">
                                 <input title="{{ channel[0] }}" type="range" min="0" max="255" step="1"
                                        value="{{ channel[1] }}" id="control_{{ fixture.id }}_{{ i }}"
-                                       orient="vertical"/>
+                                       orient="vertical"
+                                       data-url="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=0) }}"/>
                                 <label for="control_{{ fixture.id }}_{{ i }}">
                                     {{ channel[0] }}<br/>
                                     <b>{{ channel[1] }}</b>
@@ -68,5 +69,13 @@
 
 {% block script %}
     <script>
+        var sliders = document.querySelectorAll("input[type=range]");
+        for (var i = 0; i < sliders.length; i++) {
+            var slider = sliders[i];
+            slider.addEventListener("input", function () {
+                document.querySelector("label[for='" + this.id + "'] b").textContent = this.value;
+                get(this.getAttribute('data-url') + encodeURIComponent(this.value));
+            });
+        }
     </script>
 {% endblock script %}
