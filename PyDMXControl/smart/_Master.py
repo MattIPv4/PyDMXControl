@@ -4,39 +4,71 @@ from pyhap.accessory import Accessory
 from pyhap.const import CATEGORY_LIGHTBULB
 
 
-class MasterLight(Accessory):
+class MasterDimmer(Accessory):
     category = CATEGORY_LIGHTBULB
 
     def __init__(self, controller, driver):
-        super().__init__(driver, "> Master")
+        super().__init__(driver, "Global Dimmer")
 
         serv_light = self.add_preload_service(
-            'Lightbulb', chars=['On', 'Hue', 'Saturation', 'Brightness'])
+            'Lightbulb', chars=['On', 'Brightness'])
 
         # Set our instance variables
         self.controller = controller
-        self.hue = self.get_hue()  # Hue Value 0 - 360 Homekit API
-        self.saturation = self.get_saturation()  # Saturation Values 0 - 100 Homekit API
-        self.brightness = self.get_brightness()  # Brightness value 0 - 100 Homekit API
+        self.brightness = 50  # Brightness value 0 - 100 Homekit API
 
         # Configure our callbacks
         self.char_state = serv_light.configure_char(
-            'On', getter_callback=self.get_state)
+            'On', setter_callback=self.set_state, value=1)
+        self.char_brightness = serv_light.configure_char(
+            'Brightness', setter_callback=self.set_brightness, value=self.brightness)
+
+        # Set model info
+        self.set_info_service(manufacturer="PyDMXControl",
+                              model="Global Dimmer",
+                              serial_number="Chans: 1->{} (All)".format(controller.next_channel - 1))
+
+    def set_state(self, value):
+        if value == 1:  # On
+            self.set_brightness(100)
+        else:  # Off
+            self.set_brightness(0)
+
+    def set_brightness(self, value):
+        self.brightness = value
+        self.controller.all_dim(self.brightness * 255 / 100)
+
+
+class MasterColor(Accessory):
+    category = CATEGORY_LIGHTBULB
+
+    def __init__(self, controller, driver):
+        super().__init__(driver, "Global Color")
+
+        serv_light = self.add_preload_service(
+            'Lightbulb', chars=['On', 'Hue', 'Saturation'])
+
+        # Set our instance variables
+        self.controller = controller
+        self.state = 1
+        self.hue = 0  # Hue Value 0 - 360 Homekit API
+        self.saturation = 0  # Saturation Values 0 - 100 Homekit API
+
+        # Configure our callbacks
+        self.char_state = serv_light.configure_char(
+            'On', getter_callback=self.get_state, value=self.state)
         self.char_hue = serv_light.configure_char(
             'Hue', setter_callback=self.set_hue, getter_callback=self.get_hue)
         self.char_saturation = serv_light.configure_char(
             'Saturation', setter_callback=self.set_saturation, getter_callback=self.get_saturation)
-        self.char_brightness = serv_light.configure_char(
-            'Brightness', setter_callback=self.set_brightness, getter_callback=self.get_brightness)
 
         # Set model info
         self.set_info_service(manufacturer="PyDMXControl",
-                              model="Global Master",
-                              serial_number="Chans: 1->{} (All)".format(controller.next_channel-1))
+                              model="Global Color",
+                              serial_number="Chans: 1->{} (All)".format(controller.next_channel - 1))
 
-    @staticmethod
-    def get_state():
-        return 1
+    def get_state(self):
+        return self.state
 
     def set_color(self):
         h = self.hue / 360
@@ -44,26 +76,16 @@ class MasterLight(Accessory):
         r, g, b = hsv_to_rgb(h, s, 1)
         self.controller.all_color([r * 255, g * 255, b * 255])
 
-    def set_brightness(self, value):
-        self.brightness = value
-        self.controller.all_dim(self.brightness * 255 / 100)
-
-    @staticmethod
-    def get_brightness():
-        return 50
+    def get_hue(self):
+        return self.hue
 
     def set_hue(self, value):
         self.hue = value
         self.set_color()
 
-    @staticmethod
-    def get_hue():
-        return 0
+    def get_saturation(self):
+        return self.saturation
 
     def set_saturation(self, value):
         self.saturation = value
         self.set_color()
-
-    @staticmethod
-    def get_saturation():
-        return 100

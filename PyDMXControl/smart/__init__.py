@@ -4,13 +4,17 @@ from threading import Thread
 from pyhap.accessory import Bridge
 from pyhap.accessory_driver import AccessoryDriver
 
-from ._Master import MasterLight
+from ._Master import MasterDimmer,  MasterColor
 from ._RGB import RGBLight
+from ._Callback import Callback
 
 driver = None
 
 
-def run(controller):
+def run(controller, callbacks=None):
+    if callbacks is None:
+        callbacks = {}
+
     global driver
     if driver is not None: return
 
@@ -24,10 +28,14 @@ def run(controller):
     for fixture in controller.get_all_fixtures():
         bridge.add_accessory(RGBLight(fixture, driver))
 
-    bridge.add_accessory(MasterLight(controller, driver))
+    bridge.add_accessory(MasterDimmer(controller, driver))
+    bridge.add_accessory(MasterColor(controller, driver))
+
+    for name, callback in callbacks.items():
+        bridge.add_accessory(Callback(name, callback, driver))
 
     signal.signal(signal.SIGTERM, driver.signal_handler)
-    driver.add_accessory(accessory=bridge)
+    driver.add_accessory(bridge)
 
     thread = Thread(target=driver.start)
     thread.daemon = True

@@ -11,11 +11,25 @@ dmx.json.load_config('json/home.json')
 dmx.all_color(Colors.Blue)
 dmx.all_on()
 
+
+def normal():
+    dmx.all_color([255, 0, 0])
+
+
+def dimmer():
+    dmx.all_color([255, 128, 0])
+
+
+callbacks = {
+    "normal": normal,
+    "dimmer": dimmer
+}
+
 # Smart
-smart.run(dmx)
+smart.run(dmx, callbacks=callbacks)
 
 # Debug
-dmx.web_control()
+dmx.web_control(callbacks=callbacks)
 
 # Close the controller once we're done
 dmx.sleep_till_enter()
