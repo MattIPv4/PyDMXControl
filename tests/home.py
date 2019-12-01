@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List, Dict, Callable
 
 from timed_events_data import get_timed_events
 
@@ -19,6 +20,7 @@ dmx.json.load_config('json/home.json')
 
 # Define some custom colors and a global fade time
 custom_blue = [0, 16, 255, 0]
+custom_snow = [32, 48, 255, 0]
 custom_cyan = [0, 128, 255, 0]
 custom_white = [255, 255, int(255 * 0.8), 255]
 flood_white = [255, int(255 * 0.9), int(255 * 0.7)]
@@ -26,6 +28,29 @@ fade_time = 5000
 
 
 # Create all the custom state methods
+def xmas():
+    dmx.clear_all_effects()
+
+    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
+        f.color(Colors.Warm, fade_time)
+        f.dim(255, fade_time)
+
+    warm_group = dmx.get_fixtures_by_name('S3 Shelf Right') + dmx.get_fixtures_by_name('S4 Shelf Left')
+    for f in warm_group:
+        f.color(Colors.Warm, fade_time)
+        f.dim(64, fade_time)
+
+    blue_white_group = dmx.get_fixtures_by_name('S1 Art') + dmx.get_fixtures_by_name('S2 Board')
+    Color_Chase.group_apply(blue_white_group, 60 * 1000,
+                            colors=[custom_blue, custom_snow, custom_blue, custom_blue])
+    for f in blue_white_group:
+        f.dim(255, fade_time)
+
+    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        f.color(custom_white, fade_time)
+        f.dim(255, fade_time)
+
+
 def night():
     dmx.clear_all_effects()
 
@@ -93,23 +118,36 @@ def late():
 
 
 # Create a time map of states for each day
+def get_times() -> List[Dict[int, Callable]]:
+    times = [
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Monday
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Tuesday
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Wednesday
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Thursday
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Friday
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Saturday
+        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Sunday
+    ]
+    # Xmas/jingle jam adjustment
+    if datetime.today().month == 12:
+        for i in range(len(times)):
+            del times[i][1800]
+            del times[i][2100]
+            times[i][830] = xmas
+            times[i][2200] = late
+            times[i][2300] = night
+    return times
+
+
 last_state = None
-times = [
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Monday
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Tuesday
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Wednesday
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Thursday
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Friday
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Saturday
-    {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Sunday
-]
 
 
 # Create the callback to turn lights on/off and change colors at certain times
 def callback():
-    global last_state, times
+    global last_state
 
     # Get map for today and current time
+    times = get_times()
     time_map = times[datetime.today().weekday()]
     time = int(datetime.today().strftime('%H%M'))
 
@@ -137,6 +175,7 @@ callbacks = {
     "day": day,
     "evening": evening,
     "late": late,
+    "xmas": xmas,
 }
 dmx.web_control(callbacks=callbacks, timed_events={
     "you-will-be-found": get_timed_events(dmx)
