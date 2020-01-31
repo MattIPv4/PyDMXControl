@@ -21,3 +21,4 @@ from ._Controller import Controller
 from ._printController import printController
 from ._transmittingController import transmittingController
 from ._uDMXController import uDMXController
+from ._serialController import SerialController
