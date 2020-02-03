@@ -5,8 +5,8 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
-import serial as sr
-import time as tm
+from serial import Serial
+import time
 
 from ._transmittingController import transmittingController
 
@@ -22,7 +22,7 @@ class SerialController(transmittingController):
         ----------
         port: Serial port string.
         """
-        self._port = sr.Serial(port=port, baudrate=250000, bytesize=8, stopbits=2)
+        self._port = Serial(port=port, baudrate=250000, bytesize=8, stopbits=2)
         super().__init__(*args, **kwargs)
 
     def close(self):
@@ -33,5 +33,6 @@ class SerialController(transmittingController):
     def _send_data(self):
 
         data = [0] + self.get_frame()
+        self._port.send_break(100e-6)
+        time.sleep(10e-6)
         self._port.write(bytearray(data))
-        self._port.send_break(0.1)
