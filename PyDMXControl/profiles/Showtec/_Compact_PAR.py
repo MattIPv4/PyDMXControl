@@ -5,63 +5,72 @@
  *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
-from ..defaults import Fixture
+from ..defaults import Fixture, Vdim
 
 
-class Compact_PAR_7_Q4(Fixture):
+class Compact_PAR_7_Q4_4Ch(Vdim):
 
-    def __init__(self, n_channels, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
-        These models can be configured to use 4, 6, or 11 DMX channels, so the number
-        of channels has to be supplied when creating the Fixture objects.
-
-        Parameters
-        ----------
-        n_channels: Number of channel configured in the PAR 7 Q4.
+        These models can be configured to use 4, 6, or 11 DMX channels. Use this
+        class for the 4 channel configuration.
         """
         super().__init__(*args, **kwargs)
 
-        if n_channels == 4:
-            self._register_channel('red')
-            self._register_channel_aliases('red', 'r')
-            self._register_channel('green')
-            self._register_channel_aliases('green', 'g')
-            self._register_channel('blue')
-            self._register_channel_aliases('blue', 'b')
-            self._register_channel('white')
-            self._register_channel_aliases('white', 'w')
+        self._register_channel('red', vdim=True)
+        self._register_channel_aliases('red', 'r')
+        self._register_channel('green', vdim=True)
+        self._register_channel_aliases('green', 'g')
+        self._register_channel('blue', vdim=True)
+        self._register_channel_aliases('blue', 'b')
+        self._register_channel('white', vdim=True)
+        self._register_channel_aliases('white', 'w')
 
-        elif n_channels == 6:
-            self._register_channel('dimmer')
-            self._register_channel_aliases('dimmer', 'dim', 'd')
-            self._register_channel('strobe')
-            self._register_channel('red')
-            self._register_channel_aliases('red', 'r')
-            self._register_channel('green')
-            self._register_channel_aliases('green', 'g')
-            self._register_channel('blue')
-            self._register_channel_aliases('blue', 'b')
-            self._register_channel('white')
-            self._register_channel_aliases('white', 'w')
 
-        elif n_channels == 11:
-            self._register_channel('dimmer')
-            self._register_channel_aliases('dimmer', 'dim', 'd')
-            self._register_channel('strobe')
-            self._register_channel('random strobe')
-            self._register_channel('color presets')
-            self._register_channel('color running')
-            self._register_channel('color running speed')
-            self._register_channel('sound mode')
-            self._register_channel('red')
-            self._register_channel_aliases('red', 'r')
-            self._register_channel('green')
-            self._register_channel_aliases('green', 'g')
-            self._register_channel('blue')
-            self._register_channel_aliases('blue', 'b')
-            self._register_channel('white')
-            self._register_channel_aliases('white', 'w')
+class Compact_PAR_7_Q4_6Ch(Fixture):
 
-        else:
-            raise ValueError('Number of channels (n_channels) has to be 4, 6, or 11. You passed '
-                             '{}.'.format(n_channels))
+    def __init__(self, *args, **kwargs):
+        """
+        These models can be configured to use 4, 6, or 11 DMX channels. Use this
+        class for the 6 channel configuration.
+        """
+        super().__init__(*args, **kwargs)
+
+        self._register_channel('dimmer')
+        self._register_channel_aliases('dimmer', 'dim', 'd')
+        self._register_channel('strobe')
+        self._register_channel('red')
+        self._register_channel_aliases('red', 'r')
+        self._register_channel('green')
+        self._register_channel_aliases('green', 'g')
+        self._register_channel('blue')
+        self._register_channel_aliases('blue', 'b')
+        self._register_channel('white')
+        self._register_channel_aliases('white', 'w')
+
+
+class Compact_PAR_7_Q4_11Ch(Fixture):
+
+    def __init__(self, *args, **kwargs):
+        """
+        These models can be configured to use 4, 6, or 11 DMX channels. Use this
+        class for the 11 channel configuration.
+        """
+        super().__init__(*args, **kwargs)
+
+        self._register_channel('dimmer')
+        self._register_channel_aliases('dimmer', 'dim', 'd')
+        self._register_channel('strobe')
+        self._register_channel('random strobe')
+        self._register_channel('color presets')
+        self._register_channel('color running')
+        self._register_channel('color running speed')
+        self._register_channel('sound mode')
+        self._register_channel('red')
+        self._register_channel_aliases('red', 'r')
+        self._register_channel('green')
+        self._register_channel_aliases('green', 'g')
+        self._register_channel('blue')
+        self._register_channel_aliases('blue', 'b')
+        self._register_channel('white')
+        self._register_channel_aliases('white', 'w')

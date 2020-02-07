@@ -17,5 +17,7 @@
  *   <https://github.com/MattIPv4/PyDMXControl/blob/master/LICENSE> or <http://www.gnu.org/licenses/>.
 """
 
-from ._Compact_PAR import Compact_PAR_7_Q4
-from ._Compact_PAR import Compact_PAR_7_Q4 as Showtec_Compact_PAR_7_Q4
+from ._Compact_PAR import Compact_PAR_7_Q4_4Ch, Compact_PAR_7_Q4_6Ch, Compact_PAR_7_Q4_11Ch
+from ._Compact_PAR import Compact_PAR_7_Q4_4Ch as Showtec_Compact_PAR_7_Q4_4Ch
+from ._Compact_PAR import Compact_PAR_7_Q4_6Ch as Showtec_Compact_PAR_7_Q4_6Ch
+from ._Compact_PAR import Compact_PAR_7_Q4_11Ch as Showtec_Compact_PAR_7_Q4_11Ch
