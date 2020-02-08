@@ -31,7 +31,6 @@ class SerialController(transmittingController):
         super().close()
 
     def _send_data(self):
-
         data = [0] + self.get_frame()
         self._port.send_break(100e-6)
         time.sleep(10e-6)
