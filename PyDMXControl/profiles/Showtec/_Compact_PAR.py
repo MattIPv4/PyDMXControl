@@ -74,3 +74,21 @@ class Compact_PAR_7_Q4_11Ch(Fixture):
         self._register_channel_aliases('blue', 'b')
         self._register_channel('white')
         self._register_channel_aliases('white', 'w')
+
+
+class Compact_PAR_7_Q4(Fixture):
+
+    def __init__(self, mode: int, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if mode == 4:
+            new = Compact_PAR_7_Q4_4Ch(*args, **kwargs)
+        elif mode == 6:
+            new = Compact_PAR_7_Q4_6Ch(*args, **kwargs)
+        elif mode == 11:
+            new = Compact_PAR_7_Q4_11Ch(*args, **kwargs)
+        else:
+            raise ValueError('Number of channels (mode) has to be 4, 6, or 11. You passed '
+                             '{}.'.format(mode))
+
+        self.__dict__ = new.__dict__
