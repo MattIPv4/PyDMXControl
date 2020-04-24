@@ -8,39 +8,53 @@
     {
         "type": "Stairville.LED_Par_36",
         "args": [],
-        "name": "S1 Art",
+        "name": "S1 Board Left",
         "start_channel": 8
     },
     {
         "type": "Stairville.LED_Par_36",
         "args": [],
-        "name": "S2 Board",
+        "name": "S2 Board Right",
         "start_channel": 13
     },
     {
         "type": "Stairville.LED_Par_36",
         "args": [],
-        "name": "S3 Shelf Right",
+        "name": "S3 Art",
         "start_channel": 18
     },
     {
-        "type": "Stairville.LED_Par_36",
+        "type": "funGeneration.LED_Pot_12_RGBW",
         "args": [],
-        "name": "S4 Shelf Left",
+        "name": "F1 Shelf Left",
+        "mode": 8,
         "start_channel": 23
     },
     {
         "type": "funGeneration.LED_Pot_12_RGBW",
         "args": [],
-        "name": "F1 Desk Right",
+        "name": "F2 Shelf Right",
         "mode": 8,
-        "start_channel": 28
+        "start_channel": 31
     },
     {
         "type": "funGeneration.LED_Pot_12_RGBW",
         "args": [],
-        "name": "F2 Desk Left",
+        "name": "F3 Desk Right",
         "mode": 8,
-        "start_channel": 36
+        "start_channel": 39
+    },
+    {
+        "type": "funGeneration.LED_Pot_12_RGBW",
+        "args": [],
+        "name": "F4 Desk Left",
+        "mode": 8,
+        "start_channel": 47
+    },
+    {
+        "type": "Stairville.LED_Par_36",
+        "args": [],
+        "name": "S4 Books",
+        "start_channel": 55
     }
 ]

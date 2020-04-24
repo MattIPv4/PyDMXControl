@@ -141,6 +141,19 @@ class Controller(ControllerHelpers):
         # Return any matches
         return matches
 
+    def get_fixtures_by_name_include(self, fixture_name: str) -> List[Fixture]:
+        matches = []
+
+        # Iterate over each fixture id
+        for fixture_id in self.__fixtures:
+            # If it matches the given name
+            if fixture_name.lower() in self.__fixtures[fixture_id].name.lower():
+                # Store
+                matches.append(self.__fixtures[fixture_id])
+
+        # Return any matches
+        return matches
+
     def get_all_fixtures(self) -> List[Fixture]:
         # Return all the fixtures
         return list(self.__fixtures.values())

@@ -20,8 +20,10 @@ dmx.json.load_config('json/home.json')
 
 # Define some custom colors and a global fade time
 custom_blue = [0, 16, 255, 0]
+custom_blue_2 = [0, 160, 255, 0]
 custom_snow = [32, 48, 255, 0]
 custom_cyan = [0, 128, 255, 0]
+custom_cyan_2 = [0, 255, 64, 0]
 custom_white = [255, 255, int(255 * 0.8), 255]
 flood_white = [255, int(255 * 0.9), int(255 * 0.7)]
 fade_time = 5000
@@ -35,18 +37,19 @@ def xmas():
         f.color(Colors.Warm, fade_time)
         f.dim(255, fade_time)
 
-    warm_group = dmx.get_fixtures_by_name('S3 Shelf Right') + dmx.get_fixtures_by_name('S4 Shelf Left')
-    for f in warm_group:
+    for f in dmx.get_fixtures_by_name_include('Shelf'):
         f.color(Colors.Warm, fade_time)
         f.dim(64, fade_time)
 
-    blue_white_group = dmx.get_fixtures_by_name('S1 Art') + dmx.get_fixtures_by_name('S2 Board')
+    blue_white_group = dmx.get_fixtures_by_name_include('Art') \
+                       + dmx.get_fixtures_by_name_include('Board') \
+                       + dmx.get_fixtures_by_name_include('Books')
     Color_Chase.group_apply(blue_white_group, 60 * 1000,
                             colors=[custom_blue, custom_snow, custom_blue, custom_blue])
     for f in blue_white_group:
         f.dim(255, fade_time)
 
-    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+    for f in dmx.get_fixtures_by_name_include('Desk'):
         f.color(custom_white, fade_time)
         f.dim(255, fade_time)
 
@@ -54,15 +57,7 @@ def xmas():
 def night():
     dmx.clear_all_effects()
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Black, fade_time)
-        f.dim(0, fade_time)
-
-    for f in dmx.get_fixtures_by_profile(LED_Par_36):
-        f.color(Colors.Black, fade_time)
-        f.dim(0, fade_time)
-
-    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+    for f in dmx.get_all_fixtures():
         f.color(Colors.Black, fade_time)
         f.dim(0, fade_time)
 
@@ -74,13 +69,23 @@ def day():
         f.color(flood_white, fade_time)
         f.dim(int(255 * 0.5), fade_time)
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_36):
+    off_group = dmx.get_fixtures_by_name_include('Art') \
+                + dmx.get_fixtures_by_name_include('Board') \
+                + dmx.get_fixtures_by_name_include('Shelf')
+    for f in off_group:
         f.color(Colors.Black, fade_time)
         f.dim(0, fade_time)
 
-    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+    for f in dmx.get_fixtures_by_name_include('Desk'):
         f.color(custom_white, fade_time)
         f.dim(255, fade_time)
+
+    books = dmx.get_fixtures_by_name_include('Books')
+    for f in books:
+        f.dim(255, fade_time)
+
+    Color_Chase.group_apply(books, 60 * 1000,
+                            colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
 
 def evening():
@@ -90,13 +95,22 @@ def evening():
         f.color(Colors.Warm, fade_time)
         f.dim(255, fade_time)
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_36):
+    main_blue_group = dmx.get_fixtures_by_name_include('Art') \
+                 + dmx.get_fixtures_by_name_include('Board') \
+                 + dmx.get_fixtures_by_name_include('Books')
+    for f in main_blue_group:
         f.dim(255, fade_time)
 
-    Color_Chase.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 60 * 1000,
+    Color_Chase.group_apply(main_blue_group, 60 * 1000,
                             colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
-    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+    for f in dmx.get_fixtures_by_name_include('Shelf'):
+        f.dim(255, fade_time)
+
+    Color_Chase.group_apply(dmx.get_fixtures_by_name_include('Shelf'), 60 * 1000,
+                            colors=[custom_blue_2, custom_blue_2, custom_cyan_2, custom_blue_2])
+
+    for f in dmx.get_fixtures_by_name_include('Desk'):
         f.color(custom_white, fade_time)
         f.dim(255, fade_time)
 
@@ -108,13 +122,23 @@ def late():
         f.color(Colors.Black, fade_time)
         f.dim(0, fade_time)
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_36):
+    dim_group = dmx.get_fixtures_by_name_include('Art') \
+                 + dmx.get_fixtures_by_name_include('Board') \
+                 + dmx.get_fixtures_by_name_include('Shelf')
+    for f in dim_group:
         f.color(Colors.Warm, fade_time)
         f.dim(int(255 * 0.5), fade_time)
 
-    for f in dmx.get_fixtures_by_profile(LED_Pot_12_RGBW):
+    for f in dmx.get_fixtures_by_name_include('Desk'):
         f.color(Colors.Warm, fade_time)
         f.dim(int(255 * 0.75), fade_time)
+
+    books = dmx.get_fixtures_by_name_include('Books')
+    for f in books:
+        f.dim(255, fade_time)
+
+    Color_Chase.group_apply(books, 60 * 1000,
+                            colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
 
 # Create a time map of states for each day
