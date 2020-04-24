@@ -3,10 +3,10 @@ from subprocess import run
 from time import sleep
 from typing import List, Dict, Callable
 
+from timed_events_data import you_will_be_found
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.effects.Color import Color_Chase
-from timed_events_data import get_timed_events
 
 # This is my home setup, which also acts as a great demo of some of what this library is capable of doing.
 # See the tests directory for other recent/new features that I've possibly been working on.
@@ -252,7 +252,7 @@ callbacks = {
     "divoom-on": divoom_on,
 }
 dmx.web_control(callbacks=callbacks, timed_events={
-    "you-will-be-found": get_timed_events(dmx)
+    "you-will-be-found": you_will_be_found(dmx)
 })
 # dmx.debug_control(callbacks)
 
