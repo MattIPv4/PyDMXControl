@@ -1,13 +1,13 @@
 from datetime import datetime
+from subprocess import run
+from time import sleep
 from typing import List, Dict, Callable
-
-from timed_events_data import get_timed_events
 
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.effects.Color import Color_Chase
-from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
-from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
+from PyDMXControl.profiles.Stairville import LED_Par_10mm
+from timed_events_data import get_timed_events
 
 # This is my home setup, which also acts as a great demo of some of what this library is capable of doing.
 # See the tests directory for other recent/new features that I've possibly been working on.
@@ -18,7 +18,7 @@ dmx = Controller()
 # Load some fixtures from JSON
 dmx.json.load_config('json/home.json')
 
-# Define some custom colors and a global fade time
+# Define some custom colors, a global fade time and the divoom device
 custom_blue = [0, 16, 255, 0]
 custom_blue_2 = [0, 160, 255, 0]
 custom_snow = [32, 48, 255, 0]
@@ -27,6 +27,7 @@ custom_cyan_2 = [0, 255, 64, 0]
 custom_white = [255, 255, int(255 * 0.8), 255]
 flood_white = [255, int(255 * 0.9), int(255 * 0.7)]
 fade_time = 5000
+divoom_address = '11:75:58:2D:A8:65'
 
 
 # Create all the custom state methods
@@ -61,6 +62,8 @@ def night():
         f.color(Colors.Black, fade_time)
         f.dim(0, fade_time)
 
+    divoom_off()
+
 
 def day():
     dmx.clear_all_effects()
@@ -87,6 +90,8 @@ def day():
     Color_Chase.group_apply(books, 60 * 1000,
                             colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
+    divoom_on()
+
 
 def evening():
     dmx.clear_all_effects()
@@ -96,8 +101,8 @@ def evening():
         f.dim(255, fade_time)
 
     main_blue_group = dmx.get_fixtures_by_name_include('Art') \
-                 + dmx.get_fixtures_by_name_include('Board') \
-                 + dmx.get_fixtures_by_name_include('Books')
+                      + dmx.get_fixtures_by_name_include('Board') \
+                      + dmx.get_fixtures_by_name_include('Books')
     for f in main_blue_group:
         f.dim(255, fade_time)
 
@@ -123,8 +128,8 @@ def late():
         f.dim(0, fade_time)
 
     dim_group = dmx.get_fixtures_by_name_include('Art') \
-                 + dmx.get_fixtures_by_name_include('Board') \
-                 + dmx.get_fixtures_by_name_include('Shelf')
+                + dmx.get_fixtures_by_name_include('Board') \
+                + dmx.get_fixtures_by_name_include('Shelf')
     for f in dim_group:
         f.color(Colors.Warm, fade_time)
         f.dim(int(255 * 0.5), fade_time)
@@ -141,16 +146,32 @@ def late():
                             colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
 
+def divoom_off():
+    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '0'], shell=True)
+    sleep(2)
+    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '0'], shell=True)
+
+
+def divoom_on():
+    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '100'], shell=True)
+    sleep(2)
+    run(['divoom-control', 'display-custom', '-a', divoom_address], shell=True)
+    sleep(2)
+    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '100'], shell=True)
+    sleep(2)
+    run(['divoom-control', 'display-custom', '-a', divoom_address], shell=True)
+
+
 # Create a time map of states for each day
 def get_times() -> List[Dict[int, Callable]]:
     times = [
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Monday
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Tuesday
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Wednesday
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Thursday
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Friday
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Saturday
-        {0: night, 830: day, 1800: evening, 2100: late, 2200: night},  # Sunday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Monday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Tuesday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Wednesday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Thursday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Friday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Saturday
+        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Sunday
     ]
     # Xmas/jingle jam adjustment
     if datetime.today().month == 12:
@@ -183,10 +204,10 @@ def callback():
     state = keys[index]
 
     # Run the mapped state if not previously run
-    run = time_map[state]
-    if last_state != run:
-        run()
-        last_state = run
+    run_callback = time_map[state]
+    if last_state != run_callback:
+        run_callback()
+        last_state = run_callback
 
 
 # Enable the callback
@@ -200,6 +221,8 @@ callbacks = {
     "evening": evening,
     "late": late,
     "xmas": xmas,
+    "divoom-off": divoom_off,
+    "divoom-on": divoom_on,
 }
 dmx.web_control(callbacks=callbacks, timed_events={
     "you-will-be-found": get_timed_events(dmx)
