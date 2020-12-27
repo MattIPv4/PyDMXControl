@@ -170,6 +170,8 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
 
     # Define some events
     not_flood = controller.get_fixtures_by_profile(LED_Par_36) + controller.get_fixtures_by_profile(LED_Pot_12_RGBW)
+    walls = controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Books')
+    red = [255, 20, 100]
 
     def a0():
         controller.all_off()
@@ -178,141 +180,149 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
         controller.all_on()
 
     def a500():
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([60, 60, 255], 2500)
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color([60, 60, 255], 2500)
+        for f in controller.get_fixtures_by_name_include('Shelf'):
+            f.color([60, 60, 255, 191], 2500)
 
     def a9000():
-        controller.get_fixtures_by_name("S1 Art")[0].color([60, 60, 255], 2500)
-        controller.get_fixtures_by_name("S2 Board")[0].color([60, 60, 255], 2500)
+        for f in controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Board'):
+            f.color([60, 60, 255], 2500)
 
     def a16500():
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([40, 20, 255], 2500)
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color([40, 20, 255], 2500)
+        for f in controller.get_fixtures_by_name_include('Shelf'):
+            f.color([60, 40, 255, 0], 2500)
 
     def a23500():
-        controller.get_fixtures_by_name("S1 Art")[0].color([40, 20, 255], 2500)
-        controller.get_fixtures_by_name("S2 Board")[0].color([40, 20, 255], 2500)
+        for f in controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Board'):
+            f.color([40, 20, 255], 2500)
 
     def a27000():
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color(Colors.mix(Colors.Warm, Colors.Black, 0.4), 500)
 
     def a28000():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
-            fixture.color([40, 20, 255, 128], 5000)
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
+            fixture.color([40, 20, 255, 0], 2500)
+
+        for fixture in controller.get_fixtures_by_name_include('Shelf'):
+            fixture.color([40, 20, 255, 0], 5000)
+
+        for f in controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Board'):
+            f.color([40, 10, 255], 5000)
 
     def a39500():
-        controller.get_fixtures_by_name("S1 Art")[0].color([255, 20, 100], 1500)
-        controller.get_fixtures_by_name("S2 Board")[0].color(Colors.Warm, 2500)
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([255, 20, 100], 1500)
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color(Colors.Warm, 2500)
+        for i, f in enumerate(walls):
+            f.color(Colors.Warm if i % 2 == 0 else red, 2500 if i % 2 == 0 else 1500)
+
+        for f in controller.get_fixtures_by_name_include('Desk'):
+            f.color([0, 0, 0, 0], 1500)
 
     def a55000():
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color(Colors.mix(Colors.Warm, Colors.Black, 0.1), 1000)
 
+        for i, f in enumerate(walls):
+            f.color(Colors.Warm if i == count(walls) - 1 else red, 3500)
+
     def a58500():
         Chase.group_apply(
-            not_flood,
+            walls,
             bpm_millis * 6 * 3, colors=[
-                Colors.Warm, [255, 20, 100], [255, 20, 100],
-                [255, 20, 100], [255, 20, 100], [255, 20, 100]
+                Colors.Warm, red, red,
+                red, red, red
             ])
 
     def a68000():
         controller.clear_all_effects()
 
-        controller.get_fixtures_by_name("S1 Art")[0].color(Colors.Warm, 1500)
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color(Colors.Warm, 1500)
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color(Colors.Warm, 1500)
+        for f in controller.get_fixtures_by_name_include('Board'):
+            f.color(Colors.Warm, 1500)
 
-        controller.get_fixtures_by_name("S2 Board")[0].color([255, 20, 100], 1500)
-        controller.get_fixtures_by_name("F1 Desk Right")[0].color([255, 20, 100], 1500)
-        controller.get_fixtures_by_name("F2 Desk Left")[0].color([255, 20, 100], 1500)
+        for f in controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Books'):
+            f.color(red, 1500)
 
     def a69500():
         for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
             fixture.color(Colors.Warm, 7500)
 
     def a77000():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
-            fixture.color(Colors.Black, 8000)
+        for f in controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk') + controller.get_fixtures_by_name_include('Books'):
+            f.color(Colors.Black, 8000)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
-            fixture.color([60, 60, 255], 8000)
+        for f in controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art'):
+            f.color([60, 60, 255], 8000)
 
     def a86750():
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color([40, 50, 255], 500)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
-            fixture.color([40, 50, 255], 500)
+        for f in controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk') + controller.get_fixtures_by_name_include('Books'):
+            f.color([40, 50, 255], 500)
 
     def a101000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
-            fixture.color([40, 50, 255], 500)
+        for f in controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art'):
+            f.color([40, 50, 255], 500)
 
     def a108000():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
-            fixture.color(Colors.Black, 2500)
+        for f in controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk') + controller.get_fixtures_by_name_include('Books'):
+            f.color(Colors.Black, 2500)
 
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color(Colors.Black, 24000)
 
     def a132000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
-            fixture.color(Colors.Black, 2000)
+        for f in controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art'):
+            f.color(Colors.Black, 2000)
 
     def a134000():
-        controller.get_fixtures_by_name("S1 Art")[0].color([100, 100, 255], 1500)
+        controller.get_fixtures_by_name_include('Art')[0].color([100, 100, 255], 1500)
 
     def a135500():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
-            fixture.color(Colors.mix([130, 130, 255], Colors.Black, .5), 1000)
+        for f in controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art'):
+            f.color(Colors.mix([130, 130, 255], Colors.Black, .5), 1000)
 
     def a136500():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
-            fixture.color(Colors.Black, 500)
+        for f in controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art'):
+            f.color(Colors.Black, 500)
 
     def a137000():
-        controller.get_fixtures_by_name("S2 Board")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Board')[0].color([30, 70, 255], 1000)
 
     def a138000():
-        controller.get_fixtures_by_name("S2 Board")[0].color(Colors.Black, 250)
+        controller.get_fixtures_by_name_include('Board')[0].color(Colors.Black, 250)
 
     def a139000():
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Shelf')[1].color([30, 70, 255], 1000)
 
     def a140000():
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color(Colors.Black, 250)
+        controller.get_fixtures_by_name_include('Shelf')[1].color(Colors.Black, 250)
 
     def a141000():
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Shelf')[0].color([30, 70, 255], 1000)
 
     def a142000():
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color(Colors.Black, 250)
+        controller.get_fixtures_by_name_include('Shelf')[0].color(Colors.Black, 250)
 
     def a143000():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
             fixture.color([30, 70, 255], 500)
 
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color([30, 70, 255], 10000)
 
     def a145000():
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Shelf')[1].color([30, 70, 255], 1000)
 
     def a146000():
-        controller.get_fixtures_by_name("S2 Board")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Board')[1].color([30, 70, 255], 1000)
 
     def a147000():
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Shelf')[0].color([30, 70, 255], 1000)
 
     def a148000():
-        controller.get_fixtures_by_name("S1 Art")[0].color([30, 70, 255], 1000)
+        controller.get_fixtures_by_name_include('Art')[0].color([30, 70, 255], 1000)
 
     def a153000():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        for fixture in not_flood:
             fixture.color([30, 70, 255], 2500)
 
     def a156000():
@@ -320,7 +330,7 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             fixture.color(Colors.Black, 500)
 
     def a156500():
-        Chase.group_apply(not_flood, 3500, colors=[
+        Chase.group_apply(walls, 3500, colors=[
             [30, 70, 255], Colors.Black, Colors.Black,
             Colors.Black, Colors.Black, Colors.Black
         ])
@@ -331,66 +341,117 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             fixture.color(Colors.Black, 1500)
 
     def a163000():
-        controller.get_fixtures_by_name("S2 Board")[0].color([30, 70, 255], 500)
+        controller.get_fixtures_by_name_include('Board')[0].color([30, 70, 255], 500)
 
     def a164000():
-        controller.get_fixtures_by_name("S2 Board")[0].color(Colors.Black, 1500)
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color([30, 70, 255], 500)
+        controller.get_fixtures_by_name_include('Board')[0].color(Colors.Black, 1500)
+        controller.get_fixtures_by_name_include('Shelf')[0].color([30, 70, 255], 500)
 
     def a165000():
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color(Colors.Black, 1500)
-        controller.get_fixtures_by_name("S1 Art")[0].color([30, 70, 255], 500)
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([30, 70, 255], 500)
+        controller.get_fixtures_by_name_include('Shelf')[0].color(Colors.Black, 1500)
+        controller.get_fixtures_by_name_include('Art')[0].color([30, 70, 255], 500)
+        controller.get_fixtures_by_name_include('Shelf')[1].color([30, 70, 255], 500)
 
     def a166000():
-        controller.get_fixtures_by_name("S1 Art")[0].color(Colors.Black, 1500)
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color(Colors.Black, 1500)
+        controller.get_fixtures_by_name_include('Art')[0].color(Colors.Black, 1500)
+        controller.get_fixtures_by_name_include('Shelf')[1].color(Colors.Black, 1500)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
             fixture.color([30, 70, 255, 128], 500)
 
     def a167000():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
             fixture.color(Colors.Black, 1500)
 
     def a168000():
-        Chase.group_apply(controller.get_fixtures_by_profile(LED_Par_36), 1000,
-                          colors=[[30, 70, 255], Colors.Black, Colors.Black, Colors.Black])
+        # Fixed speed, irrespective of fixture count
+        Chase.group_apply(walls, 1000,
+                          colors=[[30, 70, 255], Colors.Black, Colors.Black, Colors.Black, Colors.Black, Colors.Black])
 
     def a169000():
+        # Fixed speed, irrespective of fixture count
         controller.clear_all_effects()
-        Chase.group_apply(controller.get_fixtures_by_profile(LED_Par_36), 1000,
-                          colors=[[70, 30, 255], Colors.Black, Colors.Black, Colors.Black])
+        Chase.group_apply(walls, 1000,
+                          colors=[[70, 30, 255], Colors.Black, Colors.Black, Colors.Black, Colors.Black, Colors.Black])
 
     def a170000():
+        # Fixed speed, irrespective of fixture count
         controller.clear_all_effects()
-        Chase.group_apply(controller.get_fixtures_by_profile(LED_Par_36), 3000,
-                          colors=[[70, 30, 255], Colors.Black, Colors.Black, Colors.Black])
+        Chase.group_apply(walls, 3000,
+                          colors=[[70, 30, 255], Colors.Black, Colors.Black, Colors.Black, Colors.Black, Colors.Black])
 
     def a176000():
+        # Fixed speed, irrespective of fixture count
         controller.clear_all_effects()
-        Chase.group_apply(controller.get_fixtures_by_profile(LED_Par_36), 2000,
-                          colors=[[30, 70, 255], [30, 70, 255], Colors.Black, Colors.Black])
+        Chase.group_apply(walls, 2000,
+                          colors=[[30, 70, 255], [30, 70, 255], Colors.Black, Colors.Black, Colors.Black, Colors.Black])
 
     def a178000():
         controller.clear_all_effects()
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
+        for fixture in walls:
             fixture.color([70, 30, 255], 500)
 
     def a180000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
+        for fixture in walls:
             fixture.color([30, 70, 255], 500)
 
     def a182500():
         for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
             fixture.color([30, 70, 255], 500)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
+        for fixture in walls:
             fixture.color(Colors.Black, 1500)
 
     def a183000():
-        Chase.group_apply(controller.get_fixtures_by_profile(LED_Pot_12_RGBW), bpm_millis * 2,
-                          colors=[[30, 70, 255], Colors.Black])
+        Chase.group_apply(controller.get_fixtures_by_profile(LED_Pot_12_RGBW), bpm_millis * 4,
+                          colors=[[30, 70, 255], Colors.Black, Colors.Black, Colors.Black])
+
+    def a185000():
+        controller.clear_all_effects()
+
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
+            fixture.color(Colors.Black, 500)
+
+        # Fixed speed, irrespective of fixture count
+        side_wall = controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Shelf')
+        Chase.group_apply(side_wall, 1000,
+                          colors=[[30, 70, 255], Colors.Black, Colors.Black, Colors.Black, Colors.Black])
+
+    def a186000():
+        controller.clear_all_effects()
+
+        for fixture in controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Shelf'):
+            fixture.color(Colors.Black, 500)
+
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
+            fixture.color([30, 70, 255], 5000)
+
+    def a191000():
+        Chase.group_apply(controller.get_fixtures_by_name_include('Desk'), bpm_millis * 2 * 2,
+                          colors=[[30, 70, 255], Colors.mix([30, 70, 255], Colors.Black, 0.1)])
+
+    def a195000():
+        controller.clear_all_effects()
+
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
+            fixture.color(Colors.Black, 5000)
+
+    def a202250():
+        for fixture in not_flood:
+            fixture.color([30, 70, 255], 500)
+
+    def a203750():
+        # Fixed speed, irrespective of fixture count
+        Chase.group_apply(
+            walls,
+            1000, colors=[
+                [30, 70, 255], [60, 140, 255], [30, 70, 255],
+                [30, 70, 255], [30, 70, 255], [30, 70, 255]
+            ])
+
+    def a204750():
+        controller.clear_all_effects()
+        controller.all_off(1000)
 
 
 
@@ -442,7 +503,13 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
     events.add_event(178000, a178000, name="1st burst")
     events.add_event(180000, a180000, name="2nd burst")
     events.add_event(182500, a182500, name="3rd burst")
-    events.add_event(183000, a183000, name="Close chase")  # TODO: finish
-    events.add_event(209000, controller.all_off, 500, name="End (blackout)")
+    events.add_event(183000, a183000, name="Close chase")
+    events.add_event(185000, a185000, name="Jet")
+    events.add_event(186000, a186000, name="Glow build-up")
+    events.add_event(191000, a191000, name="Glow chase")
+    events.add_event(195000, a195000, name="Slow fade")
+    events.add_event(202250, a202250, name="Burst")
+    events.add_event(203750, a203750, name="Twinkle")
+    events.add_event(204750, a204750, name="End (blackout)")
 
     return events
