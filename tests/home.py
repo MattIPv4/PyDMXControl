@@ -6,7 +6,6 @@ from typing import List, Dict, Callable
 from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.effects.Color import Color_Chase
-from PyDMXControl.profiles.Stairville import LED_Par_10mm
 from timed_events_data import get_timed_events
 
 # This is my home setup, which also acts as a great demo of some of what this library is capable of doing.
@@ -25,17 +24,21 @@ custom_snow = [32, 48, 255, 0]
 custom_cyan = [0, 128, 255, 0]
 custom_cyan_2 = [0, 255, 64, 0]
 custom_white = [255, 255, int(255 * 0.8), 255]
-flood_white = [255, int(255 * 0.9), int(255 * 0.7)]
+flood_warm = [255, int(255 * 0.9), int(255 * 0.5), 255]
+key_white = [255, int(255 * 0.9), int(255 * 0.8)]
 fade_time = 5000
 divoom_address = '11:75:58:2D:A8:65'
 
 
 # Create all the custom state methods
+
+# XMAS state, used throughout the day/evening in December
+# Warm shelves + flood, with snowy art/books/board, standard white desk + key
 def xmas():
     dmx.clear_all_effects()
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Warm, fade_time)
+    for f in dmx.get_fixtures_by_name_include('Flood'):
+        f.color(flood_warm, fade_time)
         f.dim(255, fade_time)
 
     for f in dmx.get_fixtures_by_name_include('Shelf'):
@@ -54,7 +57,12 @@ def xmas():
         f.color(custom_white, fade_time)
         f.dim(255, fade_time)
 
+    for f in dmx.get_fixtures_by_name_include('Key'):
+        f.color(key_white, fade_time)
+        f.dim(int(255 * 0.25), fade_time)
 
+
+# Nighttime state, everything off
 def night():
     dmx.clear_all_effects()
 
@@ -65,11 +73,13 @@ def night():
     divoom_off()
 
 
+# Daytime state, used during the day outside December
+# White flood + desk + key, no art/shelves/board, blue books
 def day():
     dmx.clear_all_effects()
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(flood_white, fade_time)
+    for f in dmx.get_fixtures_by_name_include('Flood'):
+        f.color(custom_white, fade_time)
         f.dim(int(255 * 0.5), fade_time)
 
     off_group = dmx.get_fixtures_by_name_include('Art') \
@@ -90,14 +100,20 @@ def day():
     Color_Chase.group_apply(books, 60 * 1000,
                             colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
 
+    for f in dmx.get_fixtures_by_name_include('Key'):
+        f.color(key_white, fade_time)
+        f.dim(int(255 * 0.25), fade_time)
+
     divoom_on()
 
 
+# Evening state, used later in the day outside December
+# Warm flood, standard white desk + key, blue art/books/board/shelves
 def evening():
     dmx.clear_all_effects()
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
-        f.color(Colors.Warm, fade_time)
+    for f in dmx.get_fixtures_by_name_include('Flood'):
+        f.color(flood_warm, fade_time)
         f.dim(255, fade_time)
 
     main_blue_group = dmx.get_fixtures_by_name_include('Art') \
@@ -119,11 +135,17 @@ def evening():
         f.color(custom_white, fade_time)
         f.dim(255, fade_time)
 
+    for f in dmx.get_fixtures_by_name_include('Key'):
+        f.color(key_white, fade_time)
+        f.dim(int(255 * 0.25), fade_time)
 
+
+# Late at night state
+# No flood + key, warm desk + art/board/shelves, blue books
 def late():
     dmx.clear_all_effects()
 
-    for f in dmx.get_fixtures_by_profile(LED_Par_10mm):
+    for f in dmx.get_fixtures_by_name_include('Flood'):
         f.color(Colors.Black, fade_time)
         f.dim(0, fade_time)
 
@@ -144,6 +166,10 @@ def late():
 
     Color_Chase.group_apply(books, 60 * 1000,
                             colors=[custom_blue, custom_cyan, custom_blue, custom_blue])
+
+    for f in dmx.get_fixtures_by_name_include('Key'):
+        f.color(Colors.Black, fade_time)
+        f.dim(0, fade_time)
 
 
 def divoom_off():
@@ -178,7 +204,7 @@ def get_times() -> List[Dict[int, Callable]]:
         for i in range(len(times)):
             del times[i][1800]
             del times[i][2100]
-            times[i][830] = xmas
+            times[i][900] = xmas
             times[i][2200] = late
             times[i][2300] = night
     return times

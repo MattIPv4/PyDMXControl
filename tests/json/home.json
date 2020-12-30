@@ -2,7 +2,7 @@
     {
         "type": "Stairville.LED_Par_10mm",
         "args": [],
-        "name": "Flood",
+        "name": "Key",
         "start_channel": 1
     },
     {
@@ -56,5 +56,12 @@
         "args": [],
         "name": "S4 Books",
         "start_channel": 55
+    },
+    {
+        "type": "Pulse.Compact_LED_PAR",
+        "args": [],
+        "name": "Flood",
+        "mode": 8,
+        "start_channel": 60
     }
 ]
