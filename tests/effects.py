@@ -4,19 +4,11 @@ from PyDMXControl import Colors
 from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.effects.Color import Chase
 from PyDMXControl.effects.Intensity import Dim
-from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
-from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
 dmx = Controller()
 
-# Fixtures
-dmx.add_fixture(LED_Par_10mm)
-dmx.add_fixture(LED_Par_36)
-dmx.add_fixture(LED_Par_36)
-dmx.add_fixture(LED_Par_36)
-dmx.add_fixture(LED_Par_36)
-dmx.add_fixture(LED_Pot_12_RGBW)
-dmx.add_fixture(LED_Pot_12_RGBW)
+# Load some fixtures from JSON
+dmx.json.load_config('json/home.json')
 
 # Dim all up
 dmx.all_locate()
@@ -41,7 +33,7 @@ sleep(5)
 
 # Test dim chase
 dmx.all_off()
-Dim.group_apply(dmx.get_fixtures_by_profile(LED_Par_36), 1000)
+Dim.group_apply(dmx.get_all_fixtures(), 1000)
 
 # Wait then clear
 sleep(15)
@@ -50,7 +42,9 @@ dmx.all_locate()
 sleep(5)
 
 # Test color chase
-Chase.group_apply(dmx.get_all_fixtures(), 500, colors=[Colors.Red, Colors.Yellow, Colors.Green, Colors.Cyan, Colors.Blue, Colors.Magenta])
+walls = dmx.get_fixtures_by_name_include('Board') + dmx.get_fixtures_by_name_include('Art') + dmx.get_fixtures_by_name_include('Shelf') + dmx.get_fixtures_by_name_include('Books')
+dmx.all_on()
+Chase.group_apply(walls, 250 * len(walls), colors=([Colors.Black] * (len(walls) - 1) + [Colors.Blue]))
 
 # Debug
 dmx.debug_control()
