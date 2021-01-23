@@ -169,8 +169,8 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
     bpm_millis = (1 / bpm) * 60 * 1000
 
     # Define some events
-    not_flood = controller.get_fixtures_by_profile(LED_Par_36) + controller.get_fixtures_by_profile(LED_Pot_12_RGBW)
     walls = controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Books')
+    not_flood = walls + controller.get_fixtures_by_name_include('Desk')
     red = [255, 20, 100]
 
     def a0():
@@ -196,7 +196,7 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             f.color([40, 20, 255], 2500)
 
     def a27000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color(Colors.mix(Colors.Warm, Colors.Black, 0.4), 500)
 
     def a28000():
@@ -217,11 +217,11 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             f.color([0, 0, 0, 0], 1500)
 
     def a55000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color(Colors.mix(Colors.Warm, Colors.Black, 0.1), 1000)
 
         for i, f in enumerate(walls):
-            f.color(Colors.Warm if i == count(walls) - 1 else red, 3500)
+            f.color(Colors.Warm if i == len(walls) - 1 else red, 3500)
 
     def a58500():
         Chase.group_apply(
@@ -241,7 +241,7 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             f.color(red, 1500)
 
     def a69500():
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        for fixture in controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk'):
             fixture.color(Colors.Warm, 7500)
 
     def a77000():
@@ -252,7 +252,7 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             f.color([60, 60, 255], 8000)
 
     def a86750():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color([40, 50, 255], 500)
 
         for f in controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk') + controller.get_fixtures_by_name_include('Books'):
@@ -266,7 +266,7 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
         for f in controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk') + controller.get_fixtures_by_name_include('Books'):
             f.color(Colors.Black, 2500)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color(Colors.Black, 24000)
 
     def a132000():
@@ -306,7 +306,7 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
         for fixture in controller.get_fixtures_by_name_include('Desk'):
             fixture.color([30, 70, 255], 500)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color([30, 70, 255], 10000)
 
     def a145000():
@@ -396,15 +396,18 @@ def into_the_unknown(controller: Controller) -> TimedEvents:
             fixture.color([30, 70, 255], 500)
 
     def a182500():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color([30, 70, 255], 500)
 
         for fixture in walls:
             fixture.color(Colors.Black, 1500)
 
     def a183000():
-        Chase.group_apply(controller.get_fixtures_by_profile(LED_Pot_12_RGBW), bpm_millis * 4,
-                          colors=[[30, 70, 255], Colors.Black, Colors.Black, Colors.Black])
+        Chase.group_apply(
+            controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Desk'),
+            bpm_millis * 4,
+            colors=[[30, 70, 255], Colors.Black, Colors.Black, Colors.Black]
+        )
 
     def a185000():
         controller.clear_all_effects()
