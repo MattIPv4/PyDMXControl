@@ -26,6 +26,8 @@ def you_will_be_found(controller: Controller) -> TimedEvents:
     bpm = 87
     bpm_millis = (1 / bpm) * 60 * 1000
 
+    walls = controller.get_fixtures_by_name_include('Board') + controller.get_fixtures_by_name_include('Art') + controller.get_fixtures_by_name_include('Shelf') + controller.get_fixtures_by_name_include('Books')
+
     def a0():
         controller.all_off()
         controller.clear_all_effects()
@@ -35,23 +37,23 @@ def you_will_be_found(controller: Controller) -> TimedEvents:
 
     def a12400():
         controller.all_on(2000)
-        controller.get_fixtures_by_name("S3 Shelf Right")[0].color([50, 100, 255], 2000)
-        controller.get_fixtures_by_name("S4 Shelf Left")[0].color([50, 100, 255], 2000)
+        for fixture in controller.get_fixtures_by_name_include('Shelf'):
+            fixture.color([50, 100, 255], 2000)
 
     def a18900():
-        controller.get_fixtures_by_name("F1 Desk Right")[0].color([160, 140, 255], 2000)
-        controller.get_fixtures_by_name("F2 Desk Left")[0].color([160, 140, 255], 2000)
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
+            fixture.color([160, 140, 255], 2000)
 
     def a45000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_36):
+        for fixture in walls:
             fixture.color([0, 150, 255])
             fixture.color([0, 0, 255], 15000)
 
     def a69000():
-        for fixture in controller.get_fixtures_by_profile(LED_Par_10mm):
+        for fixture in controller.get_fixtures_by_name_include('Flood'):
             fixture.color(Colors.White, 5000)
 
-        for fixture in controller.get_fixtures_by_profile(LED_Pot_12_RGBW):
+        for fixture in controller.get_fixtures_by_name_include('Desk'):
             fixture.color([0, 128, 255], 5000)
 
     def a93000():
