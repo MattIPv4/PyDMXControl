@@ -2,7 +2,7 @@
     {
         "type": "Stairville.LED_Par_10mm",
         "args": [],
-        "name": "Key",
+        "name": "Flood",
         "start_channel": 1
     },
     {
@@ -58,9 +58,9 @@
         "start_channel": 55
     },
     {
-        "type": "Pulse.Compact_LED_PAR",
+        "type": "Lixada.LED_Mini_Par",
         "args": [],
-        "name": "Flood",
+        "name": "Key",
         "mode": 8,
         "start_channel": 60
     }

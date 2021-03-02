@@ -25,7 +25,8 @@ custom_cyan = [0, 128, 255, 0]
 custom_cyan_2 = [0, 255, 64, 0]
 custom_white = [255, 255, int(255 * 0.8), 255]
 flood_warm = [255, int(255 * 0.9), int(255 * 0.5), 255]
-key_white = [255, int(255 * 0.9), int(255 * 0.8)]
+flood_white = [int(255 * 0.9), 255, 255, 255]
+key_white = [int(255 * 0.75), int(255 * 0.9 * 0.75), int(255 * 0.8 * 0.75), 255]
 fade_time = 5000
 divoom_address = '11:75:58:2D:A8:65'
 
@@ -79,7 +80,7 @@ def day():
     dmx.clear_all_effects()
 
     for f in dmx.get_fixtures_by_name_include('Flood'):
-        f.color(custom_white, fade_time)
+        f.color(flood_white, fade_time)
         f.dim(int(255 * 0.5), fade_time)
 
     off_group = dmx.get_fixtures_by_name_include('Art') \
