@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 import re
@@ -168,7 +168,7 @@ class Controller(ControllerHelpers):
         # Hold
         try:
             while True:
-                sleep(DMXMINWAIT)
+                sleep(0.1)
         except KeyboardInterrupt:
             # We're done
             return None
@@ -193,7 +193,7 @@ class Controller(ControllerHelpers):
         channels = {}
 
         # Channels for each registered fixture
-        for chans in [v.channels for v in self.__fixtures.values()]:
+        for chans in [v.channels for v in list(self.__fixtures.values())]:
             # Channels in this fixture
             for chanid, chanval in chans.items():
                 chanval = chanval['value']

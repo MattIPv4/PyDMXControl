@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 import builtins  # Builtins for Jinja context
@@ -13,6 +13,7 @@ from time import sleep  # Sleep
 from typing import Dict, Callable  # Typing
 
 from flask import Flask  # Flask
+from werkzeug.serving import make_server  # Flask server
 
 from ._routes import routes  # Web Routes
 from .. import DMXMINWAIT  # General Timing
@@ -21,6 +22,23 @@ from ..utils.timing import TimedEvents  # Timed Events
 # Set error only logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+
+
+class ServerThread(Thread):
+
+    def __init__(self, host, port, app):
+        super().__init__()
+
+        self.srv = make_server(host, port, app)
+        self.ctx = app.app_context()
+        self.ctx.push()
+
+    def run(self):
+        print("Started web controller: http://{}:{}".format(self.srv.host, self.srv.port))
+        self.srv.serve_forever()
+
+    def shutdown(self):
+        self.srv.shutdown()
 
 
 # WebController
@@ -89,23 +107,12 @@ class WebController:
             if not self.callbacks[key] or not callable(self.callbacks[key]):
                 del self.callbacks[key]
 
-    def __run(self):
-        has_run = False
-        self.__running = True
-        while self.__running:
-            # Run flask if not yet launched
-            if not has_run:
-                self.__app.run(host=self.__host, port=self.__port)
-                has_run = True
-            # Sleep DMX delay time
-            sleep(DMXMINWAIT)
-
     def run(self):
         if not self.__running:
-            self.__thread = Thread(target=self.__run)
+            self.__thread = ServerThread(self.__host, self.__port, self.__app)
             self.__thread.daemon = True
             self.__thread.start()
-            print("Started web controller: http://{}:{}".format(self.__host, self.__port))
 
     def stop(self):
+        self.__thread.shutdown()
         self.__running = False

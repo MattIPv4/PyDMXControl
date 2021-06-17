@@ -238,8 +238,7 @@ def callback():
 
 
 # Enable the callback
-dmx.ticker.set_interval(500)
-dmx.ticker.set_callback(callback)
+dmx.ticker.add_callback(callback, 500)
 
 # Debug
 callbacks = {
@@ -257,5 +256,5 @@ dmx.web_control(callbacks=callbacks, timed_events={
 # dmx.debug_control(callbacks)
 
 # Close the controller once we're done
-dmx.sleep_till_enter()
+dmx.sleep_till_interrupt()
 dmx.close()
