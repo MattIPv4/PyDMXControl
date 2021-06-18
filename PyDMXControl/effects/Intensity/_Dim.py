@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from ..defaults import Effect
@@ -17,16 +17,20 @@ class Dim(Effect):
         self.__start = None
 
     def callback(self):
+        # Paused
+        if not self._animating:
+            return
+
         # New
         if self.__start is None:
-            self.__start = self.ticker.millis_now()
+            self.__start = self.fixture.controller.ticker.millis_now()
 
         offset = self.speed * self.offset  # Calculate offset duration
         delay = self.speed * self.delay  # Calculate delay period after effect
         total = self.speed + delay  # Calculate total loop time (speed + delay)
 
         start = self.__start + offset  # Account for initial offset
-        since_start = self.ticker.millis_now() - start  # Calculate time since effect started
+        since_start = self.fixture.controller.ticker.millis_now() - start  # Calculate time since effect started
         since_last = since_start % total  # Calculate time since this loop started
 
         # If in delay period

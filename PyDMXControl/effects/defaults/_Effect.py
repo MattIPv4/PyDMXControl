@@ -2,12 +2,10 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from typing import List
-
-from ...utils.timing import Ticker
 
 
 class Effect:
@@ -23,23 +21,23 @@ class Effect:
         self.delay = delay / 100
         self.offset = offset / 100
 
-        # Ticker for callback
-        self.ticker = Ticker()
-        self.ticker.set_interval(0)
+        # Animating flag for ticket
+        self._animating = False
 
     def callback(self):
         pass
 
     def pause(self) -> bool:
-        return self.ticker.pause()
+        self._animating = not self._animating
+        return self.__animating
 
     def stop(self):
-        self.ticker.stop()
+        self._animating = False
+        self.fixture.controller.ticker.remove_callback(self.callback)
 
     def start(self):
-        self.ticker.clear_callbacks()
-        self.ticker.add_callback(self.callback)
-        self.ticker.start()
+        self._animating = True
+        self.fixture.controller.ticker.add_callback(self.callback, 0)
 
     @classmethod
     def group_apply(cls, fixtures: List['Fixture'], speed: float, *args, **kwargs):
