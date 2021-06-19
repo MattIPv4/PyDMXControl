@@ -22,22 +22,26 @@ class Effect:
         self.offset = offset / 100
 
         # Animating flag for ticket
-        self._animating = False
+        self.__animating = False
+
+    def __callback(self):
+        if self.__animating:
+            self.callback()
 
     def callback(self):
         pass
 
     def pause(self) -> bool:
-        self._animating = not self._animating
+        self.__animating = not self.__animating
         return self.__animating
 
     def stop(self):
-        self._animating = False
-        self.fixture.controller.ticker.remove_callback(self.callback)
+        self.__animating = False
+        self.fixture.controller.ticker.remove_callback(self.__callback)
 
     def start(self):
-        self._animating = True
-        self.fixture.controller.ticker.add_callback(self.callback, 0)
+        self.__animating = True
+        self.fixture.controller.ticker.add_callback(self.__callback, 0)
 
     @classmethod
     def group_apply(cls, fixtures: List['Fixture'], speed: float, *args, **kwargs):

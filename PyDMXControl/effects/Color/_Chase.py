@@ -33,10 +33,6 @@ class Chase(Effect):
         self.__start = None
 
     def callback(self):
-        # Paused
-        if not self._animating:
-            return
-
         # New
         if self.__start is None:
             self.__start = self.fixture.controller.ticker.millis_now()
