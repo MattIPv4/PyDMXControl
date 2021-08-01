@@ -7,7 +7,6 @@
 
 import re
 from datetime import datetime
-from threading import Thread
 from time import sleep, time
 from typing import Union, List, Tuple, Type
 from warnings import warn
@@ -47,26 +46,25 @@ class Channel:
 
 class FixtureHelpers:
 
-    def __dim(self, current, target, millis, channel):
-        start = time() * 1000.0
-        gap = target - current
-
-        if millis > 0:
-            while (time() * 1000.0) - start <= millis:
-                diff = gap * (((time() * 1000.0) - start) / millis)
-                self.set_channel(channel, int(current + diff))
-                sleep(0.000001)
-        self.set_channel(channel, int(target))
-
     def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
 
         # Calculate what we need
         current = self.get_channel_value(self.get_channel_id(channel))[0]
+        start = time() * 1000.0
+        gap = target_value - current
+        millis = max(milliseconds, 0)
 
-        # Create the thread and run loop
-        thread = Thread(target=self.__dim, args=(current, target_value, milliseconds, channel))
-        thread.daemon = True
-        thread.start()
+        # Create the callback for ticker
+        def callback():
+            if (time() * 1000.0) - start <= millis:
+                diff = gap * (((time() * 1000.0) - start) / millis)
+                self.set_channel(channel, int(current + diff))
+            else:
+                self.set_channel(channel, int(target_value))
+                self.controller.ticker.remove_callback(callback)
+
+        # Start the callback
+        self.controller.ticker.add_callback(callback, 0)
 
         return self
 
