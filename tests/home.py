@@ -33,7 +33,7 @@ divoom_address = '11:75:58:2D:A8:65'
 
 # Create all the custom state methods
 
-# XMAS state, used throughout the day/evening in December
+# XMAS state, used throughout the day in December
 # Warm shelves + flood, with snowy art/books/board, standard white desk + key
 def xmas():
     dmx.clear_all_effects()
@@ -48,7 +48,8 @@ def xmas():
 
     blue_white_group = dmx.get_fixtures_by_name_include('Art') \
                        + dmx.get_fixtures_by_name_include('Board') \
-                       + dmx.get_fixtures_by_name_include('Books')
+                       + dmx.get_fixtures_by_name_include('Books') \
+                       + dmx.get_fixtures_by_name_include('Shelving')
     Color_Chase.group_apply(blue_white_group, 60 * 1000,
                             colors=[custom_blue, custom_snow, custom_blue, custom_blue])
     for f in blue_white_group:
@@ -85,7 +86,8 @@ def day():
 
     off_group = dmx.get_fixtures_by_name_include('Art') \
                 + dmx.get_fixtures_by_name_include('Board') \
-                + dmx.get_fixtures_by_name_include('Shelf')
+                + dmx.get_fixtures_by_name_include('Shelf') \
+                + dmx.get_fixtures_by_name_include('Shelving')
     for f in off_group:
         f.color(Colors.Black, fade_time)
         f.dim(0, fade_time)
@@ -110,7 +112,7 @@ def day():
 
 # Evening state, used later in the day outside December
 # Warm flood, standard white desk + key, blue art/books/board/shelves
-def evening():
+def full():
     dmx.clear_all_effects()
 
     for f in dmx.get_fixtures_by_name_include('Flood'):
@@ -119,7 +121,8 @@ def evening():
 
     main_blue_group = dmx.get_fixtures_by_name_include('Art') \
                       + dmx.get_fixtures_by_name_include('Board') \
-                      + dmx.get_fixtures_by_name_include('Books')
+                      + dmx.get_fixtures_by_name_include('Books') \
+                      + dmx.get_fixtures_by_name_include('Shelving')
     for f in main_blue_group:
         f.dim(255, fade_time)
 
@@ -152,7 +155,8 @@ def late():
 
     dim_group = dmx.get_fixtures_by_name_include('Art') \
                 + dmx.get_fixtures_by_name_include('Board') \
-                + dmx.get_fixtures_by_name_include('Shelf')
+                + dmx.get_fixtures_by_name_include('Shelf') \
+                + dmx.get_fixtures_by_name_include('Shelving')
     for f in dim_group:
         f.color(Colors.Warm, fade_time)
         f.dim(int(255 * 0.5), fade_time)
@@ -192,22 +196,19 @@ def divoom_on():
 # Create a time map of states for each day
 def get_times() -> List[Dict[int, Callable]]:
     times = [
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Monday
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Tuesday
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Wednesday
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Thursday
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Friday
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Saturday
-        {0: night, 900: day, 1800: evening, 2100: late, 2200: night},  # Sunday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Monday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Tuesday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Wednesday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Thursday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Friday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Saturday
+        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Sunday
     ]
     # Xmas/jingle jam adjustment
     if datetime.today().month == 12:
         for i in range(len(times)):
-            del times[i][1800]
-            del times[i][2100]
+            del times[i][1300]
             times[i][900] = xmas
-            times[i][2200] = late
-            times[i][2300] = night
     return times
 
 
@@ -244,7 +245,7 @@ dmx.ticker.add_callback(callback, 500)
 callbacks = {
     "night": night,
     "day": day,
-    "evening": evening,
+    "full": full,
     "late": late,
     "xmas": xmas,
     "divoom-off": divoom_off,

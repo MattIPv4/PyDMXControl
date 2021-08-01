@@ -42,7 +42,11 @@ dmx.all_locate()
 sleep(5)
 
 # Test color chase
-walls = dmx.get_fixtures_by_name_include('Board') + dmx.get_fixtures_by_name_include('Art') + dmx.get_fixtures_by_name_include('Shelf') + dmx.get_fixtures_by_name_include('Books')
+walls = dmx.get_fixtures_by_name_include('Board') \
+        + dmx.get_fixtures_by_name_include('Art') \
+        + dmx.get_fixtures_by_name_include('Shelf') \
+        + dmx.get_fixtures_by_name_include('Books') \
+        + dmx.get_fixtures_by_name_include('Shelving')
 dmx.all_on()
 Chase.group_apply(walls, 250 * len(walls), colors=([Colors.Black] * (len(walls) - 1) + [Colors.Blue]))
 

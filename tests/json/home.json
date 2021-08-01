@@ -8,7 +8,7 @@
     {
         "type": "Stairville.LED_Par_36",
         "args": [],
-        "name": "S1 Board Left",
+        "name": "S1 Shelving Unit",
         "start_channel": 8
     },
     {
