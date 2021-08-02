@@ -47,12 +47,16 @@ class Channel:
 class FixtureHelpers:
 
     def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
+        # Handle instant edge-case
+        millis = max(milliseconds, 0)
+        if millis == 0:
+            self.set_channel(channel, int(target_value))
+            return self
 
         # Calculate what we need
         current = self.get_channel_value(self.get_channel_id(channel))[0]
         start = time() * 1000.0
         gap = target_value - current
-        millis = max(milliseconds, 0)
 
         # Create the callback for ticker
         def callback():
