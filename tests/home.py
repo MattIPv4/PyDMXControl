@@ -196,19 +196,19 @@ def divoom_on():
 # Create a time map of states for each day
 def get_times() -> List[Dict[int, Callable]]:
     times = [
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Monday
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Tuesday
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Wednesday
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Thursday
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Friday
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Saturday
-        {0: night, 900: day, 1300: full, 2200: late, 2300: night},  # Sunday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Monday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Tuesday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Wednesday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Thursday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Friday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Saturday
+        {0: night, 1200: day, 1300: full, 2200: late, 2300: night},  # Sunday
     ]
     # Xmas/jingle jam adjustment
     if datetime.today().month == 12:
         for i in range(len(times)):
             del times[i][1300]
-            times[i][900] = xmas
+            times[i][1200] = xmas
     return times
 
 
