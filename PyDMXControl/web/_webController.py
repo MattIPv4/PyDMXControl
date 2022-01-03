@@ -24,8 +24,8 @@ log.setLevel(logging.ERROR)
 
 class ServerThread(Thread):
 
-    def __init__(self, host, port, app):
-        super().__init__()
+    def __init__(self, host, port, app, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.srv = make_server(host, port, app)
         self.ctx = app.app_context()
