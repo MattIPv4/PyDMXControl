@@ -5,7 +5,7 @@ from PyDMXControl.controllers import uDMXController as Controller
 from PyDMXControl.effects.Color import Chase
 from PyDMXControl.effects.Intensity import Dim
 
-dmx = Controller()
+dmx = Controller(dynamic_frame=True)
 
 # Load some fixtures from JSON
 dmx.json.load_config('json/home.json')

@@ -55,8 +55,7 @@ class Player:
         volume = max(min(volume, 1), 0)  # clamp
 
         # Create the thread and run loop
-        thread = Thread(target=self.__fade_volume, args=(self.__volume, volume, milliseconds))
-        thread.daemon = True
+        thread = Thread(target=self.__fade_volume, args=(self.__volume, volume, milliseconds), daemon=True)
         thread.start()
 
     def __play(self, file, start_millis):
@@ -84,8 +83,7 @@ class Player:
 
     def play(self, file: str, start_millis: int = 0):
         # Play in the background so this isn't blocking
-        thread = Thread(target=self.__play, args=[file, start_millis])
-        thread.daemon = True
+        thread = Thread(target=self.__play, args=[file, start_millis], daemon=True)
         thread.start()
 
     def pause(self):

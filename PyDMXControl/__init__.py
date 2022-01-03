@@ -22,7 +22,7 @@ from collections import namedtuple
 from ._Colors import Colors
 
 # DMXMINWAIT = 0.000001 * 92
-DMXMINWAIT = 1/60  # Target 60fps
+DMXMINWAIT = 1 / 60  # Target 60 fps
 
 __title__ = 'PyDMXControl'
 __author__ = 'Matt Cowley (MattIPv4)'

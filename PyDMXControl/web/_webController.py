@@ -2,21 +2,19 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 import builtins  # Builtins for Jinja context
 import logging  # Logging
 from os import path  # OS Path
 from threading import Thread  # Threading
-from time import sleep  # Sleep
 from typing import Dict, Callable  # Typing
 
 from flask import Flask  # Flask
 from werkzeug.serving import make_server  # Flask server
 
 from ._routes import routes  # Web Routes
-from .. import DMXMINWAIT  # General Timing
 from ..utils.timing import TimedEvents  # Timed Events
 
 # Set error only logging
@@ -109,8 +107,7 @@ class WebController:
 
     def run(self):
         if not self.__running:
-            self.__thread = ServerThread(self.__host, self.__port, self.__app)
-            self.__thread.daemon = True
+            self.__thread = ServerThread(self.__host, self.__port, self.__app, daemon=True)
             self.__thread.start()
 
     def stop(self):

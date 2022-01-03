@@ -3,7 +3,7 @@ from timed_events_data import get_timed_events
 from PyDMXControl.controllers import uDMXController as Controller
 
 # Create controller and events
-dmx = Controller(suppress_dmx_value_warnings=True)
+dmx = Controller(dynamic_frame=True, suppress_dmx_value_warnings=True)
 
 # Load some fixtures from JSON
 dmx.json.load_config('json/home.json')

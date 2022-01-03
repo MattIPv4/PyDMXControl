@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 
@@ -27,6 +27,13 @@ class MissingArgumentException(PyDMXControlException, ValueError):
     def __init__(self, argument: str, kwarg: bool = False):
         super().__init__("Argument '{}' ({}) missing from call.".format(
             argument, "Positional" if not kwarg else "Keyword"))
+
+
+class InvalidArgumentException(PyDMXControlException, ValueError):
+
+    def __init__(self, argument: str, message: str, kwarg: bool = False):
+        super().__init__("Argument '{}' ({}) is not valid - {}.".format(
+            argument, message, "Positional" if not kwarg else "Keyword"))
 
 
 class JSONConfigException(PyDMXControlException):

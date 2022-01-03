@@ -1,7 +1,7 @@
 from PyDMXControl.controllers import uDMXController as Controller
 
 # Create our controller
-dmx = Controller()
+dmx = Controller(dynamic_frame=True)
 
 # Load fixture in from json
 dmx.json.load_config('json/load.json')

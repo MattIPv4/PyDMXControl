@@ -3,7 +3,7 @@ from PyDMXControl.effects.Intensity import Dim
 from PyDMXControl.profiles.funGeneration import LED_Pot_12_RGBW
 from PyDMXControl.profiles.Stairville import LED_Par_10mm, LED_Par_36
 
-dmx = Controller()
+dmx = Controller(dynamic_frame=True)
 
 # Fixtures
 dmx.add_fixture(LED_Par_10mm)

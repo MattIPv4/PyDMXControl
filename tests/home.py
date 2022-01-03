@@ -12,7 +12,7 @@ from timed_events_data import get_timed_events
 # See the tests directory for other recent/new features that I've possibly been working on.
 
 # Create our controller
-dmx = Controller()
+dmx = Controller(dynamic_frame=True)
 
 # Load some fixtures from JSON
 dmx.json.load_config('json/home.json')

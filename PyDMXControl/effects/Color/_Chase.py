@@ -2,14 +2,14 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from math import ceil, floor
 
 from ..defaults import Effect
 from ... import Colors
-from ...utils.exceptions import MissingArgumentException
+from ...utils.exceptions import MissingArgumentException, InvalidArgumentException
 
 
 class Chase(Effect):
@@ -20,6 +20,10 @@ class Chase(Effect):
 
         self.__colors = kwargs['colors'].copy()
         del kwargs['colors']
+        self.__length = len(self.__colors)
+
+        if self.__length < 2:
+            raise InvalidArgumentException('callback', 'Must contain two or more colors', True)
 
         self.__snap = False
         if 'snap' in kwargs and isinstance(kwargs['snap'], bool):
@@ -37,7 +41,7 @@ class Chase(Effect):
         if self.__start is None:
             self.__start = self.fixture.controller.ticker.millis_now()
 
-        offset = (self.speed / (len(self.__colors))) * self.offset  # Calculate offset duration
+        offset = (self.speed / self.__length) * self.offset  # Calculate offset duration
         start = self.__start + offset  # Account for initial offset
         since_start = self.fixture.controller.ticker.millis_now() - start  # Calculate time since effect started
         since_last = since_start % self.speed  # Calculate time since this loop started
@@ -52,12 +56,9 @@ class Chase(Effect):
             progress = 1 + progress
 
         # Convert to color index
-        progress_index = len(self.__colors) * progress
+        progress_index = self.__length * progress
         next_i = ceil(progress_index) - 1
         previous_i = floor(progress_index) - 1
-        total = next_i - previous_i
-        if total == 0:
-            return
         percent = 1 - (progress_index - 1 - previous_i)
 
         # Hit 0% & 100%

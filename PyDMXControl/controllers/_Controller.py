@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 import re
@@ -13,7 +13,7 @@ from typing import Type, List, Union, Dict, Tuple, Callable
 from warnings import warn
 
 from .utils.debug import Debugger
-from .. import Colors, name, DMXMINWAIT
+from .. import Colors, name
 from ..profiles.defaults import Fixture_Channel, Fixture
 from ..utils.exceptions import JSONConfigLoadException, LTPCollisionException
 from ..utils.timing import Ticker
@@ -176,17 +176,23 @@ class Controller(ControllerHelpers):
     def get_frame(self) -> List[int]:
         # Generate frame
         self.__frame = [0] * 512
+        first = 1
         if self.__dynamic_frame:
-            self.__frame = [0] * (self.next_channel - 1)
+            first = self.first_channel
+            self.__frame = [0] * (self.next_channel - first)
 
         # Get all channels values
         for key, val in self.channels.items():
             # If channel in frame
-            if key - 1 < len(self.__frame):
-                self.__frame[key - 1] = val[0]
+            if key - first < len(self.__frame):
+                self.__frame[key - first] = val[0]
 
         # Return populated frame
         return self.__frame
+
+    @property
+    def dynamic_frame(self) -> bool:
+        return self.__dynamic_frame
 
     @property
     def channels(self) -> Dict[int, Fixture_Channel]:
@@ -227,6 +233,14 @@ class Controller(ControllerHelpers):
 
         # Return next channel
         return max(channels or [0]) + 1
+
+    @property
+    def first_channel(self) -> int:
+        # Get all channels
+        channels = list(self.channels.keys())
+
+        # Return next channel
+        return min(channels or [1])
 
     def debug_control(self, callbacks: Dict[str, Callable] = None):
         if callbacks is None:

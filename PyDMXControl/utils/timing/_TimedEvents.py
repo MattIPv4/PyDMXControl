@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from collections import OrderedDict
@@ -61,21 +61,18 @@ class TimedEvents:
 
     def run(self, start_millis: int = 0):
         # Create the thread and run loop
-        thread = Thread(target=self.__run, args=[start_millis])
-        thread.daemon = True
+        thread = Thread(target=self.__run, args=[start_millis], daemon=True)
         thread.start()
 
         for cb in self.__run_cbs:
-            thread = Thread(target=cb)
-            thread.daemon = True
+            thread = Thread(target=cb, daemon=True)
             thread.start()
 
     def stop(self):
         self.__started = None
 
         for cb in self.__stop_cbs:
-            thread = Thread(target=cb)
-            thread.daemon = True
+            thread = Thread(target=cb, daemon=True)
             thread.start()
 
         for event in self.__events.values():
