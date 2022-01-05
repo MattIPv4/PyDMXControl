@@ -1,4 +1,5 @@
 pyusb
 udmx-pyusb
+pyftdi
 flask
 pyserial
