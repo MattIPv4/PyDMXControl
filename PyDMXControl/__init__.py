@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  *
  *  This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published
@@ -21,8 +21,7 @@ from collections import namedtuple
 
 from ._Colors import Colors
 
-# DMXMINWAIT = 0.000001 * 92
-DMXMINWAIT = 1 / 60  # Target 60 fps
+TICKER_DELAY = 1 / 60  # Target 60 fps
 
 __title__ = 'PyDMXControl'
 __author__ = 'Matt Cowley (MattIPv4)'

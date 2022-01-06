@@ -18,8 +18,8 @@
 """
 
 from ._Controller import Controller
-from ._printController import printController
-from ._transmittingController import transmittingController
+from ._PrintController import PrintController
+from ._TransmittingController import TransmittingController
 from ._uDMXController import uDMXController
 from ._OpenDMXController import OpenDMXController
-from ._serialController import SerialController
+from ._SerialController import SerialController

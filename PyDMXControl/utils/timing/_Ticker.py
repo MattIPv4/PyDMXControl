@@ -12,7 +12,7 @@ from typing import Callable
 from warnings import warn
 
 from ..exceptions import InvalidArgumentException
-from ... import DMXMINWAIT
+from ... import TICKER_DELAY
 
 
 class Callback:
@@ -69,7 +69,7 @@ class Ticker:
             # Get end time and duration
             loop_end = self.millis_now()
             loop_dur = loop_end - loop_start
-            wait_dur = DMXMINWAIT * 1000.0 - loop_dur
+            wait_dur = TICKER_DELAY * 1000.0 - loop_dur
 
             # Handle negative wait
             if wait_dur < 0:

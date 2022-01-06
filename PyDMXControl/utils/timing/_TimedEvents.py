@@ -12,7 +12,7 @@ from typing import Dict, Any
 
 from ._TimedEvent import TimedEvent
 from ..exceptions import EventAlreadyExistsException
-from ... import DMXMINWAIT
+from ... import TICKER_DELAY
 
 
 class TimedEvents:
@@ -126,4 +126,4 @@ class TimedEvents:
     def sleep_till_done(self):
         # Hold until all events completed
         while self.__running:
-            sleep(DMXMINWAIT)
+            sleep(TICKER_DELAY)
