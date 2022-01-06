@@ -6,7 +6,7 @@
 </h1>
 
 <!-- Tag line -->
-<h3 align="center">A Python 3 module to control DMX using uDMX - Featuring fixture profiles, built-in effects and a web control panel.</h3>
+<h3 align="center">A Python 3 module to control DMX using OpenDMX or uDMX - Featuring fixture profiles, built-in effects and a web control panel.</h3>
 
 <!-- Badges -->
 <p align="center">
@@ -82,8 +82,10 @@ Install via GitHub **(development version, with audio)**
     * [Demo: tests/effects.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/effects.py)
   
   
-  * uDMX works out of the box
+  * OpenDMX and uDMX works out of the box
     * Package developed on and tested extensively with a uDMX system
+    * OpenDMX (FTDI) controller also provided, as well as direct serial
+    * Extensible for custom [transmitting controllers](https://github.com/MattIPv4/PyDMXControl/blob/master/PyDMXControl/controllers/_TransmittingController.py)
   
   
   * CUSTOM callbacks supported with an internal ticker
@@ -118,9 +120,10 @@ An example of how to get a single dimmer working with PyDMXControl,
 providing the web control panel and the console debug system once started.
 
 ```python
-# Import the uDMX controller from PyDMXControl,
+# Import the OpenDMX or uDMX controller from PyDMXControl,
 #  this will be how the data is outputted.
-from PyDMXControl.controllers import uDMXController
+from PyDMXControl.controllers import OpenDMXController
+# from PyDMXControl.controllers import uDMXController
 
 # Import the fixture profile we will use,
 #  the simple Dimmer in this example.
@@ -129,7 +132,8 @@ from PyDMXControl.profiles.Generic import Dimmer
 # Create an instance of the uDMX controller, 
 #  this holds all the fixture information and outputs it.
 # This will start outputting data immediately.
-dmx = uDMXController()
+dmx = OpenDMXController()
+# dmx = uDMXController()
 
 # Add a new Dimmer fixture to our controller
 #  and save it to a variable so we can access it.
@@ -178,10 +182,7 @@ Has a debug shell that allows control of fixture channel values and access to ge
 an advanced web control panel with access to global callbacks, fixture helpers, fixture colors and control over 
 individual fixture channels.
 
-Currently only supports actual output via uDMX.\
-There is also a print controller included that prints the DMX frames to console at the same rate it should output them
- to a data cable (this can cause issues though with other things printing as well).
-
+Currently, output is supported via OpenDMX, uDMX or raw serial.\
 If someone wants to buy me an Enttec USB DMX Pro then I'll try make it work with that too.
 
 Thank you to Dave Hocker, author of [pyudmx](https://github.com/dhocker/udmx-pyusb/), for his work on pyudmx and his
