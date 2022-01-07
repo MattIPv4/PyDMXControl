@@ -8,13 +8,13 @@
 import builtins  # Builtins for Jinja context
 import logging  # Logging
 from os import path  # OS Path
-from threading import Thread  # Threading
 from typing import Dict, Callable  # Typing
 
 from flask import Flask  # Flask
 from werkzeug.serving import make_server  # Flask server
 
 from ._routes import routes  # Web Routes
+from ..utils import ExceptionThread  # Threading
 from ..utils.timing import TimedEvents  # Timed Events
 
 # Set error only logging
@@ -22,7 +22,7 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 
-class ServerThread(Thread):
+class ServerThread(ExceptionThread):
 
     def __init__(self, host, port, app, *args, **kwargs):
         super().__init__(*args, **kwargs)
