@@ -6,10 +6,10 @@
 """
 
 from queue import Queue, Empty
-from threading import Thread
 from typing import List
 
 from ._Controller import Controller
+from ..utils import ExceptionThread
 
 
 class TransmittingController(Controller):
@@ -92,7 +92,7 @@ class TransmittingController(Controller):
         self._connect()
 
         # Start the thread
-        self.__thread = Thread(target=self.__runner, daemon=True)
+        self.__thread = ExceptionThread(target=self.__runner, daemon=True)
         self.__thread.start()
 
         # Add the transmission of data to the ticker

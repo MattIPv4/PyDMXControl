@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  *
  *  This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published
@@ -16,3 +16,5 @@
  *   along with this program. If not, please see
  *   <https://github.com/MattIPv4/PyDMXControl/blob/master/LICENSE> or <http://www.gnu.org/licenses/>.
 """
+
+from ._ExceptionThread import ExceptionThread
