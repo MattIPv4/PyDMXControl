@@ -1,5 +1,5 @@
 from datetime import datetime
-from subprocess import run
+from subprocess import run, CalledProcessError
 from time import sleep
 from typing import List, Dict, Callable
 
@@ -178,19 +178,25 @@ def late():
 
 
 def divoom_off():
-    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '0'], shell=True)
-    sleep(2)
-    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '0'], shell=True)
+    try:
+        run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '0'], shell=True)
+        sleep(2)
+        run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '0'], shell=True)
+    except CalledProcessError as e:
+        print('Divoom control error:\nExit code: ', e.returncode, '\nOutput: ', e.stderr.decode('utf-8'))
 
 
 def divoom_on():
-    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '100'], shell=True)
-    sleep(2)
-    run(['divoom-control', 'display-custom', '-a', divoom_address], shell=True)
-    sleep(2)
-    run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '100'], shell=True)
-    sleep(2)
-    run(['divoom-control', 'display-custom', '-a', divoom_address], shell=True)
+    try:
+        run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '100'], shell=True)
+        sleep(2)
+        run(['divoom-control', 'display-custom', '-a', divoom_address], shell=True)
+        sleep(2)
+        run(['divoom-control', 'set-brightness', '-a', divoom_address, '-b', '100'], shell=True)
+        sleep(2)
+        run(['divoom-control', 'display-custom', '-a', divoom_address], shell=True)
+    except CalledProcessError as e:
+        print('Divoom control error:\nExit code: ', e.returncode, '\nOutput: ', e.stderr.decode('utf-8'))
 
 
 # Create a time map of states for each day
