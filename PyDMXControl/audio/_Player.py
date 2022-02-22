@@ -13,7 +13,7 @@ with contextlib.redirect_stdout(None):  # PyGame please shut up
     import pygame
 
 from ..utils.exceptions import AudioException
-from .. import TICKER_DELAY
+from .. import DEFAULT_INTERVAL
 
 
 class Player:
@@ -76,7 +76,7 @@ class Player:
         # Play the file and tick until play completed
         pygame.mixer.music.play(start=start_millis / 1000)
         while pygame.mixer.music.get_busy():
-            sleep(TICKER_DELAY)
+            sleep(DEFAULT_INTERVAL)
 
         # Let everyone know play is done
         self.__done = True
@@ -98,7 +98,7 @@ class Player:
     def sleep_till_done(self):
         # Hold until the play method sets done
         while not self.__done:
-            sleep(TICKER_DELAY)
+            sleep(DEFAULT_INTERVAL)
 
     def sleep_till_interrupt(self):
         # This is very useful for playing song, stopping at a specific point and getting the timestamp
@@ -107,7 +107,7 @@ class Player:
         # Hold
         try:
             while True:
-                sleep(TICKER_DELAY)
+                sleep(DEFAULT_INTERVAL)
         except KeyboardInterrupt:
             print(pygame.mixer.music.get_pos())
             self.stop()

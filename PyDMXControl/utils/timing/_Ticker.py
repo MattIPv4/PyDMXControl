@@ -12,7 +12,7 @@ from typing import Callable
 from warnings import warn
 
 from ..exceptions import InvalidArgumentException
-from ... import TICKER_DELAY
+from ... import DEFAULT_INTERVAL
 
 
 class Callback:
@@ -33,10 +33,12 @@ class Ticker:
     def millis_now() -> float:
         return time() * 1000.0
 
-    def __init__(self):
+    def __init__(self, interval_millis: float = DEFAULT_INTERVAL * 1000.0, warn_on_behind: bool = True):
         self.__callbacks = []
         self.__paused = False
         self.__ticking = False
+        self.__interval = interval_millis
+        self.__warn_on_behind = warn_on_behind
 
     def __ticker(self):
         # Loop over each callback
@@ -69,11 +71,12 @@ class Ticker:
             # Get end time and duration
             loop_end = self.millis_now()
             loop_dur = loop_end - loop_start
-            wait_dur = TICKER_DELAY * 1000.0 - loop_dur
+            wait_dur = self.__interval - loop_dur
 
             # Handle negative wait
             if wait_dur < 0:
-                warn("Ticker loop behind by {:,}ms, took {:,}ms".format(-wait_dur, loop_dur))
+                if self.__warn_on_behind:
+                    warn("Ticker loop behind by {:,}ms, took {:,}ms".format(-wait_dur, loop_dur))
                 continue
 
             # Sleep DMX delay time

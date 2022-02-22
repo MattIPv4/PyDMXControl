@@ -13,7 +13,7 @@ from typing import Type, List, Union, Dict, Tuple, Callable
 from warnings import warn
 
 from .utils.debug import Debugger
-from .. import Colors, name
+from .. import Colors, name, DEFAULT_INTERVAL
 from ..profiles.defaults import Fixture_Channel, Fixture
 from ..utils.exceptions import JSONConfigLoadException, LTPCollisionException
 from ..utils.timing import Ticker
@@ -49,7 +49,13 @@ class ControllerHelpers:
 
 class Controller(ControllerHelpers):
 
-    def __init__(self, *, ltp: bool = True, dynamic_frame: bool = False, suppress_dmx_value_warnings: bool = False):
+    def __init__(self, *,
+                 ltp: bool = True,
+                 dynamic_frame: bool = False,
+                 suppress_dmx_value_warnings: bool = False,
+                 suppress_ticker_behind_warnings: bool = False,
+                 ticker_interval_millis: float = DEFAULT_INTERVAL * 1000.0,
+                 ):
         # Store all registered fixtures
         self.__fixtures = {}
 
@@ -61,7 +67,7 @@ class Controller(ControllerHelpers):
         self.__dynamic_frame = dynamic_frame
 
         # Ticker for callback
-        self.ticker = Ticker()
+        self.ticker = Ticker(ticker_interval_millis, not suppress_ticker_behind_warnings)
         self.ticker.start()
 
         # Web control attr
@@ -71,7 +77,7 @@ class Controller(ControllerHelpers):
         self.json = JSONLoadSave(self)
 
         # Warning data
-        self.dmx_value_warnings = not suppress_dmx_value_warnings
+        self.__dmx_value_warnings = not suppress_dmx_value_warnings
 
     def add_fixture(self, fixture: Union[Fixture, Type[Fixture]], *args, **kwargs) -> Fixture:
         # Handle auto inserting
@@ -193,6 +199,10 @@ class Controller(ControllerHelpers):
     @property
     def dynamic_frame(self) -> bool:
         return self.__dynamic_frame
+
+    @property
+    def dmx_value_warnings(self) -> bool:
+        return self.__dmx_value_warnings
 
     @property
     def channels(self) -> Dict[int, Fixture_Channel]:

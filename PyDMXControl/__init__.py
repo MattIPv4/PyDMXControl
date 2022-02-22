@@ -21,7 +21,7 @@ from collections import namedtuple
 
 from ._Colors import Colors
 
-TICKER_DELAY = 1 / 60  # Target 60 fps
+DEFAULT_INTERVAL = 1 / 60  # Target 60 fps
 
 __title__ = 'PyDMXControl'
 __author__ = 'Matt Cowley (MattIPv4)'
