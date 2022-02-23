@@ -51,8 +51,8 @@ class JSONConfigLoadException(JSONConfigException):
 
 class JSONConfigSaveException(JSONConfigException):
 
-    def __init__(self, message: str):
-        super().__init__(message)
+    def __init__(self, fixture_id: int):
+        super().__init__("Failed to generate JSON data for fixture #{}".format(fixture_id))
 
 
 class AudioException(PyDMXControlException):
@@ -65,3 +65,9 @@ class EventAlreadyExistsException(PyDMXControlException):
 
     def __init__(self, timestamp: int):
         super().__init__("An event already exists at {}".format(timestamp))
+
+
+class ChannelNotFoundException(PyDMXControlException):
+
+    def __init__(self, channel: str, fixture_id: int):
+        super().__init__("Channel {} not found for fixture #{}".format(channel, fixture_id))

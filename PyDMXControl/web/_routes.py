@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2019 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from re import compile as re_compile  # Regex
@@ -12,6 +12,7 @@ from flask import Blueprint, render_template, current_app, redirect, url_for, js
 
 from .. import Colors  # Colors
 from ..profiles.defaults import Fixture, Vdim  # Fixtures
+from ..utils.exceptions import ChannelNotFoundException # Exceptions
 
 routes = Blueprint('', __name__, url_prefix='/')
 
@@ -67,9 +68,12 @@ def channel(fid: int, cid: int):
     this_fixture = current_app.parent.controller.get_fixture(fid)
     if not this_fixture:
         return redirect(url_for('.home'))
-    chan = this_fixture.get_channel_id(cid)
-    if chan == -1:
+
+    try:
+        chan = this_fixture.get_channel_id(cid)
+    except ChannelNotFoundException:
         return redirect(url_for('.fixture', fid=this_fixture.id))
+
     this_channel = fixture_channels(this_fixture)[chan]
     return render_template("channel.jinja2", fixture=this_fixture, channel=this_channel, cid=chan)
 
@@ -80,8 +84,10 @@ def channel_val(fid: int, cid: int, val: int):
     this_fixture = current_app.parent.controller.get_fixture(fid)
     if not this_fixture:
         return jsonify({"error": "Fixture {} not found".format(fid)}), 404
-    chan = this_fixture.get_channel_id(cid)
-    if chan == -1:
+
+    try:
+        chan = this_fixture.get_channel_id(cid)
+    except ChannelNotFoundException:
         return jsonify({"error": "Channel {} not found".format(cid)}), 404
 
     if val < 0 or val > 255:
@@ -124,8 +130,10 @@ def intensity(fid: int, val: int):
     this_fixture = current_app.parent.controller.get_fixture(fid)
     if not this_fixture:
         return jsonify({"error": "Fixture {} not found".format(fid)}), 404
-    chan = this_fixture.get_channel_id("dimmer")
-    if chan == -1:
+
+    try:
+        chan = this_fixture.get_channel_id("dimmer")
+    except ChannelNotFoundException:
         return jsonify({"error": "Dimmer channel not found"}), 404
 
     if val < 0 or val > 255:

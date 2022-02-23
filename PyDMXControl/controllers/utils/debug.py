@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from collections import namedtuple
@@ -12,6 +12,7 @@ from typing import List, Tuple, Union, Dict, Callable
 
 from ... import Colors
 from ...profiles.defaults import Fixture, Vdim
+from ...utils.exceptions import ChannelNotFoundException
 
 
 class Debugger:
@@ -166,10 +167,9 @@ class Debugger:
         channel = input("\n[Channel Debug] Channel Number/Name: ").strip()
 
         # Find
-        channel = fixture.get_channel_id(channel)
-
-        # Abort if not found
-        if channel == -1:
+        try:
+            channel = fixture.get_channel_id(channel)
+        except ChannelNotFoundException:
             return
 
         # Value

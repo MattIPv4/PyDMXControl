@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2021 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 import re
@@ -13,7 +13,7 @@ from warnings import warn
 
 from ... import Colors
 from ...effects.defaults import Effect
-from ...utils.exceptions import FixtureCreationException, JSONConfigSaveException
+from ...utils.exceptions import FixtureCreationException, JSONConfigSaveException, ChannelNotFoundException
 
 
 class Channel:
@@ -86,24 +86,23 @@ class FixtureHelpers:
                                                      " Supply valid Colors enum or List/Tuple of integers.")
 
         # Get a tuple
-        color = Colors.to_tuples(color)
+        color = [f for f in Colors.to_tuples(color) if self.has_channel(f[0])]
 
         # Apply
         self.anim(milliseconds, *color)
 
     def get_color(self) -> Union[None, List[int]]:
-        red = self.get_channel_value(self.get_channel_id("r"))
-        green = self.get_channel_value(self.get_channel_id("g"))
-        blue = self.get_channel_value(self.get_channel_id("b"))
-        white = self.get_channel_value(self.get_channel_id("w"))
-        amber = self.get_channel_value(self.get_channel_id("a"))
-        if red[0] == -1 or green[0] == -1 or blue[0] == -1:
+        if not self.has_channel('r') or not self.has_channel('g') or not self.has_channel('b'):
             return None
-        color = [red[0], green[0], blue[0]]
-        if white[0] != -1:
-            color.append(white[0])
-            if amber[0] != -1:
-                color.append(amber[0])
+
+        color = [self.get_channel_value('r')[0], self.get_channel_value('g')[0], self.get_channel_value('b')[0]]
+
+        if self.has_channel('w'):
+            color.append(self.get_channel_value('w')[0])
+
+            if self.has_channel('a'):
+                color.append(self.get_channel_value('a')[0])
+
         return color
 
     def on(self):
@@ -246,7 +245,7 @@ class Fixture(FixtureHelpers):
         pattern = re.compile(r"^PyDMXControl\.profiles\.(([\w\d.]+)\.)*_[\w\d]+$", re.IGNORECASE)
         match = pattern.match(self.__class__.__module__)
         if not match:
-            raise JSONConfigSaveException("Failed to generate JSON data for fixture #{}".format(self.id))
+            raise JSONConfigSaveException(self.id)
         base = {
             "type": "{}.{}".format(match.group(2), self.__class__.__name__),
             "args": self.__args
@@ -264,11 +263,11 @@ class Fixture(FixtureHelpers):
         channel = str(channel)
 
         if channel.isdigit():
-            channel = int(channel)
-            if channel < len(self.__channels):
-                return channel
+            channel_int = int(channel)
+            if channel_int < len(self.__channels):
+                return channel_int
 
-        channel = str(channel).lower().strip()
+        channel = channel.lower().strip()
         if channel in self.__channel_aliases.keys():
             channel = self.__channel_aliases[channel]
 
@@ -276,23 +275,23 @@ class Fixture(FixtureHelpers):
             if chan.name == channel:
                 return i
 
-        return -1
+        raise ChannelNotFoundException(channel, self.id)
 
-    def get_channel_value(self, channel: int) -> Tuple[int, datetime]:
-        channel = self.get_channel_id(channel)
-        if channel >= len(self.__channels) or channel < 0:
-            return -1, datetime.utcnow()
-        return self.__channels[channel].get_value()
+    def has_channel(self, channel: Union[str, int]) -> bool:
+        try:
+            self.get_channel_id(channel)
+            return True
+        except ChannelNotFoundException:
+            return False
 
-    def set_channel(self, channel: [str, int], value: int) -> 'Fixture':
+    def get_channel_value(self, channel: Union[str, int]) -> Tuple[int, datetime]:
+        return self.__channels[self.get_channel_id(channel)].get_value()
+
+    def set_channel(self, channel: Union[str, int], value: int) -> 'Fixture':
         if not self._valid_channel_value(value, channel):
             return self
 
-        channel = self.get_channel_id(channel)
-        if channel == -1:
-            return self
-
-        self.__channels[channel].set_value(value)
+        self.__channels[self.get_channel_id(channel)].set_value(value)
         return self
 
     def set_channels(self, *args: Union[int, List[int], None], **kwargs) -> 'Fixture':

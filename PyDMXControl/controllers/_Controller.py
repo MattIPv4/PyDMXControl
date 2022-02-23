@@ -209,12 +209,9 @@ class Controller(ControllerHelpers):
         channels = {}
 
         # Channels for each registered fixture
-        for chans in [v.channels for v in list(self.__fixtures.values())]:
-            # Channels in this fixture
-            for chanid, chanval in chans.items():
+        for fixture in list(self.__fixtures.values()):
+            for chanid, chanval in fixture.channels.items():
                 chanval = chanval['value']
-                if chanval[0] == -1:
-                    chanval[0] = 0
 
                 # If channel id already set
                 if chanid in channels.keys():
