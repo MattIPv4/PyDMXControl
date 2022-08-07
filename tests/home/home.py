@@ -4,7 +4,7 @@ from time import sleep
 from typing import List, Dict, Callable
 
 from PyDMXControl import Colors
-from PyDMXControl.controllers import uDMXController as Controller
+from PyDMXControl.controllers import OpenDMXController as Controller
 from PyDMXControl.effects.Color import Color_Chase
 from timed_events_data import get_timed_events
 
@@ -12,10 +12,10 @@ from timed_events_data import get_timed_events
 # See the tests directory for other recent/new features that I've possibly been working on.
 
 # Create our controller
-dmx = Controller(dynamic_frame=True)
+dmx = Controller(dynamic_frame=True, suppress_ticker_behind_warnings=True)
 
 # Load some fixtures from JSON
-dmx.json.load_config('json/home.json')
+dmx.json.load_config('home/home.json')
 
 # Define some custom colors, a global fade time and the divoom device
 custom_blue = [0, 16, 255, 0]

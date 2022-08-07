@@ -40,7 +40,7 @@ def run():
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        sys.argv.append("home.py")
+        raise SyntaxError("Expected script to run as first argument")
 
     print("Need to create environment:", not os.path.exists("./venv"))
     if not os.path.exists("./venv"):
