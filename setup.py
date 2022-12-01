@@ -64,6 +64,10 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
 
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -85,9 +89,10 @@ setup(
     ),
     project_urls={
         "Source": "https://github.com/MattIPv4/PyDMXControl/tree/master",
-        "Funding": "http://patreon.mattcowley.co.uk/",
+        "Funding": "https://patreon.mattcowley.co.uk/",
         "Issues": "https://github.com/MattIPv4/PyDMXControl/issues",
-        "Slack": "http://slack.mattcowley.co.uk/",
+        "Discord": "https://discord.mattcowley.co.uk/",
+        "Slack": "https://slack.mattcowley.co.uk/",
     },
 )
 
