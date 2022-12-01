@@ -76,7 +76,6 @@ Install via GitHub **(development version, with audio)**
     * Intensity dim chase provided, configurable speed and offset provided
     * Included is a fixture color chase effect, unlimited number of colors supported
     * Effects can be applied to individual fixtures or multiple as a group
-    * [Demo: tests/effects.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/effects.py)
   
   
   * OpenDMX and uDMX works out of the box
@@ -97,19 +96,16 @@ Install via GitHub **(development version, with audio)**
     * Global and individual fixture intensity control via sliders
     * Quick access to callback functions globally and for each fixture
     * Color picker for individual fixtures as well as specific channel control
-    * [Demo: tests/web.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/web.py)
   
  
   * JSON fixture configurations
     * Load fixture configurations from JSON files into the controller
     * Save your current set of fixtures out to JSON files for later use
-    * [Demo: tests/json_config.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/json_config.py)
   
 
   * Optional AUDIO playback supported
     * Play audio tracks whilst PyDMXControl continues to run lighting control
     * Uses pygame for best cross-platform and audio format support
-    * [Demo: tests/audio.py](https://github.com/MattIPv4/PyDMXControl/blob/master/tests/audio.py)
 
 ## Example Usage
 
@@ -165,9 +161,7 @@ dmx.close()
 
 ```
 
-> For a "real life" example, please take a look at [tests/home.py](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/home.py) which is the setup I use in my office.
-
-Browse the tests from the [tests folder](https://github.com/MattIPv4/PyDMXControl/tree/master/tests/) to see examples of other features within the library being tested out.
+> For a "real life" example, please take a look at [my home automation office lighting script](https://github.com/MattIPv4/home-automation/blob/master/lighting/office.py).
 
 ## What is the point of this?
 

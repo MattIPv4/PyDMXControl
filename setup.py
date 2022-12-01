@@ -42,7 +42,7 @@ setup(
     url="https://github.com/MattIPv4/PyDMXControl/",
     version=__version__,
     license=__license__,
-    packages=find_packages(exclude=("tests",)),
+    packages=find_packages(),
     python_requires=">= 3.6",
     include_package_data=True,
     install_requires=fetch_reqs(),

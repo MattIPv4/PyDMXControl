@@ -1,5 +1,4 @@
 .idea/
-tests/venv/
 PyDMXControl.egg-info/
 build/
 dist/
