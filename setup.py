@@ -18,10 +18,9 @@
 """
 
 from typing import List
+import re
 
 from setuptools import setup, find_packages
-
-from PyDMXControl import __title__, __author__, __email__, __license__, __version__
 
 
 def fetch_reqs(base: str = "") -> List[str]:
@@ -32,16 +31,21 @@ def fetch_reqs(base: str = "") -> List[str]:
     return requirements
 
 
+data = {}
+with open("PyDMXControl/__init__.py") as file:
+    for match in re.finditer(r'^__(.+)__\s*=\s*[\'"](.+)[\'"]$', file.read(), re.MULTILINE):
+        data[match.group(1)] = match.group(2)
+
 with open("README.md", "r") as f:
     readme = f.read()
 
 setup(
-    name=__title__,
-    author=__author__,
-    author_email=__email__,
+    name=data["title"],
+    author=data["author"],
+    author_email=data["email"],
     url="https://github.com/MattIPv4/PyDMXControl/",
-    version=__version__,
-    license=__license__,
+    version=data["version"],
+    license=data["license"],
     packages=find_packages(),
     python_requires=">= 3.6",
     include_package_data=True,
@@ -58,7 +62,7 @@ setup(
              "controller control control-dmx "
              "dmx dmx-512 dmx-interface dmx-channels dmx-dimmer dmx-library "
              "theatre udmx opendmx open-dmx ftdi",
-    classifiers=(
+    classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 
         "Programming Language :: Python :: 3",
@@ -86,7 +90,7 @@ setup(
         "Topic :: Software Development :: Embedded Systems",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: User Interfaces",
-    ),
+    ],
     project_urls={
         "Source": "https://github.com/MattIPv4/PyDMXControl/tree/master",
         "Funding": "https://patreon.mattcowley.co.uk/",
@@ -97,6 +101,8 @@ setup(
 )
 
 # How2Ship:tm:
-# 1. Update version in PyDMXControl/__init__.py
-# 2. Run python3 setup.py sdist bdist_wheel bdist_egg
-# 3. Run python3 -m twine upload dist/*
+# Update version in PyDMXControl/__init__.py
+# Run `rm -rf dist/ build/ PyDMXControl.egg-info/`
+# Run `python3 -m pip install --upgrade setuptools build twine`
+# Run `python3 -m build`
+# Run `python3 -m twine upload dist/*`
