@@ -2,5 +2,6 @@
 PyDMXControl.egg-info/
 build/
 dist/
+tests/
 __pycache__/
 .DS_Store
