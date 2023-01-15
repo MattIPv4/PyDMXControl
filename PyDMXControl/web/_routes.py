@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2023 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from re import compile as re_compile  # Regex
@@ -95,12 +95,18 @@ def channel_val(fid: int, cid: int, val: int):
 
     this_fixture.set_channel(chan, val)
     val = fixture_channel_value(this_fixture, chan)
-    data = {"message": "Channel {} {} updated to {}".format(chan + 1, this_fixture.channels[chan + 1]["name"], val),
-            "elements": {
-                "channel-{}-value".format(chan): val,
-                "value": val,
-                "slider_value": val
-            }}
+    data = {
+        "message": "Channel {} {} updated to {}".format(
+            this_fixture.start_channel + chan,
+            this_fixture.channels[this_fixture.start_channel + chan]["name"],
+            val
+        ),
+        "elements": {
+            "channel-{}-value".format(chan): val,
+            "value": val,
+            "slider_value": val
+        }
+    }
     if chan == this_fixture.get_channel_id("dimmer"):
         data["elements"]["intensity_value"] = val
     return jsonify(data), 200
