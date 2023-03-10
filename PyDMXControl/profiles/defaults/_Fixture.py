@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2023 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 import re
@@ -213,6 +213,13 @@ class Fixture(FixtureHelpers):
         return len(self.__channels) + 1
 
     @property
+    def parked(self) -> bool:
+        for chan in self.__channels:
+            if chan.parked:
+                return True
+        return False
+
+    @property
     def controller(self) -> 'Controller':
         return self.__controller
 
@@ -312,6 +319,16 @@ class Fixture(FixtureHelpers):
         apply_values(self, args, channel)
 
         return self
+
+    # Parking
+
+    def park(self):
+        for chan in self.__channels:
+            chan.park(chan.value)
+
+    def unpark(self):
+        for chan in self.__channels:
+            chan.unpark()
 
     # Effects
 
