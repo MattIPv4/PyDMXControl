@@ -45,10 +45,9 @@ class Channel:
         self.__updated()
 
     def unpark(self):
-        if self.__parked is False:
-            return
-        self.__parked = False
-        self.__updated()
+        if self.__parked is not False:
+            self.__parked = False
+            self.__updated()
 
 
 class FixtureHelpers:

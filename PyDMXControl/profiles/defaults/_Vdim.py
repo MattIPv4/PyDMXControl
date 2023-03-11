@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2023 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
 """
 
 from datetime import datetime
@@ -18,7 +18,11 @@ class Vdim(Fixture):
 
         self.__vdims = []
         self.__vdim = 255
-        self.__vdimUpdated = datetime.utcnow()
+        self.__vdim_timestamp = datetime.utcnow()
+        self.__vdim_parked = False
+
+    def __vdim_updated(self):
+        self.__vdim_timestamp = datetime.utcnow()
 
     def _register_channel(self, name: str, *, parked: Union[bool, int] = False, vdim: bool = False) -> int:
         super_call = super()._register_channel(name, parked=parked)
@@ -44,7 +48,7 @@ class Vdim(Fixture):
     def get_channel_value(self, channel: Union[str, int], apply_vdim: bool = True) -> Tuple[int, datetime]:
         # Look for vdim channel
         if self.__is_vdim_channel(channel):
-            return self.__vdim, self.__vdimUpdated
+            return (self.__vdim if self.__vdim_parked is False else self.__vdim_parked), self.__vdim_timestamp
 
         # Get normal channel
         super_call = super().get_channel_value(channel)
@@ -54,8 +58,8 @@ class Vdim(Fixture):
         # Apply vdim if applicable
         if apply_vdim and self.get_channel_id(channel) in self.__vdims:
             new_val = int(new_val * (self.__vdim / 255))
-            if self.__vdimUpdated > new_time:
-                new_time = self.__vdimUpdated
+            if self.__vdim_timestamp > new_time:
+                new_time = self.__vdim_timestamp
 
         return new_val, new_time
 
@@ -72,7 +76,11 @@ class Vdim(Fixture):
         if not self._valid_channel_value(value, 'vdim'):
             return self
         self.__vdim = value
-        self.__vdimUpdated = datetime.utcnow()
+
+        # If not parked, bump the timestamp
+        if self.__vdim_parked is False:
+            self.__vdim_updated()
+
         return self
 
     def get_color(self) -> Union[None, List[int]]:
@@ -92,3 +100,14 @@ class Vdim(Fixture):
                 color.append(self.get_channel_value('a', False)[0])
 
         return color
+
+    def park(self):
+        self.__vdim_parked = self.__vdim
+        self.__vdim_updated()
+        return super().park()
+
+    def unpark(self):
+        if self.__vdim_parked is not False:
+            self.__vdim_parked = False
+            self.__vdim_updated()
+        return super().unpark()
