@@ -37,6 +37,10 @@ class Channel:
         return (self.__value if self.__parked is False else self.__parked), self.__timestamp
 
     @property
+    def value_unparked(self) -> Tuple[int, datetime]:
+        return self.__value, self.__timestamp
+
+    @property
     def parked(self) -> bool:
         return self.__parked is not False
 
@@ -101,13 +105,17 @@ class FixtureHelpers:
         if not self.has_channel('r') or not self.has_channel('g') or not self.has_channel('b'):
             return None
 
-        color = [self.get_channel_value('r')[0], self.get_channel_value('g')[0], self.get_channel_value('b')[0]]
+        color = [
+            self.get_channel_value('r', False)[0],
+            self.get_channel_value('g', False)[0],
+            self.get_channel_value('b', False)[0]
+        ]
 
         if self.has_channel('w'):
-            color.append(self.get_channel_value('w')[0])
+            color.append(self.get_channel_value('w', False)[0])
 
             if self.has_channel('a'):
-                color.append(self.get_channel_value('a')[0])
+                color.append(self.get_channel_value('a', False)[0])
 
         return color
 
@@ -297,7 +305,9 @@ class Fixture(FixtureHelpers):
         except ChannelNotFoundException:
             return False
 
-    def get_channel_value(self, channel: Union[str, int]) -> Tuple[int, datetime]:
+    def get_channel_value(self, channel: Union[str, int], apply_parking: bool = True) -> Tuple[int, datetime]:
+        if not apply_parking:
+            return self.__channels[self.get_channel_id(channel)].value_unparked
         return self.__channels[self.get_channel_id(channel)].value
 
     def set_channel(self, channel: Union[str, int], value: int) -> 'Fixture':
@@ -328,13 +338,17 @@ class Fixture(FixtureHelpers):
 
     # Parking
 
-    def park(self):
+    def park(self) -> 'Fixture':
         for chan in self.__channels:
             chan.park(chan.value[0])
 
-    def unpark(self):
+        return self
+
+    def unpark(self) -> 'Fixture':
         for chan in self.__channels:
             chan.unpark()
+
+        return self
 
     # Effects
 

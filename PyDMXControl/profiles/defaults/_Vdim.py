@@ -45,13 +45,13 @@ class Vdim(Fixture):
         # Get normal channel
         return super().get_channel_id(channel)
 
-    def get_channel_value(self, channel: Union[str, int], apply_vdim: bool = True) -> Tuple[int, datetime]:
+    def get_channel_value(self, channel: Union[str, int], apply_vdim: bool = True, apply_parking: bool = True) -> Tuple[int, datetime]:
         # Look for vdim channel
         if self.__is_vdim_channel(channel):
-            return (self.__vdim if self.__vdim_parked is False else self.__vdim_parked), self.__vdim_timestamp
+            return (self.__vdim if (not apply_parking) or (self.__vdim_parked is False) else self.__vdim_parked), self.__vdim_timestamp
 
         # Get normal channel
-        super_call = super().get_channel_value(channel)
+        super_call = super().get_channel_value(channel, apply_parking)
         new_val = super_call[0]
         new_time = super_call[1]
 
@@ -88,26 +88,28 @@ class Vdim(Fixture):
             return None
 
         color = [
-            self.get_channel_value('r', False)[0],
-            self.get_channel_value('g', False)[0],
-            self.get_channel_value('b', False)[0],
+            self.get_channel_value('r', False, False)[0],
+            self.get_channel_value('g', False, False)[0],
+            self.get_channel_value('b', False, False)[0],
         ]
 
         if self.has_channel('w'):
-            color.append(self.get_channel_value('w', False)[0])
+            color.append(self.get_channel_value('w', False, False)[0])
 
             if self.has_channel('a'):
-                color.append(self.get_channel_value('a', False)[0])
+                color.append(self.get_channel_value('a', False, False)[0])
 
         return color
 
-    def park(self):
+    def park(self) -> Fixture:
         self.__vdim_parked = self.__vdim
         self.__vdim_updated()
+
         return super().park()
 
-    def unpark(self):
+    def unpark(self) -> Fixture:
         if self.__vdim_parked is not False:
             self.__vdim_parked = False
             self.__vdim_updated()
+
         return super().unpark()

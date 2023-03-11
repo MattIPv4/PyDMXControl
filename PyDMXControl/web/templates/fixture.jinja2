@@ -2,7 +2,7 @@
  *  PyDMXControl: A Python 3 module to control DMX using OpenDMX or uDMX.
  *                Featuring fixture profiles, built-in effects and a web control panel.
  *  <https://github.com/MattIPv4/PyDMXControl/>
- *  Copyright (C) 2018 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
+ *  Copyright (C) 2023 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)
  #}
 {% extends "base.jinja2" %}
 
@@ -32,7 +32,11 @@
                         <td data-th="Channel Name" id="channel-{{ i }}-name">
                             {{ channel[0] }}</td>
                         <td data-th="Channel Value" id="channel-{{ i }}-value">
-                            {{ channel[1] }}</td>
+                            {{ channel[1] }}
+                            {% if fixture.parked %}
+                                ({{ channel[2] }})
+                            {% endif %}
+                        </td>
                         <td data-th="Quick Control">
                             <a href="{{ url_for('.channel_val', fid=fixture.id, cid=i, val=0) }}" data-no-reload
                                class="button">0%</a>
@@ -120,6 +124,12 @@
             </form>
         </article>
 
+        <article>
+            <h2>Parking</h2>
+            <a href="{{ url_for('.park', fid=fixture.id, state=(not fixture.parked)) }}" data-no-reload
+               class="button" id="parking">{{ "Unpark" if fixture.parked else "Park" }}</a>
+        </article>
+
     </section>
 {% endblock body %}
 
@@ -159,7 +169,7 @@
             if (update) get("{{ url_for('.intensity', fid=fixture.id, val=0) }}" + encodeURIComponent(document.getElementById("intensity_value").value));
         }
 
-        change_input({{ fixture.get_channel_value(fixture.get_channel_id("dimmer"))[0] }}, false);
+        change_input({{ fixture_channel_value(fixture, "dimmer") }}, false);
         document.getElementById("intensity_value").addEventListener("input", function (e) {
             input_change(true);
         });

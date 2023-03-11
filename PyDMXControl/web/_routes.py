@@ -17,17 +17,17 @@ from ..utils.exceptions import ChannelNotFoundException # Exceptions
 routes = Blueprint('', __name__, url_prefix='/')
 
 
-def fixture_channels(this_fixture: Fixture) -> List[Tuple[str, int]]:
-    chans = [(f['name'], fixture_channel_value(this_fixture, f['name'])) for f in this_fixture.channels.values()]
+def fixture_channels(this_fixture: Fixture) -> List[Tuple[str, int, int]]:
+    chans = [(f['name'], fixture_channel_value(this_fixture, f['name']), fixture_channel_value(this_fixture, f['name'], True)) for f in this_fixture.channels.values()]
     if issubclass(type(this_fixture), Vdim):
-        chans.append(("dimmer", fixture_channel_value(this_fixture, "dimmer")))
+        chans.append(("dimmer", fixture_channel_value(this_fixture, "dimmer"), fixture_channel_value(this_fixture, "dimmer", True)))
     return chans
 
 
-def fixture_channel_value(this_fixture: Fixture, this_channel: Union[str, int]) -> int:
+def fixture_channel_value(this_fixture: Fixture, this_channel: Union[str, int], apply_parking: bool = False) -> int:
     if issubclass(type(this_fixture), Vdim):
-        return this_fixture.get_channel_value(this_channel, False)[0]
-    return this_fixture.get_channel_value(this_channel)[0]
+        return this_fixture.get_channel_value(this_channel, False, apply_parking)[0]
+    return this_fixture.get_channel_value(this_channel, apply_parking)[0]
 
 
 helpers = ["on", "off", "locate"]
@@ -59,7 +59,7 @@ def fixture(fid: int):
     if not this_fixture:
         return redirect(url_for('.home'))
     return render_template("fixture.jinja2", fixture=this_fixture, fixture_channels=fixture_channels,
-                           colors=Colors, helpers=helpers)
+                           fixture_channel_value=fixture_channel_value, colors=Colors, helpers=helpers)
 
 
 # Fixture Channel
@@ -95,6 +95,7 @@ def channel_val(fid: int, cid: int, val: int):
 
     this_fixture.set_channel(chan, val)
     val = fixture_channel_value(this_fixture, chan)
+    val_parked = fixture_channel_value(this_fixture, chan, True)
     data = {
         "message": "Channel {} {} updated to {}".format(
             this_fixture.start_channel + chan,
@@ -102,7 +103,7 @@ def channel_val(fid: int, cid: int, val: int):
             val
         ),
         "elements": {
-            "channel-{}-value".format(chan): val,
+            "channel-{}-value".format(chan): "{}{}".format(val, " ({})".format(val_parked) if this_fixture.parked else ""),
             "value": val,
             "slider_value": val
         }
@@ -124,10 +125,16 @@ def color(fid: int, val: str):
         return jsonify({"error": "Invalid color {} supplied".format(val)}), 400
     this_color = [int(f) for f in match.groups() if f]
     this_fixture.color(this_color)
-    return jsonify({"message": "Color updated to {}".format(this_color),
-                    "elements": dict({"value": Colors.to_hex(this_fixture.get_color())},
-                                     **{"channel-{}-value".format(i): f[1] for i, f in
-                                        enumerate(fixture_channels(this_fixture))})}), 200
+    return jsonify({
+        "message": "Color updated to {}".format(this_color),
+        "elements": dict(
+            {
+                "value": Colors.to_hex(this_fixture.get_color())
+            },
+            **{"channel-{}-value".format(i): "{}{}".format(f[1], " ({})".format(f[2]) if this_fixture.parked else "")
+               for i, f in enumerate(fixture_channels(this_fixture))}
+        )
+    }), 200
 
 
 # Fixture Intensity
@@ -147,10 +154,14 @@ def intensity(fid: int, val: int):
 
     this_fixture.set_channel(chan, val)
     val = fixture_channel_value(this_fixture, chan)
-    return jsonify({"message": "Dimmer updated to {}".format(val), "elements": {
-        "channel-{}-value".format(chan): val,
-        "intensity_value": val
-    }}), 200
+    val_parked = fixture_channel_value(this_fixture, chan, True)
+    return jsonify({
+        "message": "Dimmer updated to {}".format(val),
+        "elements": {
+            "channel-{}-value".format(chan): "{}{}".format(val, " ({})".format(val_parked) if this_fixture.parked else ""),
+            "intensity_value": val
+        }
+    }), 200
 
 
 # Fixture Helpers
@@ -169,10 +180,45 @@ def helper(fid: int, val: str):
         this_helpers[val]()
     except Exception:
         return jsonify({"error": "Helper {} failed to execute".format(val)}), 500
-    return jsonify({"message": "Helper {} executed".format(val), "elements": dict(
-        {"value": Colors.to_hex(this_fixture.get_color()),
-         "intensity_value": this_fixture.get_channel_value(this_fixture.get_channel_id("dimmer"))[0]},
-        **{"channel-{}-value".format(i): f[1] for i, f in enumerate(fixture_channels(this_fixture))})}), 200
+    return jsonify({
+        "message": "Helper {} executed".format(val),
+        "elements": dict(
+            {
+                "value": Colors.to_hex(this_fixture.get_color()),
+                "intensity_value": fixture_channel_value(this_fixture, "dimmer")
+            },
+            **{"channel-{}-value".format(i): "{}{}".format(f[1], " ({})".format(f[2]) if this_fixture.parked else "")
+               for i, f in enumerate(fixture_channels(this_fixture))}
+        )
+    }), 200
+
+
+# Fixture Parking
+@routes.route('fixture/<int:fid>/park', methods=['GET'])
+def park(fid: int):
+    this_fixture = current_app.parent.controller.get_fixture(fid)
+    if not this_fixture:
+        return jsonify({"error": "Fixture {} not found".format(fid)}), 404
+
+    state = this_fixture.parked
+    if state:
+        this_fixture.unpark()
+    else:
+        this_fixture.park()
+    state = not state
+
+    return jsonify({
+        "message": "Fixture {}".format("parked" if state else "unparked"),
+        "elements": dict(
+            {
+                "parking": "Unpark" if state else "Park",
+                "value": Colors.to_hex(this_fixture.get_color()),
+                "intensity_value": fixture_channel_value(this_fixture, "dimmer")
+            },
+            **{"channel-{}-value".format(i): "{}{}".format(f[1], " ({})".format(f[2]) if this_fixture.parked else "")
+               for i, f in enumerate(fixture_channels(this_fixture))}
+        )
+    }), 200
 
 
 # Callbacks
