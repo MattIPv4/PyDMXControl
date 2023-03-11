@@ -28,8 +28,8 @@ class Channel:
         self.updated = datetime.utcnow()
 
     def set_value(self, value: int):
+        self.value = value
         if self.parked is False:
-            self.value = value
             self.__updated()
 
     def get_value(self) -> Tuple[int, datetime]:
@@ -40,6 +40,8 @@ class Channel:
         self.__updated()
 
     def unpark(self):
+        if self.parked is False:
+            return
         self.parked = False
         self.__updated()
 
