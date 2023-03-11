@@ -20,29 +20,34 @@ class Channel:
 
     def __init__(self, name: str, parked: Union[bool, int]):
         self.name = name
-        self.value = 0
-        self.updated = datetime.utcnow()
-        self.parked = parked if parked is False else (0 if parked is True else parked)
+        self.__value = 0
+        self.__timestamp = datetime.utcnow()
+        self.__parked = parked if parked is False else (0 if parked is True else parked)
 
     def __updated(self):
-        self.updated = datetime.utcnow()
+        self.__timestamp = datetime.utcnow()
 
-    def set_value(self, value: int):
-        self.value = value
+    def set(self, value: int):
+        self.__value = value
         if self.parked is False:
             self.__updated()
 
-    def get_value(self) -> Tuple[int, datetime]:
-        return (self.value if self.parked is False else self.parked), self.updated
+    @property
+    def value(self) -> Tuple[int, datetime]:
+        return (self.__value if self.__parked is False else self.__parked), self.__timestamp
+
+    @property
+    def parked(self) -> bool:
+        return self.__parked is not False
 
     def park(self, value: int = 0):
-        self.parked = value
+        self.__parked = value
         self.__updated()
 
     def unpark(self):
-        if self.parked is False:
+        if self.__parked is False:
             return
-        self.parked = False
+        self.__parked = False
         self.__updated()
 
 
@@ -294,13 +299,13 @@ class Fixture(FixtureHelpers):
             return False
 
     def get_channel_value(self, channel: Union[str, int]) -> Tuple[int, datetime]:
-        return self.__channels[self.get_channel_id(channel)].get_value()
+        return self.__channels[self.get_channel_id(channel)].value
 
     def set_channel(self, channel: Union[str, int], value: int) -> 'Fixture':
         if not self._valid_channel_value(value, channel):
             return self
 
-        self.__channels[self.get_channel_id(channel)].set_value(value)
+        self.__channels[self.get_channel_id(channel)].set(value)
         return self
 
     def set_channels(self, *args: Union[int, List[int], None], **kwargs) -> 'Fixture':
@@ -326,7 +331,7 @@ class Fixture(FixtureHelpers):
 
     def park(self):
         for chan in self.__channels:
-            chan.park(chan.value)
+            chan.park(chan.value[0])
 
     def unpark(self):
         for chan in self.__channels:
