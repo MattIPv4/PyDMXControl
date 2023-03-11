@@ -99,6 +99,8 @@ class WebController:
             self.callbacks['all_off'] = self.controller.all_off
         if 'all_locate' not in self.callbacks:
             self.callbacks['all_locate'] = self.controller.all_locate
+        if 'clear_all_effects' not in self.callbacks:
+            self.callbacks['clear_all_effects'] = self.controller.clear_all_effects
 
     def __check_callbacks(self):
         for key in self.callbacks.keys():
