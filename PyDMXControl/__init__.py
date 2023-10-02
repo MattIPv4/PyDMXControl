@@ -29,7 +29,7 @@ __maintainer__ = 'Matt Cowley (MattIPv4)'
 __email__ = 'me@mattcowley.co.uk'
 __license__ = 'GPLv3'
 __copyright__ = 'Copyright (C) 2022 Matt Cowley (MattIPv4) (me@mattcowley.co.uk)'
-__version__ = '2.0.0'
+__version__ = '2.0.1'
 __status__ = 'Production'
 
 name = "PyDMXControl"
