@@ -136,7 +136,7 @@ class FixtureHelpers:
         self.color([255, 255, 255, 255, 255])
         self.dim(255)
 
-    def remove_local_callbacks(self):
+    def clear_callbacks(self):
         for callback in self.local_callback_list:
             self.controller.ticker.remove_callback(callback)
         self.local_callback_list = []
