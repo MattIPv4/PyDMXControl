@@ -57,7 +57,7 @@ class Channel:
 class FixtureHelpers:
 
     # Store the callbacks
-    local_callback_list = []
+    __callbacks = []
 
     def dim(self, target_value: int, milliseconds: int = 0, channel: Union[str, int] = 'dimmer') -> 'Fixture':
         # Handle instant edge-case
@@ -79,10 +79,10 @@ class FixtureHelpers:
             else:
                 self.set_channel(channel, int(target_value))
                 self.controller.ticker.remove_callback(callback)
-                self.local_callback_list.remove(callback)
+                self.__callbacks.remove(callback)
 
         # Append to the tracking list
-        self.local_callback_list.append(callback)
+        self.__callbacks.append(callback)
 
         # Start the callback
         self.controller.ticker.add_callback(callback, 0)
@@ -137,9 +137,9 @@ class FixtureHelpers:
         self.dim(255)
 
     def clear_callbacks(self):
-        for callback in self.local_callback_list:
+        for callback in self.__callbacks:
             self.controller.ticker.remove_callback(callback)
-        self.local_callback_list = []
+        self.__callbacks = []
             
 
 
@@ -401,8 +401,5 @@ class Fixture(FixtureHelpers):
             effect.stop()
         # Clear
         self.__effects = []
-
-        # Remove local callbacks - FixtureHelper
-        self.remove_local_callbacks()
 
         return self
