@@ -1,12 +1,12 @@
 # uDMXController
-pyusb
-udmx-pyusb
+pyusb>=1.2.1,<2.0 
+udmx-pyusb>=2.0.0,<3.0
 
 # OpenDMXController
-pyftdi
+pyftdi>=0.54.0,<=0.55.0
 
 # Serial Controller
-pyserial
+pyserial>=3.5,<4.0
 
 # Web
-flask
+Flask>=2.3,<3.0

@@ -47,7 +47,7 @@ setup(
     version=data["version"],
     license=data["license"],
     packages=find_packages(),
-    python_requires=">= 3.6",
+    python_requires=">= 3.8",
     include_package_data=True,
     install_requires=fetch_reqs(),
     extras_require={
@@ -66,8 +66,6 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

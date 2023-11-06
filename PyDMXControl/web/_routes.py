@@ -14,7 +14,7 @@ from .. import Colors  # Colors
 from ..profiles.defaults import Fixture, Vdim  # Fixtures
 from ..utils.exceptions import ChannelNotFoundException # Exceptions
 
-routes = Blueprint('', __name__, url_prefix='/')
+routes = Blueprint('PyDMXControl', __name__, url_prefix='/')
 
 
 def fixture_channels(this_fixture: Fixture) -> List[Tuple[str, int, int]]:
