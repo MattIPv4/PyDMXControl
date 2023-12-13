@@ -22,7 +22,7 @@ class ArtnetDMXController(TransmittingController):
         self.__net = 0
         self.__sequence = 0
         self.__make_even = kwargs.pop("even_packet_size", True)
-        self.__packet_size = self.put_in_range(kwargs.pop("packet_size", 512), 2, 512, self.__make_even)
+        self.__packet_size = put_in_range(kwargs.pop("packet_size", 512), 2, 512, self.__make_even)
         self.__packet_header = bytearray()
         self.__buffer = bytearray(self.__packet_size)
         self.__broadcast=kwargs.pop("broadcast", False)
@@ -59,7 +59,7 @@ class ArtnetDMXController(TransmittingController):
             # the whole net subnet is simplified
             # by transforming a single uint16 into its 8 bit parts
             # you will most likely not see any differences in small networks
-            msb, lsb = self.shift_this(self.__universe)   # convert to MSB / LSB
+            msb, lsb = shift_this(self.__universe)   # convert to MSB / LSB
             self.__packet_header.append(lsb)
             self.__packet_header.append(msb)
         # 14 - universe, subnet (2 x 4 bits each)
@@ -76,7 +76,7 @@ class ArtnetDMXController(TransmittingController):
             self.__packet_header.append(self.__subnet << 4 | self.__universe)
             self.__packet_header.append(self.__net & 0xFF)
         # 16 - packet size (2 x 8 high byte first)
-        msb, lsb = self.shift_this(self.__packet_size)		# convert to MSB / LSB
+        msb, lsb = shift_this(self.__packet_size)		# convert to MSB / LSB
         self.__packet_header.append(msb)
         self.__packet_header.append(lsb)    
 
@@ -126,9 +126,9 @@ class ArtnetDMXController(TransmittingController):
         # With simplified mode the universe will be split into two
         # values, (uni and sub) which is correct anyway. Net will always be 0
         if self.is_simplified:
-            self.universe = self.put_in_range(universe, 0, 255, False)
+            self.universe = put_in_range(universe, 0, 255, False)
         else:
-            self.universe = self.put_in_range(universe, 0, 15, False)
+            self.universe = put_in_range(universe, 0, 15, False)
         self.make_header()
 
     def set_subnet(self, sub):
@@ -136,7 +136,7 @@ class ArtnetDMXController(TransmittingController):
 
         Set simplify to false to use
         """
-        self.subnet = self.put_in_range(sub, 0, 15, False)
+        self.subnet = put_in_range(sub, 0, 15, False)
         self.make_header()
 
     def set_net(self, net):
@@ -144,112 +144,117 @@ class ArtnetDMXController(TransmittingController):
 
         Set simplify to false to use
         """
-        self.net = self.put_in_range(net, 0, 127, False)
+        self.net = put_in_range(net, 0, 127, False)
         self.make_header()
 
     def set_packet_size(self, packet_size):
         """Setter for packet size (2 - 512, even only)."""
-        self.packet_size = self.put_in_range(packet_size, 2, 512, self.make_even)
+        self.packet_size = put_in_range(packet_size, 2, 512, self.make_even)
         self.make_header()
             
-    def shift_this(number, high_first=True):
-        """Utility method: extracts MSB and LSB from number.
-
-        Args:
-        number - number to shift
-        high_first - MSB or LSB first (true / false)
-
-        Returns:
-        (high, low) - tuple with shifted values
-
-        """
-        low = (number & 0xFF)
-        high = ((number >> 8) & 0xFF)
-        if high_first:
-            return((high, low))
-        return((low, high))
+    
+    
+"""Provides common functions byte objects."""
 
 
-    def clamp(number, min_val, max_val):
-        """Utility method: sets number in defined range.
+def shift_this(number, high_first=True):
+    """Utility method: extracts MSB and LSB from number.
 
-        Args:
-        number - number to use
-        range_min - lowest possible number
-        range_max - highest possible number
+    Args:
+    number - number to shift
+    high_first - MSB or LSB first (true / false)
 
-        Returns:
-        number - number in correct range
-        """
-        return max(min_val, min(number, max_val))
+    Returns:
+    (high, low) - tuple with shifted values
 
-
-    def set_even(number):
-        """Utility method: ensures number is even by adding.
-
-        Args:
-        number - number to make even
-
-        Returns:
-        number - even number
-        """
-        if number % 2 != 0:
-            number += 1
-        return number
+    """
+    low = (number & 0xFF)
+    high = ((number >> 8) & 0xFF)
+    if high_first:
+        return((high, low))
+    return((low, high))
 
 
-    def put_in_range(self,number, range_min, range_max, make_even=True):
-        """Utility method: sets number in defined range.
-        DEPRECATED: this will be removed from the library
+def clamp(number, min_val, max_val):
+    """Utility method: sets number in defined range.
 
-        Args:
-        number - number to use
-        range_min - lowest possible number
-        range_max - highest possible number
-        make_even - should number be made even
+    Args:
+    number - number to use
+    range_min - lowest possible number
+    range_max - highest possible number
 
-        Returns:
-        number - number in correct range
-
-        """
-        number = self.clamp(number, range_min, range_max)
-        if make_even:
-            number = self.set_even(number)
-        return number
+    Returns:
+    number - number in correct range
+    """
+    return max(min_val, min(number, max_val))
 
 
-    def make_address_mask(self,universe, sub=0, net=0, is_simplified=True):
-        """Returns the address bytes for a given universe, subnet and net.
+def set_even(number):
+    """Utility method: ensures number is even by adding.
 
-        Args:
-        universe - Universe to listen
-        sub - Subnet to listen
-        net - Net to listen
-        is_simplified - Whether to use nets and subnet or universe only,
-        see User Guide page 5 (Universe Addressing)
+    Args:
+    number - number to make even
 
-        Returns:
-        bytes - byte mask for given address
+    Returns:
+    number - even number
+    """
+    if number % 2 != 0:
+        number += 1
+    return number
 
-        """
-        address_mask = bytearray()
 
-        if is_simplified:
-            # Ensure data is in right range
-            universe = self.clamp(universe, 0, 32767)
+def put_in_range(number, range_min, range_max, make_even=True):
+    """Utility method: sets number in defined range.
+    DEPRECATED: this will be removed from the library
 
-            # Make mask
-            msb, lsb = self.shift_this(universe)  # convert to MSB / LSB
-            address_mask.append(lsb)
-            address_mask.append(msb)
-        else:
-            # Ensure data is in right range
-            universe = self.clamp(universe, 0, 15)
-            sub = self.clamp(sub, 0, 15)
-            net = self.clamp(net, 0, 127)
+    Args:
+    number - number to use
+    range_min - lowest possible number
+    range_max - highest possible number
+    make_even - should number be made even
 
-            # Make mask
-            address_mask.append(sub << 4 | universe)
-            address_mask.append(net & 0xFF)
+    Returns:
+    number - number in correct range
 
-        return address_mask
+    """
+    number = clamp(number, range_min, range_max)
+    if make_even:
+        number = set_even(number)
+    return number
+
+
+def make_address_mask(universe, sub=0, net=0, is_simplified=True):
+    """Returns the address bytes for a given universe, subnet and net.
+
+    Args:
+    universe - Universe to listen
+    sub - Subnet to listen
+    net - Net to listen
+    is_simplified - Whether to use nets and subnet or universe only,
+    see User Guide page 5 (Universe Addressing)
+
+    Returns:
+    bytes - byte mask for given address
+
+    """
+    address_mask = bytearray()
+
+    if is_simplified:
+        # Ensure data is in right range
+        universe = clamp(universe, 0, 32767)
+
+        # Make mask
+        msb, lsb = shift_this(universe)  # convert to MSB / LSB
+        address_mask.append(lsb)
+        address_mask.append(msb)
+    else:
+        # Ensure data is in right range
+        universe = clamp(universe, 0, 15)
+        sub = clamp(sub, 0, 15)
+        net = clamp(net, 0, 127)
+
+        # Make mask
+        address_mask.append(sub << 4 | universe)
+        address_mask.append(net & 0xFF)
+
+    return address_mask
