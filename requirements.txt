@@ -10,3 +10,6 @@ pyserial>=3.5,<4.0
 
 # Web
 Flask>=2.3,<3.0
+
+#FTD2XX
+ftd2xx>=1.3.6
