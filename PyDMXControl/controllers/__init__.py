@@ -23,3 +23,4 @@ from ._TransmittingController import TransmittingController
 from ._uDMXController import uDMXController
 from ._OpenDMXController import OpenDMXController
 from ._SerialController import SerialController
+from ._FTD2XXController import FTD2XXController
